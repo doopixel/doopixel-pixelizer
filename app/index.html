@@ -24,8 +24,8 @@
 
     <meta property="og:title" content="DooPixel Pixel Art Maker" />
     <meta property="og:image" content="assets/png/icon-960x960.png" />
-    <meta property="og:description" content="Create custom brick pixel art from your own photo." />
-    <meta name="description" content="Create custom brick pixel art from your own photo." />
+    <meta property="og:description" content="Create custom brick pixel art from your own photo" />
+    <meta name="description" content="Create custom brick pixel art from your own photo" />
     <meta name="thumbnail" content="assets/png/icon-512x512.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#FCE4EC" />
@@ -169,989 +169,6 @@
         height: 50px;
         text-align: center;
       }
-
-      /* DooPixel customer-facing cleanup: keep the original algorithm, hide unused original-project features. */
-      [class~="3d-selector-tabs"],
-      #enable-depth-button-container,
-      #step-1-depth-tab-content,
-      #step-2-depth-tab-content,
-      #step-3-depth-tab-content,
-      #step-4-depth-tab-content,
-      #bricklink-export-card {
-        display: none !important;
-      }
-
-      #step-1-4-heading,
-      #step-1-4-collapse,
-      #step-3-4-collapse #color-ties-resolution-section,
-      .traditional-dithering-algorithm-warning {
-        display: none !important;
-      }
-
-      .dp-baseplate-note,
-      .dp-customer-note {
-        color: #5f6368;
-        font-size: 12px;
-        line-height: 1.35;
-      }
-
-      .dp-baseplate-note {
-        margin-left: 4px;
-        font-weight: 600;
-      }
-
-      .dp-customer-note {
-        display: block;
-        margin: 6px 4px 10px;
-      }
-
-      body {
-        color: #171717;
-      }
-
-      body > div[style*="min-height"] {
-        max-width: 1500px;
-        margin: 0 auto !important;
-        padding: 18px 18px 42px !important;
-        overflow: visible !important;
-      }
-
-      body > div[style*="min-height"] > h1 {
-        font-size: clamp(28px, 3vw, 42px);
-        font-weight: 800;
-        line-height: 1.08;
-        margin-top: 4px;
-      }
-
-      #image-input-card,
-      #steps-row > div > .card,
-      .card.card-body {
-        border: 1px solid #d9d9d9;
-        border-radius: 8px;
-        background-color: rgba(255, 255, 255, 0.94);
-      }
-
-      #image-input-card {
-        margin: 16px 0;
-        padding: 16px !important;
-      }
-
-      #image-input-card h3 {
-        margin-bottom: 6px;
-        font-size: 22px;
-      }
-
-      #image-input-card .btn-group,
-      #image-input-card .row {
-        max-width: 100%;
-      }
-
-      #steps-row[hidden] {
-        display: none !important;
-      }
-
-      #steps-row:not([hidden]) {
-        display: grid !important;
-        grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
-        gap: 16px;
-        align-items: start;
-        margin: 0;
-      }
-
-      #steps-row > [class*="col-"] {
-        width: auto !important;
-        max-width: none !important;
-        flex: none !important;
-        padding: 0 !important;
-      }
-
-      #steps-row > div > .card {
-        height: 100%;
-        padding: 14px !important;
-        margin-bottom: 0 !important;
-      }
-
-      #steps-row h4 {
-        margin: 12px 0 2px;
-        font-size: 17px;
-        font-weight: 800;
-      }
-
-      #steps-row h4 + small,
-      #steps-row h4 + small + br + span,
-      #steps-row .text-danger {
-        color: #5f6368;
-        font-size: 12px;
-        line-height: 1.35;
-      }
-
-      #steps-row canvas[id$="upscaled"]:not(#step-3-canvas-upscaled),
-      #step-4-canvas-3d-upscaled {
-        width: 100% !important;
-        border: 1px solid #e1e1e1;
-        border-radius: 8px;
-        background: #f7f7f7;
-        margin-bottom: 8px;
-      }
-
-      .accordion-card {
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        overflow: hidden;
-        background-color: #ffffff;
-      }
-
-      .accordion-card .card-header {
-        background: #f7f7f7;
-      }
-
-      .accordion-card .btn-link {
-        min-height: 42px;
-        padding: 10px 12px;
-        color: #171717;
-        font-size: 14px;
-        font-weight: 800;
-        line-height: 1.25;
-        text-align: left;
-        white-space: normal;
-      }
-
-      .accordion-card-body {
-        padding: 12px;
-        overflow-x: auto;
-      }
-
-      .btn {
-        border-radius: 6px;
-        font-weight: 700;
-      }
-
-      .btn-success {
-        border-color: #111111;
-        background-color: #111111;
-        color: #ffffff;
-      }
-
-      .btn-success:hover,
-      .btn-success:focus {
-        border-color: #333333;
-        background-color: #333333;
-        color: #ffffff;
-      }
-
-      .btn-info {
-        border-color: #111111;
-        background-color: #ffffff;
-        color: #111111;
-      }
-
-      .btn-info:hover,
-      .btn-info:focus {
-        border-color: #111111;
-        background-color: #f1f1f1;
-        color: #111111;
-      }
-
-      .btn-outline-dark {
-        border-color: #c9c9c9;
-        background-color: #ffffff;
-        color: #171717;
-      }
-
-      .btn-warning {
-        border-color: #c98c00;
-        background-color: #fff3d1;
-        color: #3c2a00;
-      }
-
-      input[type="range"] {
-        min-height: 34px;
-        accent-color: #111111;
-      }
-
-      .table {
-        margin-bottom: 8px;
-        background: #ffffff;
-        font-size: 13px;
-      }
-
-      .table th {
-        background: #f7f7f7;
-        font-weight: 800;
-      }
-
-      #paintbrush-controls {
-        display: inline-flex;
-        flex-wrap: wrap;
-        gap: 4px;
-      }
-
-      .paintbrush-controls-button {
-        min-width: 38px;
-        min-height: 38px;
-        border-radius: 6px;
-      }
-
-      .dropdown-menu {
-        border-radius: 8px;
-      }
-
-      .dropdown-item {
-        white-space: normal;
-      }
-
-      @media (min-width: 1280px) {
-        #steps-row:not([hidden]) {
-          grid-template-columns: repeat(4, minmax(0, 1fr));
-        }
-      }
-
-      @media (max-width: 900px) {
-        body > div[style*="min-height"] {
-          padding: 12px 10px 32px !important;
-        }
-
-        #image-input-card,
-        #steps-row > div > .card,
-        .card.card-body {
-          border-radius: 8px;
-        }
-
-        #steps-row:not([hidden]) {
-          grid-template-columns: 1fr;
-          gap: 12px;
-        }
-
-        #steps-row > div > .card {
-          padding: 12px !important;
-        }
-
-        .btn-group {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 6px;
-        }
-
-        .btn-group > .btn,
-        .btn-group > span,
-        .btn-group > div {
-          max-width: 100%;
-        }
-
-        .btn,
-        .dropdown-toggle {
-          white-space: normal;
-        }
-
-        #image-input-card .row {
-          display: block;
-        }
-
-        #image-input-card .btn {
-          width: 100%;
-          margin-top: 4px;
-        }
-
-        .dp-baseplate-note {
-          display: block;
-          margin: 2px 0 4px;
-        }
-      }
-
-      @media (max-width: 520px) {
-        body > div[style*="min-height"] > h1 {
-          font-size: 26px;
-        }
-
-        #steps-row h4 {
-          font-size: 16px;
-        }
-
-        .accordion-card .btn-link {
-          min-height: 40px;
-          padding: 9px 10px;
-          font-size: 13px;
-        }
-
-        .accordion-card-body {
-          padding: 10px;
-        }
-      }
-
-      /* DooPixel live workbench: keep the preview visible while customers adjust settings. */
-      body > div[style*="min-height"] {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        min-height: auto !important;
-      }
-
-      body > div[style*="min-height"] > h1 {
-        font-size: clamp(26px, 2.6vw, 38px);
-        font-weight: 700;
-        letter-spacing: 0;
-      }
-
-      #image-input-card {
-        order: 1;
-        margin: 6px 0 2px !important;
-        padding: 14px !important;
-      }
-
-      #steps-row {
-        order: 2;
-      }
-
-      body > div[style*="min-height"] > .card.card-body:not(#image-input-card) {
-        order: 3;
-      }
-
-      #image-input-card .row {
-        margin: 0;
-      }
-
-      #image-input-card .col-sm {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
-        grid-template-areas:
-          "heading upload"
-          "note upload"
-          "colors colors";
-        gap: 4px 18px;
-        align-items: center;
-        padding: 0;
-      }
-
-      #image-input-card h3 {
-        grid-area: heading;
-        margin: 0;
-        font-size: 18px;
-        font-weight: 700 !important;
-        line-height: 1.25;
-      }
-
-      #image-input-card p.dp-customer-note {
-        grid-area: note;
-        margin: 0 !important;
-        max-width: 720px;
-      }
-
-      #image-input-card .btn-group {
-        grid-area: colors;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 6px;
-        margin-top: 4px !important;
-      }
-
-      #image-input-card .btn-group > .row {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 6px 12px;
-        margin: 0 !important;
-      }
-
-      #image-input-card #image-input {
-        grid-area: upload;
-        justify-self: end;
-      }
-
-      #image-input-card #image-input > div {
-        margin-top: 0 !important;
-      }
-
-      #input-image-selector {
-        min-width: 148px;
-        min-height: 38px;
-        padding: 8px 16px;
-      }
-
-      #image-input-card .btn {
-        width: auto !important;
-        margin-top: 0 !important;
-      }
-
-      .dp-mobile-drawer-toggle {
-        display: none;
-      }
-
-      #steps-row:not([hidden]) {
-        display: grid !important;
-        grid-template-columns: minmax(420px, 1fr) minmax(360px, 500px) !important;
-        grid-template-areas:
-          "preview crop"
-          "preview adjust"
-          "preview pieces" !important;
-        gap: 14px;
-        margin-top: 0;
-      }
-
-      @media (min-width: 1500px) {
-        #steps-row:not([hidden]) {
-          grid-template-columns: minmax(520px, 1fr) minmax(390px, 520px) !important;
-        }
-      }
-
-      @media (max-width: 1200px) {
-        #steps-row:not([hidden]) {
-          grid-template-columns: minmax(360px, 1fr) minmax(330px, 450px) !important;
-        }
-      }
-
-      #step-1 {
-        grid-area: crop;
-      }
-
-      #step-2 {
-        grid-area: adjust;
-      }
-
-      #step-3 {
-        grid-area: pieces;
-      }
-
-      #step-4 {
-        grid-area: preview;
-        position: sticky;
-        top: 12px;
-        align-self: start;
-        z-index: 4;
-      }
-
-      #steps-row > [class*="col-"] {
-        width: auto !important;
-        max-width: none !important;
-        flex: none !important;
-        padding: 0 !important;
-      }
-
-      #steps-row > div > .card {
-        padding: 12px !important;
-        height: auto !important;
-      }
-
-      #step-4 > .card {
-        display: block;
-        padding: 12px !important;
-      }
-
-      #step-4-canvas-upscaled {
-        display: block;
-        width: 100% !important;
-        max-width: 100% !important;
-        height: auto !important;
-        max-height: calc(100vh - 250px) !important;
-        object-fit: contain !important;
-        margin: 0 auto 10px;
-      }
-
-      #step-4 h4,
-      #step-4 h4 + small,
-      #step-4 h4 + small + br,
-      #step-4 h4 + small + br + div,
-      #step-4 h4 + small + br + div + span,
-      #step-4 #step-4-accordion {
-        grid-column: auto;
-      }
-
-      #step-1-color-tab-content {
-        display: block !important;
-      }
-
-      #step-1-color-tab-content > div:first-of-type {
-        min-width: 0;
-        overflow: visible !important;
-      }
-
-      #step-1 h4,
-      #step-1 h4 + small,
-      #step-1-accordion {
-        grid-column: auto;
-      }
-
-      #step-1-canvas-upscaled {
-        width: 100% !important;
-        height: auto !important;
-        max-height: none !important;
-        object-fit: initial !important;
-      }
-
-      #step-1 .cropper-container {
-        max-width: 100% !important;
-        max-height: none !important;
-        margin-bottom: 8px;
-      }
-
-      #step-2-canvas-upscaled {
-        display: none !important;
-      }
-
-      #step-3-canvas-upscaled {
-        display: block !important;
-        max-width: none !important;
-        max-height: none !important;
-        touch-action: none;
-      }
-
-      #steps-row.dp-step3-expanded:not([hidden]) {
-        grid-template-columns: minmax(0, 1fr) !important;
-        grid-template-areas: "pieces" !important;
-      }
-
-      #steps-row.dp-step3-expanded .hide-on-step-3-expansion {
-        display: none !important;
-      }
-
-      #steps-row.dp-step3-expanded #step-3 {
-        width: 100% !important;
-        max-width: none !important;
-      }
-
-      #steps-row.dp-step3-expanded #step-3 > .card {
-        width: 100%;
-      }
-
-      #steps-row h4 {
-        margin: 0 0 3px;
-        font-size: 16px;
-        font-weight: 600;
-        line-height: 1.25;
-      }
-
-      #step-4 h4 {
-        font-size: 18px;
-      }
-
-      #steps-row h4 + small,
-      #steps-row h4 + small + br + span,
-      #steps-row .text-danger {
-        font-size: 12px;
-        font-weight: 400;
-      }
-
-      .accordion-card {
-        border-radius: 6px;
-      }
-
-      .accordion-card .btn-link {
-        min-height: 36px;
-        padding: 8px 10px;
-        font-size: 13px;
-        font-weight: 600;
-      }
-
-      .accordion-card-body {
-        padding: 10px;
-      }
-
-      .btn {
-        border-radius: 6px;
-        font-weight: 600;
-        line-height: 1.25;
-      }
-
-      .table {
-        font-size: 12px;
-      }
-
-      .table th {
-        font-weight: 600;
-      }
-
-      #paintbrush-controls {
-        gap: 3px;
-      }
-
-      .paintbrush-controls-button {
-        min-width: 34px;
-        min-height: 34px;
-      }
-
-      @media (max-width: 1100px) {
-        #steps-row:not([hidden]) {
-          grid-template-columns: minmax(0, 1fr) !important;
-          grid-template-areas:
-            "preview"
-            "crop"
-            "adjust"
-            "pieces" !important;
-        }
-
-        #step-4 {
-          top: 8px;
-        }
-
-        #step-4-canvas-upscaled {
-          max-height: 48vh !important;
-        }
-      }
-
-      @media (max-width: 720px) {
-        body > div[style*="min-height"] {
-          padding: 12px 10px 30px !important;
-          gap: 10px;
-        }
-
-        body > div[style*="min-height"] > h1 {
-          font-size: 24px;
-        }
-
-        #image-input-card .col-sm {
-          grid-template-columns: 1fr;
-          grid-template-areas:
-            "heading"
-            "note"
-            "upload"
-            "colors";
-          align-items: start;
-        }
-
-        #image-input-card #image-input {
-          justify-self: start;
-        }
-
-        #image-input-card .btn {
-          width: auto !important;
-          margin-top: 0;
-          white-space: nowrap;
-        }
-
-        #image-input-card .btn-group {
-          display: block;
-        }
-
-        #image-input-card .btn-group > .row {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 4px;
-        }
-
-        #steps-row:not([hidden]) {
-          grid-template-columns: 1fr !important;
-          grid-template-areas:
-            "preview"
-            "crop"
-            "adjust"
-            "pieces" !important;
-          gap: 10px;
-          overflow-x: visible;
-          overflow-y: visible;
-          padding-bottom: 8px;
-        }
-
-        #step-4 {
-          top: 0;
-          left: 0;
-          justify-self: start;
-          width: calc(100vw - 20px);
-          max-width: calc(100vw - 20px);
-        }
-
-        #step-4 > .card {
-          width: calc(100vw - 20px);
-          max-width: calc(100vw - 20px);
-          padding: 8px !important;
-        }
-
-        #step-4-canvas-upscaled {
-          max-height: 56vh !important;
-          margin-bottom: 6px;
-          pointer-events: none;
-        }
-
-        #step-4-color-tab-content > small,
-        #step-4-color-tab-content > br,
-        #step-4-color-tab-content > span[data-toggle="tooltip"] {
-          display: none !important;
-        }
-
-        .dp-mobile-drawer-toggle {
-          display: flex;
-          width: 100%;
-          align-items: center;
-          justify-content: space-between;
-          gap: 10px;
-          min-height: 40px;
-          padding: 9px 10px;
-          border: 1px solid #d9d9d9;
-          border-radius: 6px;
-          background: #ffffff;
-          color: #171717;
-          font-size: 14px;
-          font-weight: 600;
-          text-align: left;
-        }
-
-        .dp-mobile-drawer-toggle small {
-          color: #5f6368;
-          font-size: 12px;
-          font-weight: 500;
-          white-space: nowrap;
-        }
-
-        #step-1:not(.dp-mobile-open) > .card > .tab-content {
-          display: none !important;
-        }
-
-        #step-1.dp-mobile-open > .card > .tab-content {
-          display: block !important;
-        }
-
-        #step-3-canvas-upscaled {
-          display: block !important;
-          max-width: none !important;
-          max-height: none !important;
-          touch-action: none;
-        }
-
-        #steps-row h4 {
-          font-size: 15px;
-        }
-
-        #step-4 h4 {
-          font-size: 16px;
-        }
-
-        .accordion-card .btn-link {
-          min-height: 34px;
-          padding: 7px 9px;
-        }
-      }
-
-      /* Mobile rebuild: main preview page + focused edit pages. */
-      .dp-mobile-editor-bar,
-      #dp-mobile-home-actions {
-        display: none;
-      }
-
-      @media (max-width: 720px) {
-        body > div[style*="min-height"] {
-          padding-bottom: 34px !important;
-        }
-
-        #steps-row:not([hidden]) {
-          display: flex !important;
-          flex-direction: column;
-          gap: 10px;
-          overflow: visible !important;
-        }
-
-        #steps-row > [class*="col-"],
-        #dp-mobile-home-actions {
-          width: 100% !important;
-          max-width: none !important;
-          flex: none !important;
-          padding: 0 !important;
-        }
-
-        #step-4 {
-          order: 1;
-          position: static !important;
-          width: 100% !important;
-          max-width: none !important;
-          z-index: auto;
-        }
-
-        #step-4 > .card {
-          width: 100% !important;
-          max-width: none !important;
-          padding: 10px !important;
-        }
-
-        #step-4-canvas-upscaled {
-          width: 100% !important;
-          max-width: 100% !important;
-          max-height: none !important;
-          pointer-events: auto !important;
-          margin-bottom: 8px;
-        }
-
-        #step-4-color-tab-content > small,
-        #step-4-color-tab-content > br,
-        #step-4-color-tab-content > span[data-toggle="tooltip"] {
-          display: none !important;
-        }
-
-        #step-2 {
-          order: 2;
-        }
-
-        #step-3 {
-          order: 3;
-        }
-
-        #dp-mobile-home-actions {
-          order: 4;
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 8px;
-        }
-
-        #step-1 {
-          display: none !important;
-        }
-
-        #step-2-canvas-upscaled,
-        body:not(.dp-mobile-edit-mode) #step-3-canvas-upscaled,
-        body:not(.dp-mobile-edit-mode) .dp-manual-edit-tools,
-        .dp-mobile-drawer-toggle {
-          display: none !important;
-        }
-
-        #step-2 h4,
-        #step-3 h4 {
-          font-size: 17px;
-          margin-bottom: 4px;
-        }
-
-        #step-2 h4 + small,
-        #step-3 h4 + small {
-          display: block;
-          margin-bottom: 8px;
-          color: #5f6368;
-          font-size: 12px;
-          line-height: 1.35;
-        }
-
-        #step-2-accordion .collapse,
-        #step-3-3-collapse,
-        #step-3-4-collapse {
-          display: block !important;
-          height: auto !important;
-          visibility: visible !important;
-        }
-
-        #step-2-accordion .card-header,
-        #step-3-accordion .card-header {
-          background: #ffffff;
-        }
-
-        #step-2-accordion .btn-link,
-        #step-3-accordion .btn-link {
-          min-height: 34px;
-          padding: 7px 8px;
-          font-size: 13px;
-          pointer-events: none;
-        }
-
-        #step-3-accordion > .accordion-card:first-child {
-          display: none !important;
-        }
-
-        .dp-mobile-action-button {
-          display: block;
-          width: 100%;
-          padding: 12px;
-          border: 1px solid #d9d9d9;
-          border-radius: 8px;
-          background: #ffffff;
-          color: #171717;
-          text-align: left;
-        }
-
-        .dp-mobile-action-button strong {
-          display: block;
-          font-size: 15px;
-          font-weight: 700;
-          line-height: 1.25;
-        }
-
-        .dp-mobile-action-button span {
-          display: block;
-          margin-top: 3px;
-          color: #5f6368;
-          font-size: 12px;
-          line-height: 1.35;
-        }
-
-        .dp-mobile-editor-bar {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          margin-bottom: 10px;
-          padding-bottom: 10px;
-          border-bottom: 1px solid #e5e5e5;
-        }
-
-        .dp-mobile-back-button {
-          flex: 0 0 auto;
-          min-height: 36px;
-          padding: 7px 12px;
-          border: 1px solid #111111;
-          border-radius: 6px;
-          background: #111111;
-          color: #ffffff;
-          font-weight: 600;
-        }
-
-        .dp-mobile-editor-bar strong {
-          display: block;
-          font-size: 15px;
-          line-height: 1.2;
-        }
-
-        .dp-mobile-editor-bar small {
-          display: block;
-          color: #5f6368;
-          font-size: 12px;
-          line-height: 1.35;
-        }
-
-        body.dp-mobile-size-mode #step-1,
-        body.dp-mobile-edit-mode #step-3 {
-          display: block !important;
-          order: 1;
-          width: 100% !important;
-          max-width: none !important;
-        }
-
-        body.dp-mobile-size-mode #step-2,
-        body.dp-mobile-size-mode #step-3,
-        body.dp-mobile-size-mode #step-4,
-        body.dp-mobile-size-mode #dp-mobile-home-actions,
-        body.dp-mobile-edit-mode #step-1,
-        body.dp-mobile-edit-mode #step-2,
-        body.dp-mobile-edit-mode #step-4,
-        body.dp-mobile-edit-mode #dp-mobile-home-actions {
-          display: none !important;
-        }
-
-        body.dp-mobile-size-mode #step-1 > .card,
-        body.dp-mobile-edit-mode #step-3 > .card {
-          padding: 10px !important;
-        }
-
-        body.dp-mobile-size-mode #step-1-color-tab-content,
-        body.dp-mobile-edit-mode #step-3-color-tab-content {
-          display: block !important;
-        }
-
-        body.dp-mobile-size-mode #step-1 > .card > .tab-content,
-        body.dp-mobile-edit-mode #step-3 > .card > .tab-content {
-          display: block !important;
-        }
-
-        body.dp-mobile-edit-mode #step-3 h4,
-        body.dp-mobile-edit-mode #step-3 h4 + small,
-        body.dp-mobile-edit-mode #step-3 h4 + small + br,
-        body.dp-mobile-edit-mode #step-3 h4 + small + br + span,
-        body.dp-mobile-edit-mode #step-3-accordion {
-          display: none !important;
-        }
-
-        body.dp-mobile-edit-mode #step-3-canvas-upscaled {
-          display: block !important;
-          max-width: none !important;
-          max-height: none !important;
-          touch-action: none;
-        }
-
-        body.dp-mobile-edit-mode .dp-manual-edit-tools {
-          display: flex !important;
-        }
-      }
     </style>
 
     <style class="dark-mode-stylesheet" disabled>
@@ -1237,13 +254,6 @@
     <div class="row" id="steps-row" hidden>
       <div id="step-1" class="col-6 col-md-3 hide-on-step-3-expansion">
         <div class="card" style="padding: 10px; margin-bottom: 10px">
-          <div class="dp-mobile-editor-bar">
-            <button type="button" class="dp-mobile-back-button" data-dp-mobile-mode="home">Done</button>
-            <div>
-              <strong>Adjust Size & Crop</strong>
-              <small>Set the final pixel size, baseplate count, and crop position.</small>
-            </div>
-          </div>
           <ul class="nav nav-tabs 3d-selector-tabs" role="tablist" hidden>
             <li class="nav-item">
               <a
@@ -1280,36 +290,35 @@
               <div style="width: 100%">
                 <canvas id="step-1-canvas-upscaled" style="width: 100%" class="cropper-img"></canvas>
               </div>
-              <h4>Adjust Size & Crop</h4>
-              <small className="step-header-subtitle">Set the final pixel size, baseplate count, and crop position</small>
+              <h4>Step 1</h4>
+              <small className="step-header-subtitle">Crop + Scale input image</small>
               <div id="step-1-accordion">
                 <div class="card accordion-card">
                   <div class="card-header" id="step-1-1-heading">
                     <h5 class="mb-0">
                       <button
-                        class="btn btn-link"
+                        class="btn btn-link collapsed"
                         data-toggle="collapse"
                         data-target="#step-1-1-collapse"
-                        aria-expanded="true"
+                        aria-expanded="false"
                         aria-controls="step-1-1-collapse"
                       >
-                        Artwork Size
+                        Resolution
                       </button>
                     </h5>
                   </div>
                   <div
                     id="step-1-1-collapse"
-                    class="collapse show"
+                    class="collapse"
                     aria-labelledby="step-1-1-heading"
                     data-parent="#step-1-accordion"
                   >
                     <div class="card-body accordion-card-body">
-                      <b>Final Pixel Size:</b>
+                      <b>Target Resolution:</b>
                       <div style="width: 100%">
                         <div>
                           Width:
                           <span id="width-text" data-toggle="tooltip" title="" data-placement="top">48</span>
-                          <span id="width-baseplate-count" class="dp-baseplate-note">= 3 baseplates wide</span>
                         </div>
                         <input
                           type="range"
@@ -1326,7 +335,6 @@
                         <div>
                           Height:
                           <span id="height-text" data-toggle="tooltip" title="" data-placement="top">48</span>
-                          <span id="height-baseplate-count" class="dp-baseplate-note">= 3 baseplates tall</span>
                         </div>
                         <input
                           type="range"
@@ -1343,7 +351,7 @@
                   </div>
                 </div>
 
-                <div class="card accordion-card" id="enable-depth-button-container" hidden>
+                <div class="card accordion-card" id="enable-depth-button-container">
                   <div class="card-header" id="step-1-2-heading">
                     <h5 class="mb-0">
                       <button
@@ -1416,7 +424,7 @@
                   </div>
                 </div>
 
-                <div class="card accordion-card" hidden>
+                <div class="card accordion-card">
                   <div class="card-header" id="step-1-4-heading">
                     <h5 class="mb-0">
                       <button
@@ -1443,14 +451,14 @@
                         id="resolution-limit-increase-button"
                         style="margin-bottom: 12px; margin-top: 8px"
                       >
-                        Larger Artwork Sizes
+                        Increase Resolution Limit
                       </button>
                       <small>
                         <div>
                           <b style="color: #ff4c00">Important</b>
                           <p>
                             Be careful when using high resolutions - this can cause performance issues on less powerful
-                            machines, especially during PDF generation
+                            machines, especially during pdf generation and for 3D previews
                           </p>
                         </div>
                       </small>
@@ -1619,8 +627,8 @@
             >
               <canvas id="step-2-canvas" hidden></canvas>
               <canvas id="step-2-canvas-upscaled" style="width: 100%"></canvas>
-              <h4>Fine-tune Your Photo</h4>
-              <small className="step-header-subtitle">Adjust brightness, contrast, sharpness, and color strength</small>
+              <h4>Step 2</h4>
+              <small className="step-header-subtitle">Interpolate + Adjust colors</small>
 
               <div id="step-2-accordion">
                 <div class="card accordion-card">
@@ -1633,7 +641,7 @@
                         aria-expanded="false"
                         aria-controls="step-2-4-collapse"
                       >
-                        Image Sharpness
+                        Interpolation
                       </button>
                     </h5>
                   </div>
@@ -1648,7 +656,8 @@
                         <div style="margin-top: 12px; margin-left: 4px" id="color-ties-resolution-section">
                           <small>
                             <p style="margin-bottom: 4px">
-                              This controls how smooth or crisp the image looks after resizing
+                              This setting determines which algorithm is used to resize the image to the target
+                              resolution
                             </p>
                           </small>
                         </div>
@@ -1659,7 +668,7 @@
                             id="interpolation-algorithm-button"
                             data-toggle="dropdown"
                           >
-                            Standard
+                            Browser Default
                           </button>
                           <div class="dropdown-menu" id="interpolation-algorithm-options"></div>
                         </div>
@@ -1678,7 +687,7 @@
                         aria-expanded="false"
                         aria-controls="step-2-1-collapse"
                       >
-                        Color Tone
+                        HSV
                       </button>
                     </h5>
                   </div>
@@ -1691,7 +700,7 @@
                     <div class="card-body accordion-card-body">
                       <div style="width: 100%">
                         <div>
-                          Hue:
+                          Hue adjustment:
                           <span id="hue-text">0<span>&#176;</span></span>
                         </div>
                         <div style="display: flex; direction: horizontal; width: 100%; margin-bottom: 8px">
@@ -1709,7 +718,7 @@
                       </div>
                       <div style="width: 100%">
                         <div>
-                          Color Intensity:
+                          Saturation adjustment:
                           <span id="saturation-text">0%</span>
                         </div>
                         <div style="display: flex; direction: horizontal; width: 100%; margin-bottom: 8px">
@@ -1727,7 +736,7 @@
                       </div>
                       <div style="width: 100%">
                         <div>
-                          Lightness:
+                          Value adjustment:
                           <span id="value-text">0%</span>
                         </div>
                         <div style="display: flex; direction: horizontal; width: 100%; margin-bottom: 8px">
@@ -1743,7 +752,7 @@
                           <button class="btn btn-sm" id="value-increment" style="flex-grow: 0">+</button>
                         </div>
                       </div>
-                      <button class="btn btn-info" type="button" id="reset-hsv-button">Reset Color Tone</button>
+                      <button class="btn btn-info" type="button" id="reset-hsv-button">Reset HSV</button>
                     </div>
                   </div>
                 </div>
@@ -1771,7 +780,7 @@
                     <div class="card-body accordion-card-body">
                       <div style="width: 100%">
                         <div>
-                          Brightness:
+                          Brightness adjustment:
                           <span id="brightness-text">0</span>
                         </div>
                         <div style="display: flex; direction: horizontal; width: 100%; margin-bottom: 8px">
@@ -1815,7 +824,7 @@
                     <div class="card-body accordion-card-body">
                       <div style="width: 100%">
                         <div>
-                          Contrast:
+                          Contrast adjustment:
                           <span id="contrast-text">0</span>
                         </div>
                         <div style="display: flex; direction: horizontal; width: 100%; margin-bottom: 8px">
@@ -1877,7 +886,7 @@
                         <div>
                           <small
                             >Determines how many discrete levels of depth you want the pixels of the image to have,
-                            where each level is one plate layer deep</small
+                            where each level is one brick plate deep</small
                           >
                         </div>
                         <input
@@ -1970,13 +979,6 @@
 
       <div id="step-3" class="col-6 col-md-3">
         <div class="card" style="padding: 10px; margin-bottom: 10px">
-          <div class="dp-mobile-editor-bar dp-manual-editor-bar">
-            <button type="button" class="dp-mobile-back-button" data-dp-mobile-mode="home">Done</button>
-            <div>
-              <strong>Manual Pixel Editing</strong>
-              <small>Zoom in, paint, erase, and pick individual pixel colors.</small>
-            </div>
-          </div>
           <ul class="nav nav-tabs 3d-selector-tabs" role="tablist" hidden>
             <li class="nav-item">
               <a
@@ -2012,19 +1014,19 @@
             >
               <canvas id="step-3-canvas" hidden></canvas>
               <canvas id="step-3-canvas-upscaled" style="width: 100%"></canvas>
-              <h4>Choose Color Style</h4>
-              <small className="step-header-subtitle">Change color matching, texture, and piece style</small>
+              <h4>Step 3</h4>
+              <small className="step-header-subtitle">Align to closest pixel from available colors</small>
               <br />
               <span
                 data-toggle="tooltip"
-                title="This is the average per pixel quantization error. The lower this value is, the closer this image is to the image in step 2 (according to the selected color matching setting)"
+                title="This is the average per pixel quantization error. The lower this value is, the closer this image is to the image in step 2 (according to the chosen color distance function)"
                 data-placement="top"
               >
-                <small>Color Match</small>:
+                <small>Average</small> &#x3F5;:
                 <small id="step-3-quantization-error"></small>
               </span>
 
-              <div class="dp-manual-edit-tools" style="display: flex; flex-direction: row; flex-wrap: wrap">
+              <div style="display: flex; flex-direction: row; flex-wrap: wrap">
                 <div style="margin-bottom: 4px">
                   <div class="btn-group">
                     <button
@@ -2147,7 +1149,7 @@
                         aria-expanded="false"
                         aria-controls="step-3-2-collapse"
                       >
-                        Color Set
+                        Available Colors
                       </button>
                     </h5>
                   </div>
@@ -2158,31 +1160,30 @@
                     data-parent="#step-3-accordion"
                   >
                     <div class="card-body accordion-card-body">
-                      <div class="dp-customer-note">
-                        DooPixel uses all available colors for the selected piece style by default. You do not need to
-                        edit this section unless you want to manually limit which colors can be used.
-                      </div>
                       <div id="custom-stud-map-controls" style="margin-top: 4px">
                         <div style="margin-bottom: 20px">
                           <small>
                             <p style="margin-left: 4px; margin-bottom: 8px">
-                              &#9679; This controls which piece colors can be used to create the image
+                              &#9679; This section specifies how many pieces of each color you have available to create
+                              the image
                             </p>
-                            <p style="margin-left: 4px; margin-bottom: 8px">&#9679; Color names follow common brick color names</p>
+                            <p style="margin-left: 4px; margin-bottom: 8px">&#9679; Color names are bricklink colors</p>
                             <p style="margin-left: 4px; margin-bottom: 8px">
-                              &#9679; The final preview works best when there are enough pieces to fill the picture
+                              &#9679; Step 4 of the algorithm cannot run unless you select enough pieces to fill the
+                              picture ('Missing Pieces' must be 0)
                             </p>
                             <p style="margin-left: 4px; margin-bottom: 8px">
-                              &#9679; You can import a saved color list if you want to reuse the same piece colors later.
+                              &#9679; If you're working with an existing set, then clear the available pieces and use
+                              the mix in option to add in the pieces from your set.
                             </p>
-                            <b>Pieces Needed: <span id="required-studs"></span></b><br />
-                            <b>Pieces Available: <span id="available-studs"></span></b><br />
-                            <b>Pieces Not Available: <span id="missing-studs"></span></b><br />
+                            <b>Required Pieces: <span id="required-studs"></span></b><br />
+                            <b>Available Pieces: <span id="available-studs"></span></b><br />
+                            <b>Missing Pieces: <span id="missing-studs"></span></b><br />
                           </small>
                         </div>
                         <div style="padding-bottom: 10px">
                           <button class="btn btn-warning" type="button" id="clear-custom-studs-button">
-                            Clear Piece Colors
+                            Clear Available Pieces
                           </button>
                         </div>
                         <div
@@ -2191,8 +1192,8 @@
                           id="infinite-piece-count-check-container"
                         >
                           <label class="checkbox-clickable">
-                            <input type="checkbox" class="checkbox-clickable" id="infinite-piece-count-check" checked />
-                            <span style="font-size: 13px">Use All Available Colors</span>
+                            <input type="checkbox" class="checkbox-clickable" id="infinite-piece-count-check" />
+                            <span style="font-size: 13px">Infinite Piece Counts</span>
                           </label>
                         </div>
                         <div style="margin-left: 4px" id="forced-infinite-piece-count-warning" hidden>
@@ -2200,9 +1201,9 @@
                             <p>
                               <b>Important</b>: Infinite piece counts were used, since a linear error dithering
                               algorithm was selected in the
-                              <span style="font-weight: 550">'Pixel Color Style'</span>
+                              <span style="font-weight: 550">'Quantization'</span>
                               section, or a variable piece type was selected in the
-                              <span style="font-weight: 550">'Piece Style'</span>
+                              <span style="font-weight: 550">'Pixel Piece'</span>
                               section
                             </p>
                           </small>
@@ -2219,19 +1220,19 @@
                           <thead>
                             <tr>
                               <th scope="col">Color</th>
-                              <th scope="col">Quantity Available</th>
+                              <th scope="col">Number Available</th>
                             </tr>
                           </thead>
                           <tbody id="custom-stud-table-body"></tbody>
                         </table>
                         <div style="padding-bottom: 10px">
                           <button class="btn btn-success" id="add-custom-stud-button">
-                            <span class="glyphicon glyphicon-plus"></span>+ Add Color
+                            <span class="glyphicon glyphicon-plus"></span>+ Add Stud
                           </button>
                         </div>
                         <div style="padding-bottom: 10px">
                           <a id="export-stud-map-button" download="selected-studs.json" href="””">
-                            <button class="btn btn-info" type="button">Export Selected Colors</button>
+                            <button class="btn btn-info" type="button">Export Selected Studs</button>
                           </a>
                         </div>
                         <div class="btn-group">
@@ -2243,7 +1244,7 @@
                             aria-haspopup="true"
                             aria-expanded="false"
                           >
-                            Import Colors From Saved List
+                            Mix in Studs From Existing Set
                           </button>
                           <div
                             class="dropdown-menu"
@@ -2253,11 +1254,11 @@
                           <input type="file" id="import-stud-map-file-input" name="import-stud-map-file-input" hidden />
                         </div>
                         <div style="margin-left: 4px">
-                          <small><b>Imported colors are added to the colors already selected</b></small>
+                          <small><b>Mixed in studs are added to studs already selected</b></small>
                         </div>
                         <div style="margin-left: 4px; padding-top: 4px">
                           <small>
-                            <b>Make sure the imported colors match the selected piece style</b></small
+                            <b>Make sure the set you're mixing in studs from matches the selected pixel piece</b></small
                           >
                         </div>
                       </div>
@@ -2275,7 +1276,7 @@
                         aria-expanded="false"
                         aria-controls="step-3-3-collapse"
                       >
-                        Piece Style
+                        Pixel Piece
                       </button>
                     </h5>
                   </div>
@@ -2296,7 +1297,7 @@
                             aria-haspopup="true"
                             aria-expanded="false"
                           >
-                            Piece Type
+                            Bricklink Pixel Piece
                           </button>
                           <div
                             class="dropdown-menu"
@@ -2308,13 +1309,13 @@
                           <small>
                             <p style="margin-bottom: 8px">
                               <b>Important</b>: Since a variable size pixel type was selected,
-                              <span style="font-weight: 550">'Use All Available Colors'</span>
+                              <span style="font-weight: 550">'Infinite Piece Counts'</span>
                               under
-                              <span style="font-weight: 550">'Available Piece Colors'</span>
+                              <span style="font-weight: 550">'Available Colors'</span>
                               was enabled - be careful!
                             </p>
                           </small>
-                          <b>Available Sizes:</b>
+                          <b>Available Dimensions:</b>
                           <div id="pixel-dimensions-container"></div>
                         </div>
                       </div>
@@ -2332,7 +1333,7 @@
                         aria-expanded="false"
                         aria-controls="step-3-4-collapse"
                       >
-                        Pixel Color Style
+                        Quantization
                       </button>
                     </h5>
                   </div>
@@ -2345,10 +1346,10 @@
                     <div class="card-body accordion-card-body">
                       <div style="margin-left: 4px">
                         <small>
-                          <b style="margin-bottom: 2px">Color Matching </b>
+                          <b style="margin-bottom: 2px">Color Distance Function </b>
                           <p style="margin-bottom: 8px; margin-top: 4px">
-                            &#9679; Controls how closely photo colors are matched to available piece colors.
-                            Advanced Matching usually gives the most natural result.
+                            &#9679; This setting determines which distance function is used to align pixels to their
+                            closest brick colors
                           </p>
                         </small>
                         <button
@@ -2357,19 +1358,19 @@
                           id="distance-function-button"
                           data-toggle="dropdown"
                         >
-                          Standard Matching
+                          Euclidean RGB
                         </button>
                         <div class="dropdown-menu" id="distance-function-options"></div>
                       </div>
                       <div style="margin-top: 12px; margin-left: 4px">
                         <small>
-                          <b style="margin-bottom: 2px">Pixel Color Style </b>
+                          <b style="margin-bottom: 2px">Quantization Algorithm </b>
                           <p style="margin-bottom: 8px; margin-top: 4px">
-                            &#9679; Controls how clean or detailed the final pixel art looks.
+                            &#9679; This determines what strategy is used for aligning pixels
                           </p>
                           <p style="margin-bottom: 8px; margin-top: 4px">
-                            &#9679; Balanced is the best default. Detailed keeps more texture. Clean keeps larger color
-                            areas smoother.
+                            &#9679; Some algorithms run faster than others - be careful when running the greedy
+                            algorithms on larger images
                           </p>
                         </small>
                         <button
@@ -2378,7 +1379,7 @@
                           id="quantization-algorithm-button"
                           data-toggle="dropdown"
                         >
-                          Balanced
+                          2 Phase
                         </button>
                         <div class="dropdown-menu" id="quantization-algorithm-options"></div>
                       </div>
@@ -2390,9 +1391,9 @@
                         <small>
                           <p style="margin-bottom: 8px">
                             <b>Important</b>: Since this is a linear error dithering algorithm,
-                            <span style="font-weight: 550">'Use All Available Colors'</span>
+                            <span style="font-weight: 550">'Infinite Piece Counts'</span>
                             under
-                            <span style="font-weight: 550">'Available Piece Colors'</span>
+                            <span style="font-weight: 550">'Available Colors'</span>
                             was enabled - be careful!
                           </p>
                         </small>
@@ -2401,14 +1402,14 @@
                         <small>
                           <p>
                             It's often best to use
-                            <span style="font-weight: 550">'Standard Matching'</span>
+                            <span style="font-weight: 550">'Euclidean RGB'</span>
                             for the color distance function, for mathematical cleanliness
                           </p>
                         </small>
                       </div>
                       <div style="margin-top: 12px; margin-left: 4px" id="color-ties-resolution-section">
                         <small>
-                          <b style="margin-bottom: 2px">Color Blending Strategy </b>
+                          <b style="margin-bottom: 2px">Color Tie Resolution Strategy </b>
                           <p style="margin-bottom: 4px">
                             Changing this is useful if you have a large background but not enough pieces to fill it out
                             uniformly in step 4
@@ -2421,13 +1422,13 @@
                             id="color-ties-resolution-button"
                             data-toggle="dropdown"
                           >
-                            Strategy: Balanced Alternating
+                            Strategy: Alternating Mod
                           </button>
                           <div class="dropdown-menu" id="color-ties-resolution-options"></div>
                         </div>
                         <div style="padding-top: 4px; padding-right: 12px; width: 100%">
                           <div>
-                            Blending Block Size:
+                            Blocking Factor:
                             <span id="color-tie-grouping-factor-text">1</span>
                           </div>
                           <input
@@ -2549,18 +1550,18 @@
               <canvas id="step-4-canvas" hidden></canvas>
               <canvas id="bricklink-cache-canvas" hidden></canvas>
               <canvas id="step-4-canvas-upscaled" style="width: 100%"></canvas>
-              <h4>Preview Your Pixel Art</h4>
-              <small className="step-header-subtitle">See how your photo will look as brick pixel art</small>
+              <h4>Step 4</h4>
+              <small className="step-header-subtitle">Correct for available pieces, if piece counts are limited</small>
               <br />
               <div className="step-header-subtitle text-danger" id="nonzero-missing-pieces-warning" hidden>
-                <small>'Pieces Not Available' under 'Available Piece Colors' must be 0 </small>
+                <small>'Missing Pieces' under 'Available Colors' must be 0 </small>
               </div>
               <span
                 data-toggle="tooltip"
-                title="This is the average per pixel quantization error. The lower this value is, the closer this image is to the image in step 2 (according to the selected color matching setting). If this is significantly higher than the quantization error from step 3, see 'Pieces Still Needed' under 'Pieces Used' to determine which additional pieces can be used to improve the image."
+                title="This is the average per pixel quantization error. The lower this value is, the closer this image is to the image in step 2 (according to the chosen color distance function). If this is significantly higher than the quantization error from step 3, see 'Pieces Missing From Step 3' under 'Pieces Used' to determine which additional pieces can be used to improve the image."
                 data-placement="top"
               >
-                <small>Color Match</small>:
+                <small>Average</small> &#x3F5;:
                 <small id="step-4-quantization-error"></small>
               </span>
               <div id="step-4-accordion">
@@ -2574,7 +1575,7 @@
                         aria-expanded="false"
                         aria-controls="step-4-1-collapse"
                       >
-                        Parts List
+                        Pieces Used
                       </button>
                     </h5>
                   </div>
@@ -2586,32 +1587,32 @@
                   >
                     <div class="card-body accordion-card-body">
                       <div style="margin-left: 4px; margin-bottom: 2px; margin-top: 8px">
-                        <b>Pieces Needed for Final Image </b>
+                        <b>Pieces Used in Final Image </b>
                       </div>
                       <table class="table">
                         <thead>
                           <tr>
                             <th scope="col">Color</th>
                             <th scope="col" id="pieces-used-dimensions-header" hidden>Dimensions</th>
-                            <th scope="col">Quantity</th>
+                            <th scope="col">Number Used</th>
                           </tr>
                         </thead>
                         <tbody id="studs-used-table-body"></tbody>
                       </table>
                       <div id="studs-missing-container" hidden>
                         <div style="margin-left: 4px; margin-bottom: 2px; margin-top: 8px">
-                          <b>Pieces Still Needed </b>
+                          <b>Pieces Missing From Step 3 </b>
                         </div>
                         <div style="margin-left: 4px; margin-bottom: 2px; margin-top: 8px">
                           <small
-                            >Adding these pieces helps the final preview match the color-matched preview
+                            >Adding these pieces will allow the image from step 4 to match the image from step 3
                           </small>
                         </div>
                         <table class="table">
                           <thead>
                             <tr>
                               <th scope="col">Color</th>
-                              <th scope="col">Quantity Missing</th>
+                              <th scope="col">Number Missing</th>
                             </tr>
                           </thead>
                           <tbody id="studs-missing-table-body"></tbody>
@@ -2621,7 +1622,7 @@
                   </div>
                 </div>
 
-                <div class="card accordion-card" id="bricklink-export-card" hidden>
+                <div class="card accordion-card" id="bricklink-export-card">
                   <div class="card-header" id="step-4-2-heading">
                     <h5 class="mb-0">
                       <button
@@ -2631,7 +1632,7 @@
                         aria-expanded="false"
                         aria-controls="step-4-2-collapse"
                       >
-                        Export Parts List
+                        Export Piece List
                       </button>
                     </h5>
                   </div>
@@ -2648,12 +1649,12 @@
                         class="btn btn-info"
                         style="margin-bottom: 10px; margin-top: 8px"
                       >
-                        Copy Parts List XML
+                        Copy Bricklink XML to Clipboard
                       </button>
                       <br />
                       <small>
                         <p style="margin-left: 4px; margin-bottom: 4px">
-                          The type of piece used depends on 'Piece Style' under step 3
+                          The type of piece used depends on 'Pixel Piece' under step 3
                         </p>
                         <p style="margin-left: 4px; margin-bottom: 4px">Frame elements are not exported</p>
                         <p style="margin-left: 4px; margin-bottom: 4px">
@@ -2681,7 +1682,7 @@
                         aria-expanded="false"
                         aria-controls="step-4-3-collapse"
                       >
-                        Download Building Guide
+                        Instructions
                       </button>
                     </h5>
                   </div>
@@ -2707,19 +1708,19 @@
                         class="btn btn-info"
                         style="margin-top: 8px"
                       >
-                        Download Building Guide
+                        Generate Instructions PDF
                       </button>
                       <div class="checkbox" style="margin-top: 4px; margin-left: 4px">
                         <label class="checkbox-clickable">
                           <input type="checkbox" class="checkbox-clickable" id="high-quality-instructions-check" />
-                          <span style="font-size: 13px">High quality PDF</span>
+                          <span style="font-size: 13px">High quality pdf</span>
                         </label>
                       </div>
                       <small>
                         <p style="margin-left: 4px; margin-bottom: 4px">
                           Longer instructions may be split into multiple files
                         </p>
-                        <p style="margin-left: 4px; margin-bottom: 4px">Color names follow common brick color names</p>
+                        <p style="margin-left: 4px; margin-bottom: 4px">Color names are Bricklink colors</p>
                       </small>
                       <div style="margin-left: 4px; margin-bottom: 4px">
                         <small>
@@ -2859,7 +1860,7 @@
                         aria-expanded="false"
                         aria-controls="step-4-depth-2-collapse"
                       >
-                        Building Guide
+                        Instructions
                       </button>
                     </h5>
                   </div>
@@ -2894,7 +1895,7 @@
                             class="checkbox-clickable"
                             id="high-quality-depth-instructions-check"
                           />
-                          <span style="font-size: 13px">High quality PDF</span>
+                          <span style="font-size: 13px">High quality pdf</span>
                         </label>
                       </div>
                       <small>
@@ -2928,7 +1929,7 @@
                         aria-expanded="false"
                         aria-controls="step-4-depth-3-collapse"
                       >
-                        Final Parts List
+                        Pieces Used
                       </button>
                     </h5>
                   </div>
@@ -2946,7 +1947,7 @@
                         disabled
                         style="margin-bottom: 10px; margin-top: 8px"
                       >
-                        Copy Parts List XML
+                        Copy Bricklink XML to Clipboard
                       </button>
                       <small style="margin-left: 4px">
                         <a href="https://www.bricklink.com/v2/wanted/upload.page" target="_blank">
@@ -2967,30 +1968,17 @@
           </div>
         </div>
       </div>
-      <div id="dp-mobile-home-actions" class="hide-on-step-3-expansion">
-        <button type="button" class="dp-mobile-action-button" data-dp-mobile-mode="size">
-          <strong>Adjust Size & Crop</strong>
-          <span>Set artwork size, baseplate count, and crop position.</span>
-        </button>
-        <button type="button" class="dp-mobile-action-button" data-dp-mobile-mode="edit">
-          <strong>Manual Pixel Editing</strong>
-          <span>Zoom in, paint, erase, and change individual pixel colors.</span>
-        </button>
-      </div>
     </div>
 
     <div id="image-input-card" class="card card-body" style="padding-bottom: 10px">
       <div class="row">
         <div class="col-sm">
-          <h3 style="font-weight: 600">Upload Your Photo</h3>
-          <p class="dp-customer-note" style="margin-left: 0">
-            Your live preview stays visible while you adjust size, image style, and piece settings.
-          </p>
+          <h3 style="font-weight: 600">Get Started</h3>
           <span class="btn-group" style="margin-top: 8px">
             <div class="row" style="margin-left: 0px">
               <div style="margin-right: 4px">
                 <span style="margin-left: 4px; margin-right: 8px; margin-top: 4px; font-weight: 600"
-                  >Color Library:</span
+                  >Input Pieces:</span
                 >
                 <span
                   data-toggle="tooltip"
@@ -3006,7 +1994,7 @@
                     aria-expanded="false"
                     disabled
                   >
-                    Default colors
+                    Input set
                   </button>
                   <div
                     class="dropdown-menu"
@@ -3017,9 +2005,6 @@
               </div>
               <div style="margin-left: 2px">
                 <small style="margin-top: 10px" class="text-muted" id="input-stud-map-description"></small>
-                <small class="dp-customer-note">
-                  Starts with all matching DooPixel colors. You can refine the color set later.
-                </small>
               </div>
             </div>
           </span>
@@ -3029,7 +2014,7 @@
             <input type="file" id="input-image-selector-hidden" name="input-image-selector-hidden" hidden />
             <div style="margin-top: 12px">
               <button class="btn btn-success" type="button" id="input-image-selector" disabled>
-                Upload Photo
+                Select Input Image
               </button>
             </div>
           </span>
@@ -3057,7 +2042,7 @@
       </div>
     </div>
 
-    <div class="card card-body" style="padding-bottom: 10px; margin-top: 10px" hidden>
+    <div class="card card-body" style="padding-bottom: 10px; margin-top: 10px">
       <div class="row">
         <div class="col-sm">
           <h5>
@@ -3068,7 +2053,7 @@
               aria-controls="articles"
               id="toggle-tech-talk-button"
             >
-              Technical Notes
+              Tech Talk + Other Media
             </a>
           </h5>
           <div class="collapse" id="articles">
@@ -3080,12 +2065,12 @@
               </p>
               <p style="margin-bottom: 4px">
                 It also goes over some ideas that haven't (yet) been implemented within the tool, so it functions fairly
-                well as a more general overview of the Lego mosaic space
+                well as a more general overview of the brick mosaic space
               </p>
               <p style="margin-bottom: 4px">
                 You can find the slide deck used in the talk
                 <a
-                  href="https://github.com/debkbanerji/lego-art-remix/blob/master/media/Lego%20Mosaic%20Presentation.pdf"
+                  href="https://github.com/doopixel/doopixel-pixelizer/blob/master/media/Lego%20Mosaic%20Presentation.pdf"
                   target="_blank"
                   >here</a
                 > (with some updates since the talk), and if the video doesn't load, you can find it directly on BrickCon's YouTube channel
@@ -3109,7 +2094,7 @@
               <ul>
                 <li>
                   <a href="https://www.instagram.com/explore/tags/legoartremix/" target="_blank"
-                    >#LegoArtRemix on Instagram</a
+                    >#DooPixel on Instagram</a
                   >
                 </li>
                 <li>
@@ -3163,27 +2148,61 @@
             </div>
             <h6>What is it?</h6>
             <p style="margin-bottom: 5px">
-              DooPixel Pixel Art Maker lets you upload your own photo and turn it into brick pixel art. The tool
-              generates a preview, matches colors to available piece colors, and creates a parts list for building the
-              design.
+              DooPixel Pixel Art Maker lets you upload your own image and turn it into brick pixel art. The tool matches
+              your image to available brick colors, then creates a parts list and building guide for the design.
             </p>
-            <p>DooPixel is an independent brick pixel art tool</p>
+            <p>DooPixel is an independent brick pixel art tool.</p>
             <h6>Performance and Security</h6>
             <p style="margin-bottom: 5px">
-              Image processing runs directly in your browser. The photo you choose is not uploaded by this page during
-              pixel art generation.
+              The computer vision techniques used are pretty inexpensive (with the exception of optional depth map
+              generation), and the resolutions being dealt with are naturally quite low, so as of the time of writing,
+              the algorithm runs quite quickly. This allows for it to be run on the client, and on the machines that I
+              tested, it ran in near real time.
             </p>
             <p style="margin-bottom: 5px">
-              Building guide generation also runs in the browser and may take longer for larger artwork sizes.
+              The most computationally expensive part of the process, apart from depth map generation, is generating the
+              instructions, since even pdf generation is done client side.
             </p>
             <p style="margin-bottom: 5px">
-              This project is customized from open-source browser-based mosaic software.
+              Since it runs almost entirely within the browser (see the
+              <a href="https://github.com/doopixel/doopixel-pixelizer" target="_blank">source code</a>), no image data is
+              sent to a server and so it's very secure. This also makes it much easier for me to maintain and host. The
+              only server code consists of simple increments to anonymously estimate usage for the purposes for tracking
+              performance in case the static deployment needs to be scaled up, and for the counter in the about section.
             </p>
+            <p style="margin-bottom: 5px">
+              Even the deep neural network to compute depth maps is being run entirely within the browser, in a web
+              worker, using a modified version of
+              <a href="https://github.com/microsoft/onnxjs" target="_blank">ONNX.js</a>. I've compiled a version of the
+              library based on
+              <a href="https://github.com/microsoft/onnxjs/pull/228" target="_blank">this pull request</a>, with a small
+              additional change I made to support the resize operation in v10. The model used is
+              <a href="https://github.com/intel-isl/MiDaS" target="_blank">MiDaS</a>
+              - more specifically, the small ONNX version which can be found
+              <a href="https://github.com/intel-isl/MiDaS/releases/tag/v2_1" target="_blank">here</a>.
+            </p>
+            <div class="card" style="margin-top: 4px; margin-bottom: 16px; padding: 4px">
+              <b>Citation for Model Used</b>
+              <span>
+                Ranftl, René, Katrin Lasinger, David Hafner, Konrad Schindler, and Vladlen Koltun. "Towards robust
+                monocular depth estimation: Mixing datasets for zero-shot cross-dataset transfer." (2020).
+                <i>IEEE Transactions on Pattern Analysis and Machine Intelligence</i></span
+              >
+            </div>
             <p></p>
-            <h6>Feedback</h6>
+            <h6>Bugs, Feature Requests, and Algorithm Improvements</h6>
             <em style="margin-bottom: 5px"
-              >For questions or improvement ideas, contact DooPixel support.</em
+              >Direct any concerns or ideas for improvements
+              <a href="https://github.com/doopixel/doopixel-pixelizer/issues" target="_blank">here</a></em
             >
+            <p style="margin-bottom: 5px">
+              As of the time of writing, I don't have all of the sets, and I haven't had much time to test. As a result,
+              there's probably a few bugs, so let me know if you find any.
+            </p>
+            <p style="margin-bottom: 5px">
+              Algorithm improvement ideas are always welcome. Improvements that maintain the efficiency to within a
+              reasonable degree would allow the algorithm to keep running on the client, which I really like.
+            </p>
           </div>
         </div>
       </div>
@@ -3313,222 +2332,10 @@
     <script src="js/pixi.min.js"></script>
     <script src="js/bricklink-colors.js"></script>
     <script src="js/stud-maps.js"></script>
-    <script>
-      if (window.STUD_MAPS) {
-        if (window.STUD_MAPS.all_tile_colors) {
-          window.STUD_MAPS.all_tile_colors.name = "All Flat Piece Colors";
-          window.STUD_MAPS.all_tile_colors.officialName = "All Flat Pixel Piece Colors";
-          window.STUD_MAPS.all_tile_colors.descriptionHTML = "Use all colors available for Flat Pixel Pieces.";
-        }
-
-        if (window.STUD_MAPS.all_stud_colors) {
-          window.STUD_MAPS.all_stud_colors.name = "All Stud Piece Colors";
-          window.STUD_MAPS.all_stud_colors.officialName = "All Stud Pixel Piece Colors";
-          window.STUD_MAPS.all_stud_colors.descriptionHTML = "Use all colors available for Stud Pixel Pieces.";
-        }
-
-        if (window.STUD_MAPS.all_solid_colors) {
-          window.STUD_MAPS.all_solid_colors.name = "All DooPixel Colors";
-          window.STUD_MAPS.all_solid_colors.officialName = "All DooPixel Supported Colors";
-          window.STUD_MAPS.all_solid_colors.descriptionHTML = "Use all supported DooPixel colors.";
-        }
-      }
-    </script>
     <script src="js/heap.js"></script>
     <script src="js/algo.js"></script>
     <script src="js/index.js"></script>
     <script src="js/metrics.js"></script>
-
-    <script>
-      (function () {
-        const textReplacements = [
-          ["All Tile Colors", "All Flat Piece Colors"],
-          ["All Available Tile Colors", "All Flat Pixel Piece Colors"],
-          ["All Stud Colors", "All Stud Piece Colors"],
-          ["All Available Stud Colors", "All Stud Pixel Piece Colors"],
-          ["All Supported Colors", "All DooPixel Colors"],
-          ["All colors in which 1x1 round tiles are available", "All colors available for Flat Pixel Pieces"],
-          ["All colors in which studs (1x1 round plates) are available", "All colors available for Stud Pixel Pieces"],
-          ["1 x 1 Round Tile", "Flat Pixel Pieces"],
-          ["1x1 Round Tile", "Flat Pixel Pieces"],
-          ["Tile, Round 1 x 1", "Flat Pixel Pieces"],
-          ["1 x 1 Round Plate", "Stud Pixel Pieces"],
-          ["1x1 Round Plate", "Stud Pixel Pieces"],
-          ["Plate, Round 1 x 1", "Stud Pixel Pieces"],
-          ["Browser Default", "Standard"],
-          ["Nearest Neighbor", "Crisp Pixel Edges"],
-          ["Pixelated", "Crisp Pixel Edges"],
-          ["Bilinear", "Smooth"],
-          ["Bicubic", "Extra Smooth"],
-          ["Euclidean RGB", "Standard Matching"],
-          ["CIEDE2000", "Advanced Matching"],
-          ["2 Phase", "Balanced"],
-          ["Greedy", "Detailed"],
-          ["Greedy Fill", "Detailed Fill"],
-          ["Floyd Steinberg", "Detailed Texture"],
-          ["Atkinson", "Soft Texture"],
-          ["Bayer", "Patterned Texture"],
-          ["No Dithering", "Clean"],
-          ["Dithering", "Texture Detail"],
-          ["Alternating Mod", "Balanced Alternating"],
-          ["Infinite Piece Counts", "Use All Available Colors"],
-          ["Studs", "Pieces"],
-          ["studs", "pieces"]
-        ];
-
-        function replaceText(value) {
-          let next = value;
-          textReplacements.forEach(([from, to]) => {
-            next = next.split(from).join(to);
-          });
-          return next;
-        }
-
-        function relabelCustomerText(rootNode) {
-          const walker = document.createTreeWalker(rootNode || document.body, NodeFilter.SHOW_TEXT, {
-            acceptNode(node) {
-              const parent = node.parentElement;
-              if (!parent || ["SCRIPT", "STYLE", "TEXTAREA"].includes(parent.tagName)) {
-                return NodeFilter.FILTER_REJECT;
-              }
-              return NodeFilter.FILTER_ACCEPT;
-            }
-          });
-
-          const nodes = [];
-          while (walker.nextNode()) {
-            nodes.push(walker.currentNode);
-          }
-
-          nodes.forEach((node) => {
-            const next = replaceText(node.nodeValue);
-            if (next !== node.nodeValue) {
-              node.nodeValue = next;
-            }
-          });
-
-          document.querySelectorAll("[title]").forEach((element) => {
-            const next = replaceText(element.getAttribute("title") || "");
-            if (next !== element.getAttribute("title")) {
-              element.setAttribute("title", next);
-            }
-          });
-        }
-
-        function updateBaseplateCounts() {
-          const width = parseInt(document.getElementById("width-text")?.textContent || "0", 10);
-          const height = parseInt(document.getElementById("height-text")?.textContent || "0", 10);
-          const widthNote = document.getElementById("width-baseplate-count");
-          const heightNote = document.getElementById("height-baseplate-count");
-
-          if (widthNote && width) {
-            const count = width / 16;
-            const next = `= ${count} ${count === 1 ? "baseplate" : "baseplates"} wide`;
-            if (widthNote.textContent !== next) {
-              widthNote.textContent = next;
-            }
-          }
-
-          if (heightNote && height) {
-            const count = height / 16;
-            const next = `= ${count} ${count === 1 ? "baseplate" : "baseplates"} tall`;
-            if (heightNote.textContent !== next) {
-              heightNote.textContent = next;
-            }
-          }
-        }
-
-        function applyDefaultColorMode() {
-          const infiniteColors = document.getElementById("infinite-piece-count-check");
-          if (infiniteColors && !infiniteColors.checked) {
-            infiniteColors.checked = true;
-            infiniteColors.dispatchEvent(new Event("change", { bubbles: true }));
-          }
-        }
-
-        function limitCustomerMenus() {
-          const pieceMenu = document.getElementById("bricklink-piece-options");
-          if (pieceMenu) {
-            pieceMenu.querySelectorAll(".dropdown-item, a, button").forEach((option) => {
-              const text = option.textContent.trim();
-              const isAllowed =
-                text.includes("Flat Pixel Pieces") ||
-                text.includes("Stud Pixel Pieces") ||
-                text.includes("Round Tile") ||
-                text.includes("Round Plate");
-              option.style.display = isAllowed ? "" : "none";
-            });
-          }
-
-          const colorMenu = document.getElementById("select-starting-custom-stud-map-options");
-          if (colorMenu) {
-            colorMenu.querySelectorAll(".dropdown-item, a, button").forEach((option) => {
-              const text = option.textContent.trim();
-              const isAllowed =
-                text.includes("All Flat Piece Colors") ||
-                text.includes("All Stud Piece Colors") ||
-                text.includes("All DooPixel Colors") ||
-                text.includes("All Tile Colors") ||
-                text.includes("All Stud Colors");
-              option.style.display = isAllowed ? "" : "none";
-            });
-          }
-        }
-
-        function keepCustomerLabelsUpdated() {
-          relabelCustomerText(document.body);
-          updateBaseplateCounts();
-          limitCustomerMenus();
-        }
-
-        applyDefaultColorMode();
-        window.setTimeout(applyDefaultColorMode, 400);
-        window.setTimeout(applyDefaultColorMode, 1200);
-        keepCustomerLabelsUpdated();
-        window.setInterval(keepCustomerLabelsUpdated, 900);
-      })();
-    </script>
-
-    <script>
-      (function () {
-        function closeOriginalStep3ExpansionIfNeeded() {
-          const collapseIcon = document.getElementById("collapse-picture-svg");
-          const expansionButton = document.getElementById("toggle-expansion-button");
-          if (collapseIcon && expansionButton && !collapseIcon.hidden) {
-            expansionButton.click();
-          }
-        }
-
-        function setMobileMode(mode) {
-          document.body.classList.toggle("dp-mobile-size-mode", mode === "size");
-          document.body.classList.toggle("dp-mobile-edit-mode", mode === "edit");
-
-          if (mode !== "edit") {
-            closeOriginalStep3ExpansionIfNeeded();
-          }
-
-          window.scrollTo(0, 0);
-        }
-
-        function setupDooPixelMobileModes() {
-          document.querySelectorAll("[data-dp-mobile-mode]").forEach((button) => {
-            if (button.dataset.dpModeReady === "true") {
-              return;
-            }
-            button.dataset.dpModeReady = "true";
-            button.addEventListener("click", function () {
-              setMobileMode(button.getAttribute("data-dp-mobile-mode") || "home");
-            });
-          });
-        }
-
-        if (document.readyState === "loading") {
-          document.addEventListener("DOMContentLoaded", setupDooPixelMobileModes);
-        } else {
-          setupDooPixelMobileModes();
-        }
-      })();
-    </script>
 
     <script>
       // note that the disableServiceWorker param only disables new service worker registration
@@ -3546,11 +2353,12 @@
 
     <footer>
       <small class="footer">
-        <p>DooPixel is an independent brick pixel art tool</p>
+        <p>DooPixel is an independent brick pixel art tool.</p>
       </small>
     </footer>
   </body>
 </html>
+
 
 
 
