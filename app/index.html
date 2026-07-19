@@ -180,6 +180,32 @@
       #bricklink-export-card {
         display: none !important;
       }
+
+      #step-1-4-heading,
+      #step-1-4-collapse,
+      #step-3-2-heading,
+      #step-3-2-collapse,
+      #step-3-4-collapse #color-ties-resolution-section,
+      .traditional-dithering-algorithm-warning {
+        display: none !important;
+      }
+
+      .dp-baseplate-note,
+      .dp-customer-note {
+        color: #5f6368;
+        font-size: 12px;
+        line-height: 1.35;
+      }
+
+      .dp-baseplate-note {
+        margin-left: 4px;
+        font-weight: 600;
+      }
+
+      .dp-customer-note {
+        display: block;
+        margin: 6px 4px 10px;
+      }
     </style>
 
     <style class="dark-mode-stylesheet" disabled>
@@ -330,6 +356,7 @@
                         <div>
                           Width:
                           <span id="width-text" data-toggle="tooltip" title="" data-placement="top">48</span>
+                          <span id="width-baseplate-count" class="dp-baseplate-note">= 3 baseplates wide</span>
                         </div>
                         <input
                           type="range"
@@ -346,6 +373,7 @@
                         <div>
                           Height:
                           <span id="height-text" data-toggle="tooltip" title="" data-placement="top">48</span>
+                          <span id="height-baseplate-count" class="dp-baseplate-note">= 3 baseplates tall</span>
                         </div>
                         <input
                           type="range"
@@ -435,7 +463,7 @@
                   </div>
                 </div>
 
-                <div class="card accordion-card">
+                <div class="card accordion-card" hidden>
                   <div class="card-header" id="step-1-4-heading">
                     <h5 class="mb-0">
                       <button
@@ -1149,7 +1177,7 @@
                 </div>
               </div>
               <div id="step-3-accordion">
-                <div class="card accordion-card">
+                <div class="card accordion-card" hidden>
                   <div class="card-header" id="step-3-2-heading">
                     <h5 class="mb-0">
                       <button
@@ -1355,8 +1383,8 @@
                         <small>
                           <b style="margin-bottom: 2px">Color Matching </b>
                           <p style="margin-bottom: 8px; margin-top: 4px">
-                            &#9679; This setting determines which distance function is used to align pixels to their
-                            closest available piece colors
+                            &#9679; Controls how closely photo colors are matched to available piece colors.
+                            Advanced Matching usually gives the most natural result.
                           </p>
                         </small>
                         <button
@@ -1373,11 +1401,11 @@
                         <small>
                           <b style="margin-bottom: 2px">Pixel Color Style </b>
                           <p style="margin-bottom: 8px; margin-top: 4px">
-                            &#9679; This determines what strategy is used for aligning pixels
+                            &#9679; Controls how clean or detailed the final pixel art looks.
                           </p>
                           <p style="margin-bottom: 8px; margin-top: 4px">
-                            &#9679; Some algorithms run faster than others - be careful when running the greedy
-                            algorithms on larger images
+                            &#9679; Balanced is the best default. Detailed keeps more texture. Clean keeps larger color
+                            areas smoother.
                           </p>
                         </small>
                         <button
@@ -2012,6 +2040,10 @@
               </div>
               <div style="margin-left: 2px">
                 <small style="margin-top: 10px" class="text-muted" id="input-stud-map-description"></small>
+                <small class="dp-customer-note">
+                  Default color set should be All Flat Piece Colors for flat pieces, or All Stud Piece Colors for raised
+                  stud pieces.
+                </small>
               </div>
             </div>
           </span>
@@ -2305,10 +2337,171 @@
     <script src="js/pixi.min.js"></script>
     <script src="js/bricklink-colors.js"></script>
     <script src="js/stud-maps.js"></script>
+    <script>
+      if (window.STUD_MAPS) {
+        if (window.STUD_MAPS.all_tile_colors) {
+          window.STUD_MAPS.all_tile_colors.name = "All Flat Piece Colors";
+          window.STUD_MAPS.all_tile_colors.officialName = "All Flat Pixel Piece Colors";
+          window.STUD_MAPS.all_tile_colors.descriptionHTML = "Use all colors available for Flat Pixel Pieces.";
+        }
+
+        if (window.STUD_MAPS.all_stud_colors) {
+          window.STUD_MAPS.all_stud_colors.name = "All Stud Piece Colors";
+          window.STUD_MAPS.all_stud_colors.officialName = "All Stud Pixel Piece Colors";
+          window.STUD_MAPS.all_stud_colors.descriptionHTML = "Use all colors available for Stud Pixel Pieces.";
+        }
+
+        if (window.STUD_MAPS.all_solid_colors) {
+          window.STUD_MAPS.all_solid_colors.name = "All DooPixel Colors";
+          window.STUD_MAPS.all_solid_colors.officialName = "All DooPixel Supported Colors";
+          window.STUD_MAPS.all_solid_colors.descriptionHTML = "Use all supported DooPixel colors.";
+        }
+      }
+    </script>
     <script src="js/heap.js"></script>
     <script src="js/algo.js"></script>
     <script src="js/index.js"></script>
     <script src="js/metrics.js"></script>
+
+    <script>
+      (function () {
+        const textReplacements = [
+          ["All Tile Colors", "All Flat Piece Colors"],
+          ["All Available Tile Colors", "All Flat Pixel Piece Colors"],
+          ["All Stud Colors", "All Stud Piece Colors"],
+          ["All Available Stud Colors", "All Stud Pixel Piece Colors"],
+          ["All Supported Colors", "All DooPixel Colors"],
+          ["All colors in which 1x1 round tiles are available", "All colors available for Flat Pixel Pieces"],
+          ["All colors in which studs (1x1 round plates) are available", "All colors available for Stud Pixel Pieces"],
+          ["1 x 1 Round Tile", "Flat Pixel Pieces"],
+          ["1x1 Round Tile", "Flat Pixel Pieces"],
+          ["Tile, Round 1 x 1", "Flat Pixel Pieces"],
+          ["1 x 1 Round Plate", "Stud Pixel Pieces"],
+          ["1x1 Round Plate", "Stud Pixel Pieces"],
+          ["Plate, Round 1 x 1", "Stud Pixel Pieces"],
+          ["Browser Default", "Standard"],
+          ["Nearest Neighbor", "Crisp Pixel Edges"],
+          ["Pixelated", "Crisp Pixel Edges"],
+          ["Bilinear", "Smooth"],
+          ["Bicubic", "Extra Smooth"],
+          ["Euclidean RGB", "Standard Matching"],
+          ["CIEDE2000", "Advanced Matching"],
+          ["2 Phase", "Balanced"],
+          ["Greedy", "Detailed"],
+          ["Greedy Fill", "Detailed Fill"],
+          ["Floyd Steinberg", "Detailed Texture"],
+          ["Atkinson", "Soft Texture"],
+          ["Bayer", "Patterned Texture"],
+          ["No Dithering", "Clean"],
+          ["Dithering", "Texture Detail"],
+          ["Alternating Mod", "Balanced Alternating"],
+          ["Infinite Piece Counts", "Use All Available Colors"],
+          ["Studs", "Pieces"],
+          ["studs", "pieces"]
+        ];
+
+        function replaceText(value) {
+          let next = value;
+          textReplacements.forEach(([from, to]) => {
+            next = next.split(from).join(to);
+          });
+          return next;
+        }
+
+        function relabelCustomerText(rootNode) {
+          const walker = document.createTreeWalker(rootNode || document.body, NodeFilter.SHOW_TEXT, {
+            acceptNode(node) {
+              const parent = node.parentElement;
+              if (!parent || ["SCRIPT", "STYLE", "TEXTAREA"].includes(parent.tagName)) {
+                return NodeFilter.FILTER_REJECT;
+              }
+              return NodeFilter.FILTER_ACCEPT;
+            }
+          });
+
+          const nodes = [];
+          while (walker.nextNode()) {
+            nodes.push(walker.currentNode);
+          }
+
+          nodes.forEach((node) => {
+            const next = replaceText(node.nodeValue);
+            if (next !== node.nodeValue) {
+              node.nodeValue = next;
+            }
+          });
+
+          document.querySelectorAll("[title]").forEach((element) => {
+            const next = replaceText(element.getAttribute("title") || "");
+            if (next !== element.getAttribute("title")) {
+              element.setAttribute("title", next);
+            }
+          });
+        }
+
+        function updateBaseplateCounts() {
+          const width = parseInt(document.getElementById("width-text")?.textContent || "0", 10);
+          const height = parseInt(document.getElementById("height-text")?.textContent || "0", 10);
+          const widthNote = document.getElementById("width-baseplate-count");
+          const heightNote = document.getElementById("height-baseplate-count");
+
+          if (widthNote && width) {
+            const count = width / 16;
+            widthNote.textContent = `= ${count} ${count === 1 ? "baseplate" : "baseplates"} wide`;
+          }
+
+          if (heightNote && height) {
+            const count = height / 16;
+            heightNote.textContent = `= ${count} ${count === 1 ? "baseplate" : "baseplates"} tall`;
+          }
+        }
+
+        function limitCustomerMenus() {
+          const pieceMenu = document.getElementById("bricklink-piece-options");
+          if (pieceMenu) {
+            pieceMenu.querySelectorAll(".dropdown-item, a, button").forEach((option) => {
+              const text = option.textContent.trim();
+              const isAllowed =
+                text.includes("Flat Pixel Pieces") ||
+                text.includes("Stud Pixel Pieces") ||
+                text.includes("Round Tile") ||
+                text.includes("Round Plate");
+              option.style.display = isAllowed ? "" : "none";
+            });
+          }
+
+          const colorMenu = document.getElementById("select-starting-custom-stud-map-options");
+          if (colorMenu) {
+            colorMenu.querySelectorAll(".dropdown-item, a, button").forEach((option) => {
+              const text = option.textContent.trim();
+              const isAllowed =
+                text.includes("All Flat Piece Colors") ||
+                text.includes("All Stud Piece Colors") ||
+                text.includes("All DooPixel Colors") ||
+                text.includes("All Tile Colors") ||
+                text.includes("All Stud Colors");
+              option.style.display = isAllowed ? "" : "none";
+            });
+          }
+        }
+
+        function keepCustomerLabelsUpdated() {
+          relabelCustomerText(document.body);
+          updateBaseplateCounts();
+          limitCustomerMenus();
+        }
+
+        keepCustomerLabelsUpdated();
+        window.setInterval(keepCustomerLabelsUpdated, 500);
+
+        const observer = new MutationObserver(() => keepCustomerLabelsUpdated());
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true,
+          characterData: true
+        });
+      })();
+    </script>
 
     <script>
       // note that the disableServiceWorker param only disables new service worker registration
@@ -2331,3 +2524,4 @@
     </footer>
   </body>
 </html>
+
