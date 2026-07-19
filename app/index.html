@@ -573,6 +573,10 @@
         margin-top: 0 !important;
       }
 
+      .dp-mobile-drawer-toggle {
+        display: none;
+      }
+
       #steps-row:not([hidden]) {
         display: grid !important;
         grid-template-columns: minmax(420px, 1fr) minmax(360px, 500px) !important;
@@ -680,9 +684,16 @@
         margin-bottom: 8px;
       }
 
-      #step-2-canvas-upscaled,
-      #step-3-canvas-upscaled {
+      #step-2-canvas-upscaled {
         display: none !important;
+      }
+
+      #step-3-canvas-upscaled {
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        max-height: none !important;
+        touch-action: none;
       }
 
       #steps-row h4 {
@@ -801,32 +812,87 @@
         }
 
         #steps-row:not([hidden]) {
-          grid-template-columns: 1fr !important;
+          grid-template-columns: repeat(3, minmax(calc(100vw - 24px), 1fr)) !important;
           grid-template-areas:
-            "preview"
-            "crop"
-            "adjust"
-            "pieces" !important;
+            "preview preview preview"
+            "crop adjust pieces" !important;
           gap: 10px;
+          overflow-x: auto;
+          overflow-y: visible;
+          scroll-snap-type: x mandatory;
+          scroll-padding-left: 0;
+          -webkit-overflow-scrolling: touch;
+          padding-bottom: 8px;
         }
 
         #step-4 {
           top: 0;
+          left: 0;
+          justify-self: start;
+          width: calc(100vw - 20px);
+          max-width: calc(100vw - 20px);
         }
 
         #step-4 > .card {
+          width: calc(100vw - 20px);
+          max-width: calc(100vw - 20px);
           padding: 8px !important;
         }
 
         #step-4-canvas-upscaled {
-          max-height: 38vh !important;
+          max-height: 56vh !important;
           margin-bottom: 6px;
+          pointer-events: none;
         }
 
         #step-4-color-tab-content > small,
         #step-4-color-tab-content > br,
         #step-4-color-tab-content > span[data-toggle="tooltip"] {
           display: none !important;
+        }
+
+        #step-1,
+        #step-2,
+        #step-3 {
+          scroll-snap-align: start;
+        }
+
+        .dp-mobile-drawer-toggle {
+          display: flex;
+          width: 100%;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+          min-height: 40px;
+          padding: 9px 10px;
+          border: 1px solid #d9d9d9;
+          border-radius: 6px;
+          background: #ffffff;
+          color: #171717;
+          font-size: 14px;
+          font-weight: 600;
+          text-align: left;
+        }
+
+        .dp-mobile-drawer-toggle small {
+          color: #5f6368;
+          font-size: 12px;
+          font-weight: 500;
+          white-space: nowrap;
+        }
+
+        #step-1:not(.dp-mobile-open) > .card > .tab-content {
+          display: none !important;
+        }
+
+        #step-1.dp-mobile-open > .card > .tab-content {
+          display: block !important;
+        }
+
+        #step-3-canvas-upscaled {
+          display: block !important;
+          max-height: none !important;
+          touch-action: none;
         }
 
         #steps-row h4 {
@@ -927,6 +993,15 @@
     <div class="row" id="steps-row" hidden>
       <div id="step-1" class="col-6 col-md-3 hide-on-step-3-expansion">
         <div class="card" style="padding: 10px; margin-bottom: 10px">
+          <button
+            type="button"
+            class="dp-mobile-drawer-toggle"
+            aria-expanded="false"
+            aria-controls="step-1-color-tab-content"
+          >
+            <span>Size & Crop</span>
+            <small class="dp-mobile-drawer-status">Open</small>
+          </button>
           <ul class="nav nav-tabs 3d-selector-tabs" role="tablist" hidden>
             <li class="nav-item">
               <a
@@ -3152,6 +3227,40 @@
         window.setTimeout(applyDefaultColorMode, 1200);
         keepCustomerLabelsUpdated();
         window.setInterval(keepCustomerLabelsUpdated, 900);
+      })();
+    </script>
+
+    <script>
+      (function () {
+        function setupMobileSizeCropDrawer() {
+          const step = document.getElementById("step-1");
+          const button = document.querySelector(".dp-mobile-drawer-toggle");
+          const status = button?.querySelector(".dp-mobile-drawer-status");
+
+          if (!step || !button || button.dataset.drawerReady === "true") {
+            return;
+          }
+
+          function setOpen(isOpen) {
+            step.classList.toggle("dp-mobile-open", isOpen);
+            button.setAttribute("aria-expanded", String(isOpen));
+            if (status) {
+              status.textContent = isOpen ? "Close" : "Open";
+            }
+          }
+
+          setOpen(false);
+          button.dataset.drawerReady = "true";
+          button.addEventListener("click", function () {
+            setOpen(!step.classList.contains("dp-mobile-open"));
+          });
+        }
+
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", setupMobileSizeCropDrawer);
+        } else {
+          setupMobileSizeCropDrawer();
+        }
       })();
     </script>
 
