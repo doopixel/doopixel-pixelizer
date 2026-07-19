@@ -592,6 +592,270 @@
           max-height: none;
         }
       }
+
+      /* DooPixel customer flow v2: upload first, result as the main view, controls as secondary settings. */
+      body > div[style*="min-height"] {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        min-height: auto !important;
+      }
+
+      body > div[style*="min-height"] > h1 {
+        font-size: clamp(26px, 2.6vw, 38px);
+        font-weight: 700;
+        letter-spacing: 0;
+      }
+
+      #image-input-card {
+        order: 1;
+        margin: 6px 0 2px !important;
+        padding: 14px !important;
+      }
+
+      #steps-row {
+        order: 2;
+      }
+
+      body > div[style*="min-height"] > .card.card-body:not(#image-input-card) {
+        order: 3;
+      }
+
+      #image-input-card .row {
+        margin: 0;
+      }
+
+      #image-input-card .col-sm {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+          "heading upload"
+          "note upload"
+          "colors colors";
+        gap: 4px 18px;
+        align-items: center;
+        padding: 0;
+      }
+
+      #image-input-card h3 {
+        grid-area: heading;
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700 !important;
+        line-height: 1.25;
+      }
+
+      #image-input-card p.dp-customer-note {
+        grid-area: note;
+        margin: 0 !important;
+        max-width: 720px;
+      }
+
+      #image-input-card .btn-group {
+        grid-area: colors;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+        margin-top: 4px !important;
+      }
+
+      #image-input-card .btn-group > .row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px 12px;
+        margin: 0 !important;
+      }
+
+      #image-input-card #image-input {
+        grid-area: upload;
+        justify-self: end;
+      }
+
+      #image-input-card #image-input > div {
+        margin-top: 0 !important;
+      }
+
+      #input-image-selector {
+        min-width: 148px;
+        min-height: 38px;
+        padding: 8px 16px;
+      }
+
+      #image-input-card .btn {
+        width: auto !important;
+        margin-top: 0 !important;
+      }
+
+      #steps-row:not([hidden]) {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        grid-template-areas:
+          "preview preview preview"
+          "crop adjust pieces" !important;
+        gap: 12px;
+        margin-top: 0;
+      }
+
+      #steps-row > div > .card {
+        padding: 12px !important;
+      }
+
+      #step-4 > .card {
+        grid-template-columns: minmax(0, 1fr) minmax(280px, 370px);
+        gap: 14px;
+        padding: 12px !important;
+      }
+
+      #step-4-canvas-upscaled {
+        display: block;
+        width: 100% !important;
+        height: auto !important;
+        max-height: 72vh;
+        object-fit: contain;
+      }
+
+      #step-1-canvas-upscaled {
+        max-height: 220px;
+      }
+
+      #steps-row h4 {
+        margin: 0 0 3px;
+        font-size: 15px;
+        font-weight: 700;
+        line-height: 1.25;
+      }
+
+      #step-4 h4 {
+        font-size: 17px;
+      }
+
+      #steps-row h4 + small,
+      #steps-row h4 + small + br + span,
+      #steps-row .text-danger {
+        font-size: 12px;
+        font-weight: 400;
+      }
+
+      .accordion-card {
+        border-radius: 6px;
+      }
+
+      .accordion-card .btn-link {
+        min-height: 36px;
+        padding: 8px 10px;
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .accordion-card-body {
+        padding: 10px;
+      }
+
+      .btn {
+        border-radius: 6px;
+        font-weight: 600;
+        line-height: 1.25;
+      }
+
+      .table {
+        font-size: 12px;
+      }
+
+      .table th {
+        font-weight: 600;
+      }
+
+      #paintbrush-controls {
+        gap: 3px;
+      }
+
+      .paintbrush-controls-button {
+        min-width: 34px;
+        min-height: 34px;
+      }
+
+      @media (max-width: 1100px) {
+        #steps-row:not([hidden]) {
+          grid-template-columns: 1fr 1fr !important;
+          grid-template-areas:
+            "preview preview"
+            "crop adjust"
+            "pieces pieces" !important;
+        }
+
+        #step-4 > .card {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 720px) {
+        body > div[style*="min-height"] {
+          padding: 12px 10px 30px !important;
+          gap: 10px;
+        }
+
+        body > div[style*="min-height"] > h1 {
+          font-size: 24px;
+        }
+
+        #image-input-card .col-sm {
+          grid-template-columns: 1fr;
+          grid-template-areas:
+            "heading"
+            "note"
+            "upload"
+            "colors";
+          align-items: start;
+        }
+
+        #image-input-card #image-input {
+          justify-self: start;
+        }
+
+        #image-input-card .btn {
+          width: auto !important;
+          margin-top: 0;
+          white-space: nowrap;
+        }
+
+        #image-input-card .btn-group {
+          display: block;
+        }
+
+        #image-input-card .btn-group > .row {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 4px;
+        }
+
+        #steps-row:not([hidden]) {
+          grid-template-columns: 1fr !important;
+          grid-template-areas:
+            "preview"
+            "crop"
+            "adjust"
+            "pieces" !important;
+          gap: 10px;
+        }
+
+        #step-4-canvas-upscaled {
+          max-height: none;
+        }
+
+        #steps-row h4 {
+          font-size: 15px;
+        }
+
+        #step-4 h4 {
+          font-size: 16px;
+        }
+
+        .accordion-card .btn-link {
+          min-height: 34px;
+          padding: 7px 9px;
+        }
+      }
     </style>
 
     <style class="dark-mode-stylesheet" disabled>
@@ -713,8 +977,8 @@
               <div style="width: 100%">
                 <canvas id="step-1-canvas-upscaled" style="width: 100%" class="cropper-img"></canvas>
               </div>
-              <h4>Crop & Size</h4>
-              <small className="step-header-subtitle">Crop your photo and choose the final pixel size</small>
+              <h4>Size & Crop</h4>
+              <small className="step-header-subtitle">Choose the finished size and crop the photo</small>
               <div id="step-1-accordion">
                 <div class="card accordion-card">
                   <div class="card-header" id="step-1-1-heading">
@@ -1438,8 +1702,8 @@
             >
               <canvas id="step-3-canvas" hidden></canvas>
               <canvas id="step-3-canvas-upscaled" style="width: 100%"></canvas>
-              <h4>Piece & Color Settings</h4>
-              <small className="step-header-subtitle">Match the image to available piece colors</small>
+              <h4>Pieces & Style</h4>
+              <small className="step-header-subtitle">Choose the piece type and color matching style</small>
               <br />
               <span
                 data-toggle="tooltip"
@@ -1975,8 +2239,8 @@
               <canvas id="step-4-canvas" hidden></canvas>
               <canvas id="bricklink-cache-canvas" hidden></canvas>
               <canvas id="step-4-canvas-upscaled" style="width: 100%"></canvas>
-              <h4>Pixel Art Preview</h4>
-              <small className="step-header-subtitle">Review the final pixel art and the pieces needed to build it</small>
+              <h4>Your Pixel Art Preview</h4>
+              <small className="step-header-subtitle">Review the result, parts list, and building guide</small>
               <br />
               <div className="step-header-subtitle text-danger" id="nonzero-missing-pieces-warning" hidden>
                 <small>'Pieces Not Available' under 'Available Piece Colors' must be 0 </small>
@@ -2398,15 +2662,15 @@
     <div id="image-input-card" class="card card-body" style="padding-bottom: 10px">
       <div class="row">
         <div class="col-sm">
-          <h3 style="font-weight: 600">Get Started</h3>
+          <h3 style="font-weight: 600">Upload Your Photo</h3>
           <p class="dp-customer-note" style="margin-left: 0">
-            Upload a photo first. Your pixel art preview will appear above the settings after processing.
+            Your pixel art preview appears first. Use the settings below only when you want to adjust the result.
           </p>
           <span class="btn-group" style="margin-top: 8px">
             <div class="row" style="margin-left: 0px">
               <div style="margin-right: 4px">
                 <span style="margin-left: 4px; margin-right: 8px; margin-top: 4px; font-weight: 600"
-                  >Starting Colors:</span
+                  >Color Library:</span
                 >
                 <span
                   data-toggle="tooltip"
@@ -2434,8 +2698,7 @@
               <div style="margin-left: 2px">
                 <small style="margin-top: 10px" class="text-muted" id="input-stud-map-description"></small>
                 <small class="dp-customer-note">
-                  Default color set should be All Flat Piece Colors for flat pieces, or All Stud Piece Colors for raised
-                  stud pieces.
+                  Starts with all matching DooPixel colors. You can refine the color set later.
                 </small>
               </div>
             </div>
