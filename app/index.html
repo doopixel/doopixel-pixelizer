@@ -285,7 +285,7 @@
         line-height: 1.35;
       }
 
-      #steps-row canvas[id$="upscaled"],
+      #steps-row canvas[id$="upscaled"]:not(#step-3-canvas-upscaled),
       #step-4-canvas-3d-upscaled {
         width: 100% !important;
         border: 1px solid #e1e1e1;
@@ -690,10 +690,27 @@
 
       #step-3-canvas-upscaled {
         display: block !important;
-        width: 100% !important;
-        height: auto !important;
+        max-width: none !important;
         max-height: none !important;
         touch-action: none;
+      }
+
+      #steps-row.dp-step3-expanded:not([hidden]) {
+        grid-template-columns: minmax(0, 1fr) !important;
+        grid-template-areas: "pieces" !important;
+      }
+
+      #steps-row.dp-step3-expanded .hide-on-step-3-expansion {
+        display: none !important;
+      }
+
+      #steps-row.dp-step3-expanded #step-3 {
+        width: 100% !important;
+        max-width: none !important;
+      }
+
+      #steps-row.dp-step3-expanded #step-3 > .card {
+        width: 100%;
       }
 
       #steps-row h4 {
@@ -812,16 +829,15 @@
         }
 
         #steps-row:not([hidden]) {
-          grid-template-columns: repeat(3, minmax(calc(100vw - 24px), 1fr)) !important;
+          grid-template-columns: 1fr !important;
           grid-template-areas:
-            "preview preview preview"
-            "crop adjust pieces" !important;
+            "preview"
+            "crop"
+            "adjust"
+            "pieces" !important;
           gap: 10px;
-          overflow-x: auto;
+          overflow-x: visible;
           overflow-y: visible;
-          scroll-snap-type: x mandatory;
-          scroll-padding-left: 0;
-          -webkit-overflow-scrolling: touch;
           padding-bottom: 8px;
         }
 
@@ -849,12 +865,6 @@
         #step-4-color-tab-content > br,
         #step-4-color-tab-content > span[data-toggle="tooltip"] {
           display: none !important;
-        }
-
-        #step-1,
-        #step-2,
-        #step-3 {
-          scroll-snap-align: start;
         }
 
         .dp-mobile-drawer-toggle {
@@ -891,6 +901,7 @@
 
         #step-3-canvas-upscaled {
           display: block !important;
+          max-width: none !important;
           max-height: none !important;
           touch-action: none;
         }
@@ -3232,6 +3243,24 @@
 
     <script>
       (function () {
+        function setupStep3ExpansionLayout() {
+          const stepsRow = document.getElementById("steps-row");
+          const expansionButton = document.getElementById("toggle-expansion-button");
+
+          if (!stepsRow || !expansionButton || expansionButton.dataset.dpExpansionReady === "true") {
+            return;
+          }
+
+          expansionButton.dataset.dpExpansionReady = "true";
+          expansionButton.addEventListener("click", function () {
+            window.setTimeout(function () {
+              const collapseIcon = document.getElementById("collapse-picture-svg");
+              const isExpanded = collapseIcon ? !collapseIcon.hidden : !stepsRow.classList.contains("dp-step3-expanded");
+              stepsRow.classList.toggle("dp-step3-expanded", isExpanded);
+            }, 0);
+          });
+        }
+
         function setupMobileSizeCropDrawer() {
           const step = document.getElementById("step-1");
           const button = document.querySelector(".dp-mobile-drawer-toggle");
@@ -3256,10 +3285,15 @@
           });
         }
 
-        if (document.readyState === "loading") {
-          document.addEventListener("DOMContentLoaded", setupMobileSizeCropDrawer);
-        } else {
+        function setupDooPixelLayoutHelpers() {
+          setupStep3ExpansionLayout();
           setupMobileSizeCropDrawer();
+        }
+
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", setupDooPixelLayoutHelpers);
+        } else {
+          setupDooPixelLayoutHelpers();
         }
       })();
     </script>
@@ -3285,6 +3319,7 @@
     </footer>
   </body>
 </html>
+
 
 
 
