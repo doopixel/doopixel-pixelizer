@@ -2331,41 +2331,75 @@
     ></script>
     <script src="js/pixi.min.js"></script>
     <script src="js/bricklink-colors.js"></script>
-    <script>
-      if (typeof PIXEL_TYPE_OPTIONS !== "undefined") {
-        PIXEL_TYPE_OPTIONS.splice(
-          0,
-          PIXEL_TYPE_OPTIONS.length,
-          { name: "1x1 Round Tile", number: 98138 },
-          { name: "1x1 Round Plate", number: 4073 }
-        );
-      }
-    </script>
     <script src="js/stud-maps.js"></script>
-    <script>
-      if (typeof STUD_MAPS !== "undefined") {
-        const tileColors = STUD_MAPS.all_tile_colors;
-        const studColors = STUD_MAPS.all_stud_colors;
-
-        if (tileColors && studColors) {
-          tileColors.name = "All 1x1 Round Tile Colors";
-          tileColors.officialName = "All 1x1 Round Tile Colors";
-          tileColors.descriptionHTML = "Use all colors available for 1x1 round tile pieces.";
-
-          studColors.name = "All 1x1 Round Plate Colors";
-          studColors.officialName = "All 1x1 Round Plate Colors";
-          studColors.descriptionHTML = "Use all colors available for 1x1 round plate pieces.";
-
-          STUD_MAPS = {
-            all_tile_colors: tileColors,
-            all_stud_colors: studColors,
-          };
-        }
-      }
-    </script>
     <script src="js/heap.js"></script>
     <script src="js/algo.js"></script>
     <script src="js/index.js"></script>
+    <script>
+      (function restrictDooPixelPieceMenus() {
+        const allowedPieceValues = new Set(["98138", "4073"]);
+        const allowedColorMaps = new Map([
+          [
+            "all_tile_colors",
+            {
+              name: "All 1x1 Round Tile Colors",
+              officialName: "All 1x1 Round Tile Colors",
+              descriptionHTML: "Use all colors available for 1x1 round tile pieces.",
+            },
+          ],
+          [
+            "all_stud_colors",
+            {
+              name: "All 1x1 Round Plate Colors",
+              officialName: "All 1x1 Round Plate Colors",
+              descriptionHTML: "Use all colors available for 1x1 round plate pieces.",
+            },
+          ],
+        ]);
+
+        if (typeof STUD_MAPS !== "undefined") {
+          allowedColorMaps.forEach((label, key) => {
+            if (STUD_MAPS[key]) {
+              STUD_MAPS[key].name = label.name;
+              STUD_MAPS[key].officialName = label.officialName;
+              STUD_MAPS[key].descriptionHTML = label.descriptionHTML;
+            }
+          });
+        }
+
+        const filterDropdown = (menuId, allowedValues) => {
+          const menu = document.getElementById(menuId);
+          if (!menu) {
+            return;
+          }
+
+          Array.from(menu.children).forEach((option) => {
+            const value = option.value || "";
+            if (!allowedValues.has(value)) {
+              option.remove();
+              return;
+            }
+
+            if (allowedColorMaps.has(value)) {
+              option.textContent = allowedColorMaps.get(value).name;
+            }
+          });
+        };
+
+        filterDropdown("bricklink-piece-options", allowedPieceValues);
+        filterDropdown("select-starting-custom-stud-map-options", new Set(allowedColorMaps.keys()));
+        filterDropdown("mix-in-stud-map-options", new Set(allowedColorMaps.keys()));
+
+        const startingButton = document.getElementById("select-starting-custom-stud-map-button");
+        const startingDescription = document.getElementById("input-stud-map-description");
+        if (startingButton && allowedColorMaps.has("all_tile_colors")) {
+          startingButton.innerHTML = allowedColorMaps.get("all_tile_colors").name;
+        }
+        if (startingDescription && allowedColorMaps.has("all_tile_colors")) {
+          startingDescription.innerHTML = allowedColorMaps.get("all_tile_colors").descriptionHTML;
+        }
+      })();
+    </script>
     <script src="js/metrics.js"></script>
 
     <script>
@@ -2389,6 +2423,7 @@
     </footer>
   </body>
 </html>
+
 
 
 
