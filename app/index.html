@@ -478,7 +478,7 @@
         }
       }
 
-      /* DooPixel workbench layout: upload first, result first, then practical edit controls. */
+      /* DooPixel live workbench: keep the preview visible while customers adjust settings. */
       body > div[style*="min-height"] {
         display: flex;
         flex-direction: column;
@@ -575,13 +575,25 @@
 
       #steps-row:not([hidden]) {
         display: grid !important;
-        grid-template-columns: minmax(0, 1fr) minmax(320px, 430px) !important;
+        grid-template-columns: minmax(420px, 1fr) minmax(360px, 500px) !important;
         grid-template-areas:
-          "preview preview"
-          "crop crop"
-          "adjust pieces" !important;
+          "preview crop"
+          "preview adjust"
+          "preview pieces" !important;
         gap: 14px;
         margin-top: 0;
+      }
+
+      @media (min-width: 1500px) {
+        #steps-row:not([hidden]) {
+          grid-template-columns: minmax(520px, 1fr) minmax(390px, 520px) !important;
+        }
+      }
+
+      @media (max-width: 1200px) {
+        #steps-row:not([hidden]) {
+          grid-template-columns: minmax(360px, 1fr) minmax(330px, 450px) !important;
+        }
       }
 
       #step-1 {
@@ -598,6 +610,10 @@
 
       #step-4 {
         grid-area: preview;
+        position: sticky;
+        top: 12px;
+        align-self: start;
+        z-index: 4;
       }
 
       #steps-row > [class*="col-"] {
@@ -613,22 +629,18 @@
       }
 
       #step-4 > .card {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(280px, 370px);
-        gap: 14px;
-        align-items: start;
+        display: block;
         padding: 12px !important;
       }
 
       #step-4-canvas-upscaled {
         display: block;
-        grid-column: 1;
-        grid-row: 1 / span 6;
         width: 100% !important;
+        max-width: 100% !important;
         height: auto !important;
-        max-height: none !important;
-        object-fit: initial !important;
-        margin-bottom: 0;
+        max-height: calc(100vh - 250px) !important;
+        object-fit: contain !important;
+        margin: 0 auto 10px;
       }
 
       #step-4 h4,
@@ -637,19 +649,14 @@
       #step-4 h4 + small + br + div,
       #step-4 h4 + small + br + div + span,
       #step-4 #step-4-accordion {
-        grid-column: 2;
+        grid-column: auto;
       }
 
       #step-1-color-tab-content {
-        display: grid !important;
-        grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
-        gap: 10px 14px;
-        align-items: start;
+        display: block !important;
       }
 
       #step-1-color-tab-content > div:first-of-type {
-        grid-column: 1;
-        grid-row: 1 / span 5;
         min-width: 0;
         overflow: visible !important;
       }
@@ -657,7 +664,7 @@
       #step-1 h4,
       #step-1 h4 + small,
       #step-1-accordion {
-        grid-column: 2;
+        grid-column: auto;
       }
 
       #step-1-canvas-upscaled {
@@ -744,28 +751,12 @@
             "pieces" !important;
         }
 
-        #step-4 > .card {
-          grid-template-columns: 1fr;
+        #step-4 {
+          top: 8px;
         }
 
-        #step-4 h4,
-        #step-4 h4 + small,
-        #step-4 h4 + small + br,
-        #step-4 h4 + small + br + div,
-        #step-4 h4 + small + br + div + span,
-        #step-4 #step-4-accordion {
-          grid-column: 1;
-        }
-
-        #step-1-color-tab-content {
-          grid-template-columns: minmax(0, 1fr);
-        }
-
-        #step-1-color-tab-content > div:first-of-type,
-        #step-1 h4,
-        #step-1 h4 + small,
-        #step-1-accordion {
-          grid-column: 1;
+        #step-4-canvas-upscaled {
+          max-height: 48vh !important;
         }
       }
 
@@ -817,6 +808,25 @@
             "adjust"
             "pieces" !important;
           gap: 10px;
+        }
+
+        #step-4 {
+          top: 0;
+        }
+
+        #step-4 > .card {
+          padding: 8px !important;
+        }
+
+        #step-4-canvas-upscaled {
+          max-height: 38vh !important;
+          margin-bottom: 6px;
+        }
+
+        #step-4-color-tab-content > small,
+        #step-4-color-tab-content > br,
+        #step-4-color-tab-content > span[data-toggle="tooltip"] {
+          display: none !important;
         }
 
         #steps-row h4 {
@@ -2215,8 +2225,8 @@
               <canvas id="step-4-canvas" hidden></canvas>
               <canvas id="bricklink-cache-canvas" hidden></canvas>
               <canvas id="step-4-canvas-upscaled" style="width: 100%"></canvas>
-              <h4>Your Pixel Art Preview</h4>
-              <small className="step-header-subtitle">Review the result, parts list, and building guide</small>
+              <h4>Live Preview</h4>
+              <small className="step-header-subtitle">Watch the result update while you adjust the settings</small>
               <br />
               <div className="step-header-subtitle text-danger" id="nonzero-missing-pieces-warning" hidden>
                 <small>'Pieces Not Available' under 'Available Piece Colors' must be 0 </small>
@@ -2640,7 +2650,7 @@
         <div class="col-sm">
           <h3 style="font-weight: 600">Upload Your Photo</h3>
           <p class="dp-customer-note" style="margin-left: 0">
-            Your pixel art preview appears first. Use the settings below only when you want to adjust the result.
+            Your live preview stays visible while you adjust size, image style, and piece settings.
           </p>
           <span class="btn-group" style="margin-top: 8px">
             <div class="row" style="margin-left: 0px">
@@ -3166,6 +3176,7 @@
     </footer>
   </body>
 </html>
+
 
 
 
