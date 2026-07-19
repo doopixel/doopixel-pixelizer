@@ -477,6 +477,121 @@
           padding: 10px;
         }
       }
+
+      /* Customer layout: result first, settings below. The original step DOM stays intact for the algorithm. */
+      #steps-row:not([hidden]) {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        grid-template-areas:
+          "preview preview preview"
+          "crop adjust pieces" !important;
+      }
+
+      #step-1 {
+        grid-area: crop;
+      }
+
+      #step-2 {
+        grid-area: adjust;
+      }
+
+      #step-3 {
+        grid-area: pieces;
+      }
+
+      #step-4 {
+        grid-area: preview;
+      }
+
+      #step-4 > .card {
+        display: grid;
+        grid-template-columns: minmax(320px, 1.35fr) minmax(300px, 0.9fr);
+        gap: 16px;
+        align-items: start;
+      }
+
+      #step-4-canvas-upscaled {
+        margin-bottom: 0;
+      }
+
+      #step-4 h4,
+      #step-4 h4 + small,
+      #step-4 h4 + small + br,
+      #step-4 h4 + small + br + div,
+      #step-4 h4 + small + br + div + span {
+        grid-column: 2;
+      }
+
+      #step-4 #step-4-accordion {
+        grid-column: 2;
+      }
+
+      #step-1-canvas-upscaled,
+      #step-2-canvas-upscaled,
+      #step-3-canvas-upscaled {
+        max-height: 260px;
+        object-fit: contain;
+      }
+
+      #step-2-canvas-upscaled,
+      #step-3-canvas-upscaled {
+        display: none !important;
+      }
+
+      #step-1 > .card,
+      #step-2 > .card,
+      #step-3 > .card {
+        min-height: auto;
+      }
+
+      #step-1 h4,
+      #step-2 h4,
+      #step-3 h4 {
+        margin-top: 0;
+      }
+
+      #step-1-accordion,
+      #step-2-accordion,
+      #step-3-accordion {
+        margin-top: 10px;
+      }
+
+      @media (max-width: 1100px) {
+        #steps-row:not([hidden]) {
+          grid-template-columns: 1fr 1fr !important;
+          grid-template-areas:
+            "preview preview"
+            "crop adjust"
+            "pieces pieces" !important;
+        }
+
+        #step-4 > .card {
+          grid-template-columns: 1fr;
+        }
+
+        #step-4 h4,
+        #step-4 h4 + small,
+        #step-4 h4 + small + br,
+        #step-4 h4 + small + br + div,
+        #step-4 h4 + small + br + div + span,
+        #step-4 #step-4-accordion {
+          grid-column: 1;
+        }
+      }
+
+      @media (max-width: 720px) {
+        #steps-row:not([hidden]) {
+          grid-template-columns: 1fr !important;
+          grid-template-areas:
+            "preview"
+            "crop"
+            "adjust"
+            "pieces" !important;
+        }
+
+        #step-1-canvas-upscaled {
+          max-height: none;
+        }
+      }
     </style>
 
     <style class="dark-mode-stylesheet" disabled>
@@ -598,7 +713,7 @@
               <div style="width: 100%">
                 <canvas id="step-1-canvas-upscaled" style="width: 100%" class="cropper-img"></canvas>
               </div>
-              <h4>Step 1</h4>
+              <h4>Crop & Size</h4>
               <small className="step-header-subtitle">Crop your photo and choose the final pixel size</small>
               <div id="step-1-accordion">
                 <div class="card accordion-card">
@@ -937,7 +1052,7 @@
             >
               <canvas id="step-2-canvas" hidden></canvas>
               <canvas id="step-2-canvas-upscaled" style="width: 100%"></canvas>
-              <h4>Step 2</h4>
+              <h4>Image Adjustments</h4>
               <small className="step-header-subtitle">Tune how your photo becomes pixel art</small>
 
               <div id="step-2-accordion">
@@ -1323,7 +1438,7 @@
             >
               <canvas id="step-3-canvas" hidden></canvas>
               <canvas id="step-3-canvas-upscaled" style="width: 100%"></canvas>
-              <h4>Step 3</h4>
+              <h4>Piece & Color Settings</h4>
               <small className="step-header-subtitle">Match the image to available piece colors</small>
               <br />
               <span
@@ -1860,8 +1975,8 @@
               <canvas id="step-4-canvas" hidden></canvas>
               <canvas id="bricklink-cache-canvas" hidden></canvas>
               <canvas id="step-4-canvas-upscaled" style="width: 100%"></canvas>
-              <h4>Step 4</h4>
-              <small className="step-header-subtitle">Review the final preview and required pieces</small>
+              <h4>Pixel Art Preview</h4>
+              <small className="step-header-subtitle">Review the final pixel art and the pieces needed to build it</small>
               <br />
               <div className="step-header-subtitle text-danger" id="nonzero-missing-pieces-warning" hidden>
                 <small>'Pieces Not Available' under 'Available Piece Colors' must be 0 </small>
@@ -2284,6 +2399,9 @@
       <div class="row">
         <div class="col-sm">
           <h3 style="font-weight: 600">Get Started</h3>
+          <p class="dp-customer-note" style="margin-left: 0">
+            Upload a photo first. Your pixel art preview will appear above the settings after processing.
+          </p>
           <span class="btn-group" style="margin-top: 8px">
             <div class="row" style="margin-left: 0px">
               <div style="margin-right: 4px">
@@ -2809,6 +2927,7 @@
     </footer>
   </body>
 </html>
+
 
 
 
