@@ -919,6 +919,239 @@
           padding: 7px 9px;
         }
       }
+
+      /* Mobile rebuild: main preview page + focused edit pages. */
+      .dp-mobile-editor-bar,
+      #dp-mobile-home-actions {
+        display: none;
+      }
+
+      @media (max-width: 720px) {
+        body > div[style*="min-height"] {
+          padding-bottom: 34px !important;
+        }
+
+        #steps-row:not([hidden]) {
+          display: flex !important;
+          flex-direction: column;
+          gap: 10px;
+          overflow: visible !important;
+        }
+
+        #steps-row > [class*="col-"],
+        #dp-mobile-home-actions {
+          width: 100% !important;
+          max-width: none !important;
+          flex: none !important;
+          padding: 0 !important;
+        }
+
+        #step-4 {
+          order: 1;
+          position: static !important;
+          width: 100% !important;
+          max-width: none !important;
+          z-index: auto;
+        }
+
+        #step-4 > .card {
+          width: 100% !important;
+          max-width: none !important;
+          padding: 10px !important;
+        }
+
+        #step-4-canvas-upscaled {
+          width: 100% !important;
+          max-width: 100% !important;
+          max-height: none !important;
+          pointer-events: auto !important;
+          margin-bottom: 8px;
+        }
+
+        #step-4-color-tab-content > small,
+        #step-4-color-tab-content > br,
+        #step-4-color-tab-content > span[data-toggle="tooltip"] {
+          display: none !important;
+        }
+
+        #step-2 {
+          order: 2;
+        }
+
+        #step-3 {
+          order: 3;
+        }
+
+        #dp-mobile-home-actions {
+          order: 4;
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+
+        #step-1 {
+          display: none !important;
+        }
+
+        #step-2-canvas-upscaled,
+        body:not(.dp-mobile-edit-mode) #step-3-canvas-upscaled,
+        body:not(.dp-mobile-edit-mode) .dp-manual-edit-tools,
+        .dp-mobile-drawer-toggle {
+          display: none !important;
+        }
+
+        #step-2 h4,
+        #step-3 h4 {
+          font-size: 17px;
+          margin-bottom: 4px;
+        }
+
+        #step-2 h4 + small,
+        #step-3 h4 + small {
+          display: block;
+          margin-bottom: 8px;
+          color: #5f6368;
+          font-size: 12px;
+          line-height: 1.35;
+        }
+
+        #step-2-accordion .collapse,
+        #step-3-3-collapse,
+        #step-3-4-collapse {
+          display: block !important;
+          height: auto !important;
+          visibility: visible !important;
+        }
+
+        #step-2-accordion .card-header,
+        #step-3-accordion .card-header {
+          background: #ffffff;
+        }
+
+        #step-2-accordion .btn-link,
+        #step-3-accordion .btn-link {
+          min-height: 34px;
+          padding: 7px 8px;
+          font-size: 13px;
+          pointer-events: none;
+        }
+
+        #step-3-accordion > .accordion-card:first-child {
+          display: none !important;
+        }
+
+        .dp-mobile-action-button {
+          display: block;
+          width: 100%;
+          padding: 12px;
+          border: 1px solid #d9d9d9;
+          border-radius: 8px;
+          background: #ffffff;
+          color: #171717;
+          text-align: left;
+        }
+
+        .dp-mobile-action-button strong {
+          display: block;
+          font-size: 15px;
+          font-weight: 700;
+          line-height: 1.25;
+        }
+
+        .dp-mobile-action-button span {
+          display: block;
+          margin-top: 3px;
+          color: #5f6368;
+          font-size: 12px;
+          line-height: 1.35;
+        }
+
+        .dp-mobile-editor-bar {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 10px;
+          padding-bottom: 10px;
+          border-bottom: 1px solid #e5e5e5;
+        }
+
+        .dp-mobile-back-button {
+          flex: 0 0 auto;
+          min-height: 36px;
+          padding: 7px 12px;
+          border: 1px solid #111111;
+          border-radius: 6px;
+          background: #111111;
+          color: #ffffff;
+          font-weight: 600;
+        }
+
+        .dp-mobile-editor-bar strong {
+          display: block;
+          font-size: 15px;
+          line-height: 1.2;
+        }
+
+        .dp-mobile-editor-bar small {
+          display: block;
+          color: #5f6368;
+          font-size: 12px;
+          line-height: 1.35;
+        }
+
+        body.dp-mobile-size-mode #step-1,
+        body.dp-mobile-edit-mode #step-3 {
+          display: block !important;
+          order: 1;
+          width: 100% !important;
+          max-width: none !important;
+        }
+
+        body.dp-mobile-size-mode #step-2,
+        body.dp-mobile-size-mode #step-3,
+        body.dp-mobile-size-mode #step-4,
+        body.dp-mobile-size-mode #dp-mobile-home-actions,
+        body.dp-mobile-edit-mode #step-1,
+        body.dp-mobile-edit-mode #step-2,
+        body.dp-mobile-edit-mode #step-4,
+        body.dp-mobile-edit-mode #dp-mobile-home-actions {
+          display: none !important;
+        }
+
+        body.dp-mobile-size-mode #step-1 > .card,
+        body.dp-mobile-edit-mode #step-3 > .card {
+          padding: 10px !important;
+        }
+
+        body.dp-mobile-size-mode #step-1-color-tab-content,
+        body.dp-mobile-edit-mode #step-3-color-tab-content {
+          display: block !important;
+        }
+
+        body.dp-mobile-size-mode #step-1 > .card > .tab-content,
+        body.dp-mobile-edit-mode #step-3 > .card > .tab-content {
+          display: block !important;
+        }
+
+        body.dp-mobile-edit-mode #step-3 h4,
+        body.dp-mobile-edit-mode #step-3 h4 + small,
+        body.dp-mobile-edit-mode #step-3 h4 + small + br,
+        body.dp-mobile-edit-mode #step-3 h4 + small + br + span,
+        body.dp-mobile-edit-mode #step-3-accordion {
+          display: none !important;
+        }
+
+        body.dp-mobile-edit-mode #step-3-canvas-upscaled {
+          display: block !important;
+          max-width: none !important;
+          max-height: none !important;
+          touch-action: none;
+        }
+
+        body.dp-mobile-edit-mode .dp-manual-edit-tools {
+          display: flex !important;
+        }
+      }
     </style>
 
     <style class="dark-mode-stylesheet" disabled>
@@ -1004,15 +1237,13 @@
     <div class="row" id="steps-row" hidden>
       <div id="step-1" class="col-6 col-md-3 hide-on-step-3-expansion">
         <div class="card" style="padding: 10px; margin-bottom: 10px">
-          <button
-            type="button"
-            class="dp-mobile-drawer-toggle"
-            aria-expanded="false"
-            aria-controls="step-1-color-tab-content"
-          >
-            <span>Size & Crop</span>
-            <small class="dp-mobile-drawer-status">Open</small>
-          </button>
+          <div class="dp-mobile-editor-bar">
+            <button type="button" class="dp-mobile-back-button" data-dp-mobile-mode="home">Done</button>
+            <div>
+              <strong>Adjust Size & Crop</strong>
+              <small>Set the final pixel size, baseplate count, and crop position.</small>
+            </div>
+          </div>
           <ul class="nav nav-tabs 3d-selector-tabs" role="tablist" hidden>
             <li class="nav-item">
               <a
@@ -1049,8 +1280,8 @@
               <div style="width: 100%">
                 <canvas id="step-1-canvas-upscaled" style="width: 100%" class="cropper-img"></canvas>
               </div>
-              <h4>Size & Crop</h4>
-              <small className="step-header-subtitle">Choose the finished size and crop the photo</small>
+              <h4>Adjust Size & Crop</h4>
+              <small className="step-header-subtitle">Set the final pixel size, baseplate count, and crop position</small>
               <div id="step-1-accordion">
                 <div class="card accordion-card">
                   <div class="card-header" id="step-1-1-heading">
@@ -1388,8 +1619,8 @@
             >
               <canvas id="step-2-canvas" hidden></canvas>
               <canvas id="step-2-canvas-upscaled" style="width: 100%"></canvas>
-              <h4>Image Adjustments</h4>
-              <small className="step-header-subtitle">Tune how your photo becomes pixel art</small>
+              <h4>Fine-tune Your Photo</h4>
+              <small className="step-header-subtitle">Adjust brightness, contrast, sharpness, and color strength</small>
 
               <div id="step-2-accordion">
                 <div class="card accordion-card">
@@ -1739,6 +1970,13 @@
 
       <div id="step-3" class="col-6 col-md-3">
         <div class="card" style="padding: 10px; margin-bottom: 10px">
+          <div class="dp-mobile-editor-bar dp-manual-editor-bar">
+            <button type="button" class="dp-mobile-back-button" data-dp-mobile-mode="home">Done</button>
+            <div>
+              <strong>Manual Pixel Editing</strong>
+              <small>Zoom in, paint, erase, and pick individual pixel colors.</small>
+            </div>
+          </div>
           <ul class="nav nav-tabs 3d-selector-tabs" role="tablist" hidden>
             <li class="nav-item">
               <a
@@ -1774,8 +2012,8 @@
             >
               <canvas id="step-3-canvas" hidden></canvas>
               <canvas id="step-3-canvas-upscaled" style="width: 100%"></canvas>
-              <h4>Pieces & Style</h4>
-              <small className="step-header-subtitle">Choose the piece type and color matching style</small>
+              <h4>Choose Color Style</h4>
+              <small className="step-header-subtitle">Change color matching, texture, and piece style</small>
               <br />
               <span
                 data-toggle="tooltip"
@@ -1786,7 +2024,7 @@
                 <small id="step-3-quantization-error"></small>
               </span>
 
-              <div style="display: flex; flex-direction: row; flex-wrap: wrap">
+              <div class="dp-manual-edit-tools" style="display: flex; flex-direction: row; flex-wrap: wrap">
                 <div style="margin-bottom: 4px">
                   <div class="btn-group">
                     <button
@@ -2311,8 +2549,8 @@
               <canvas id="step-4-canvas" hidden></canvas>
               <canvas id="bricklink-cache-canvas" hidden></canvas>
               <canvas id="step-4-canvas-upscaled" style="width: 100%"></canvas>
-              <h4>Live Preview</h4>
-              <small className="step-header-subtitle">Watch the result update while you adjust the settings</small>
+              <h4>Preview Your Pixel Art</h4>
+              <small className="step-header-subtitle">See how your photo will look as brick pixel art</small>
               <br />
               <div className="step-header-subtitle text-danger" id="nonzero-missing-pieces-warning" hidden>
                 <small>'Pieces Not Available' under 'Available Piece Colors' must be 0 </small>
@@ -2336,7 +2574,7 @@
                         aria-expanded="false"
                         aria-controls="step-4-1-collapse"
                       >
-                        Final Parts List
+                        Parts List
                       </button>
                     </h5>
                   </div>
@@ -2443,7 +2681,7 @@
                         aria-expanded="false"
                         aria-controls="step-4-3-collapse"
                       >
-                        Building Guide
+                        Download Building Guide
                       </button>
                     </h5>
                   </div>
@@ -2728,6 +2966,16 @@
             </div>
           </div>
         </div>
+      </div>
+      <div id="dp-mobile-home-actions" class="hide-on-step-3-expansion">
+        <button type="button" class="dp-mobile-action-button" data-dp-mobile-mode="size">
+          <strong>Adjust Size & Crop</strong>
+          <span>Set artwork size, baseplate count, and crop position.</span>
+        </button>
+        <button type="button" class="dp-mobile-action-button" data-dp-mobile-mode="edit">
+          <strong>Manual Pixel Editing</strong>
+          <span>Zoom in, paint, erase, and change individual pixel colors.</span>
+        </button>
       </div>
     </div>
 
@@ -3243,57 +3491,41 @@
 
     <script>
       (function () {
-        function setupStep3ExpansionLayout() {
-          const stepsRow = document.getElementById("steps-row");
+        function closeOriginalStep3ExpansionIfNeeded() {
+          const collapseIcon = document.getElementById("collapse-picture-svg");
           const expansionButton = document.getElementById("toggle-expansion-button");
-
-          if (!stepsRow || !expansionButton || expansionButton.dataset.dpExpansionReady === "true") {
-            return;
+          if (collapseIcon && expansionButton && !collapseIcon.hidden) {
+            expansionButton.click();
           }
-
-          expansionButton.dataset.dpExpansionReady = "true";
-          expansionButton.addEventListener("click", function () {
-            window.setTimeout(function () {
-              const collapseIcon = document.getElementById("collapse-picture-svg");
-              const isExpanded = collapseIcon ? !collapseIcon.hidden : !stepsRow.classList.contains("dp-step3-expanded");
-              stepsRow.classList.toggle("dp-step3-expanded", isExpanded);
-            }, 0);
-          });
         }
 
-        function setupMobileSizeCropDrawer() {
-          const step = document.getElementById("step-1");
-          const button = document.querySelector(".dp-mobile-drawer-toggle");
-          const status = button?.querySelector(".dp-mobile-drawer-status");
+        function setMobileMode(mode) {
+          document.body.classList.toggle("dp-mobile-size-mode", mode === "size");
+          document.body.classList.toggle("dp-mobile-edit-mode", mode === "edit");
 
-          if (!step || !button || button.dataset.drawerReady === "true") {
-            return;
+          if (mode !== "edit") {
+            closeOriginalStep3ExpansionIfNeeded();
           }
 
-          function setOpen(isOpen) {
-            step.classList.toggle("dp-mobile-open", isOpen);
-            button.setAttribute("aria-expanded", String(isOpen));
-            if (status) {
-              status.textContent = isOpen ? "Close" : "Open";
+          window.scrollTo(0, 0);
+        }
+
+        function setupDooPixelMobileModes() {
+          document.querySelectorAll("[data-dp-mobile-mode]").forEach((button) => {
+            if (button.dataset.dpModeReady === "true") {
+              return;
             }
-          }
-
-          setOpen(false);
-          button.dataset.drawerReady = "true";
-          button.addEventListener("click", function () {
-            setOpen(!step.classList.contains("dp-mobile-open"));
+            button.dataset.dpModeReady = "true";
+            button.addEventListener("click", function () {
+              setMobileMode(button.getAttribute("data-dp-mobile-mode") || "home");
+            });
           });
-        }
-
-        function setupDooPixelLayoutHelpers() {
-          setupStep3ExpansionLayout();
-          setupMobileSizeCropDrawer();
         }
 
         if (document.readyState === "loading") {
-          document.addEventListener("DOMContentLoaded", setupDooPixelLayoutHelpers);
+          document.addEventListener("DOMContentLoaded", setupDooPixelMobileModes);
         } else {
-          setupDooPixelLayoutHelpers();
+          setupDooPixelMobileModes();
         }
       })();
     </script>
@@ -3319,6 +3551,7 @@
     </footer>
   </body>
 </html>
+
 
 
 
