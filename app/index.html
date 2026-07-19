@@ -171,7 +171,7 @@
       }
 
       /* DooPixel customer-facing cleanup: keep the original algorithm, hide unused original-project features. */
-      .3d-selector-tabs,
+      [class~="3d-selector-tabs"],
       #enable-depth-button-container,
       #step-1-depth-tab-content,
       #step-2-depth-tab-content,
@@ -183,8 +183,6 @@
 
       #step-1-4-heading,
       #step-1-4-collapse,
-      #step-3-2-heading,
-      #step-3-2-collapse,
       #step-3-4-collapse #color-ties-resolution-section,
       .traditional-dithering-algorithm-warning {
         display: none !important;
@@ -1177,7 +1175,7 @@
                 </div>
               </div>
               <div id="step-3-accordion">
-                <div class="card accordion-card" hidden>
+                <div class="card accordion-card">
                   <div class="card-header" id="step-3-2-heading">
                     <h5 class="mb-0">
                       <button
@@ -1187,7 +1185,7 @@
                         aria-expanded="false"
                         aria-controls="step-3-2-collapse"
                       >
-                        Available Piece Colors
+                        Color Set
                       </button>
                     </h5>
                   </div>
@@ -1198,11 +1196,15 @@
                     data-parent="#step-3-accordion"
                   >
                     <div class="card-body accordion-card-body">
+                      <div class="dp-customer-note">
+                        DooPixel uses all available colors for the selected piece style by default. You do not need to
+                        edit this section unless you want to manually limit which colors can be used.
+                      </div>
                       <div id="custom-stud-map-controls" style="margin-top: 4px">
                         <div style="margin-bottom: 20px">
                           <small>
                             <p style="margin-left: 4px; margin-bottom: 8px">
-                              &#9679; This section controls which piece colors can be used to create the image
+                              &#9679; This controls which piece colors can be used to create the image
                             </p>
                             <p style="margin-left: 4px; margin-bottom: 8px">&#9679; Color names follow common brick color names</p>
                             <p style="margin-left: 4px; margin-bottom: 8px">
@@ -1227,7 +1229,7 @@
                           id="infinite-piece-count-check-container"
                         >
                           <label class="checkbox-clickable">
-                            <input type="checkbox" class="checkbox-clickable" id="infinite-piece-count-check" />
+                            <input type="checkbox" class="checkbox-clickable" id="infinite-piece-count-check" checked />
                             <span style="font-size: 13px">Use All Available Colors</span>
                           </label>
                         </div>
@@ -2447,12 +2449,26 @@
 
           if (widthNote && width) {
             const count = width / 16;
-            widthNote.textContent = `= ${count} ${count === 1 ? "baseplate" : "baseplates"} wide`;
+            const next = `= ${count} ${count === 1 ? "baseplate" : "baseplates"} wide`;
+            if (widthNote.textContent !== next) {
+              widthNote.textContent = next;
+            }
           }
 
           if (heightNote && height) {
             const count = height / 16;
-            heightNote.textContent = `= ${count} ${count === 1 ? "baseplate" : "baseplates"} tall`;
+            const next = `= ${count} ${count === 1 ? "baseplate" : "baseplates"} tall`;
+            if (heightNote.textContent !== next) {
+              heightNote.textContent = next;
+            }
+          }
+        }
+
+        function applyDefaultColorMode() {
+          const infiniteColors = document.getElementById("infinite-piece-count-check");
+          if (infiniteColors && !infiniteColors.checked) {
+            infiniteColors.checked = true;
+            infiniteColors.dispatchEvent(new Event("change", { bubbles: true }));
           }
         }
 
@@ -2491,15 +2507,11 @@
           limitCustomerMenus();
         }
 
+        applyDefaultColorMode();
+        window.setTimeout(applyDefaultColorMode, 400);
+        window.setTimeout(applyDefaultColorMode, 1200);
         keepCustomerLabelsUpdated();
-        window.setInterval(keepCustomerLabelsUpdated, 500);
-
-        const observer = new MutationObserver(() => keepCustomerLabelsUpdated());
-        observer.observe(document.body, {
-          childList: true,
-          subtree: true,
-          characterData: true
-        });
+        window.setInterval(keepCustomerLabelsUpdated, 900);
       })();
     </script>
 
@@ -2524,4 +2536,5 @@
     </footer>
   </body>
 </html>
+
 
