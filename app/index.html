@@ -20,20 +20,20 @@
     />
     <link href="assets/png/icon-192x192.png" rel="icon" type="image/x-icon" />
 
-    <title>Lego Art Remix</title>
+    <title>DooPixel Pixel Art Maker</title>
 
-    <meta property="og:title" content="Lego Art Remix" />
-    <meta property="og:image" content="https://lego-art-remix.com/assets/png/icon-960x960.png" />
-    <meta property="og:description" content="The Intelligent, Easy to Use Lego Mosaic Maker" />
-    <meta name="description" content="The Intelligent, Easy to Use Lego Mosaic Maker" />
-    <meta name="thumbnail" content="https://lego-art-remix.com/assets/png/icon-512x512.png" />
+    <meta property="og:title" content="DooPixel Pixel Art Maker" />
+    <meta property="og:image" content="assets/png/icon-960x960.png" />
+    <meta property="og:description" content="Create custom brick pixel art from your own photo." />
+    <meta name="description" content="Create custom brick pixel art from your own photo." />
+    <meta name="thumbnail" content="assets/png/icon-512x512.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#FCE4EC" />
     <link rel="manifest" href="/manifest.json" />
 
     <PageMap>
       <DataObject type="thumbnail">
-        <Attribute name="src" value="https://lego-art-remix.com/assets/png/icon-512x512.png" />
+        <Attribute name="src" value="assets/png/icon-512x512.png" />
         <Attribute name="width" value="512" />
         <Attribute name="height" value="512" />
       </DataObject>
@@ -169,6 +169,17 @@
         height: 50px;
         text-align: center;
       }
+
+      /* DooPixel customer-facing cleanup: keep the original algorithm, hide unused original-project features. */
+      .3d-selector-tabs,
+      #enable-depth-button-container,
+      #step-1-depth-tab-content,
+      #step-2-depth-tab-content,
+      #step-3-depth-tab-content,
+      #step-4-depth-tab-content,
+      #bricklink-export-card {
+        display: none !important;
+      }
     </style>
 
     <style class="dark-mode-stylesheet" disabled>
@@ -231,13 +242,13 @@
 
   <body>
     <div style="margin: 10px; padding-bottom: 30px; overflow: hidden; min-height: calc(100vh - 60px)">
-      <h1 style="margin-bottom: 0; margin-left: 4px">Lego Art Remix</h1>
+      <h1 style="margin-bottom: 0; margin-left: 4px">DooPixel Pixel Art Maker</h1>
       <div style="margin-bottom: 10px; margin-left: 6px">
-        <small> The Intelligent, Easy to Use Lego Mosaic Maker </small>
+        <small> Create custom brick pixel art from your own photo </small>
         <div style="margin-bottom: 5px">
           <small>
-            <span>Made with ♥ by Deb</span> &bull;
-            <a href="https://github.com/debkbanerji/lego-art-remix" target="_blank">Source Code</a>
+            <span>Open-source pixel art tool customized for DooPixel</span> &bull;
+            <a href="https://github.com/doopixel/doopixel-pixelizer" target="_blank">Source Code</a>
           </small>
         </div>
       </div>
@@ -291,7 +302,7 @@
                 <canvas id="step-1-canvas-upscaled" style="width: 100%" class="cropper-img"></canvas>
               </div>
               <h4>Step 1</h4>
-              <small className="step-header-subtitle">Crop + Scale input image</small>
+              <small className="step-header-subtitle">Crop your photo and choose the final pixel size</small>
               <div id="step-1-accordion">
                 <div class="card accordion-card">
                   <div class="card-header" id="step-1-1-heading">
@@ -303,7 +314,7 @@
                         aria-expanded="false"
                         aria-controls="step-1-1-collapse"
                       >
-                        Resolution
+                        Artwork Size
                       </button>
                     </h5>
                   </div>
@@ -314,7 +325,7 @@
                     data-parent="#step-1-accordion"
                   >
                     <div class="card-body accordion-card-body">
-                      <b>Target Resolution:</b>
+                      <b>Final Pixel Size:</b>
                       <div style="width: 100%">
                         <div>
                           Width:
@@ -351,7 +362,7 @@
                   </div>
                 </div>
 
-                <div class="card accordion-card" id="enable-depth-button-container">
+                <div class="card accordion-card" id="enable-depth-button-container" hidden>
                   <div class="card-header" id="step-1-2-heading">
                     <h5 class="mb-0">
                       <button
@@ -417,7 +428,7 @@
                           Supported image formats are dependent on your browser's compatibility
                         </p>
                         <p style="margin-bottom: 0; margin-left: 4px">
-                          Due to the nature of the Lego Art sets, images with transparency aren't fully supported
+                          Images with transparency may not preview correctly
                         </p>
                       </small>
                     </div>
@@ -451,14 +462,14 @@
                         id="resolution-limit-increase-button"
                         style="margin-bottom: 12px; margin-top: 8px"
                       >
-                        Increase Resolution Limit
+                        Larger Artwork Sizes
                       </button>
                       <small>
                         <div>
                           <b style="color: #ff4c00">Important</b>
                           <p>
                             Be careful when using high resolutions - this can cause performance issues on less powerful
-                            machines, especially during pdf generation and for 3D previews
+                            machines, especially during PDF generation
                           </p>
                         </div>
                       </small>
@@ -628,7 +639,7 @@
               <canvas id="step-2-canvas" hidden></canvas>
               <canvas id="step-2-canvas-upscaled" style="width: 100%"></canvas>
               <h4>Step 2</h4>
-              <small className="step-header-subtitle">Interpolate + Adjust colors</small>
+              <small className="step-header-subtitle">Tune how your photo becomes pixel art</small>
 
               <div id="step-2-accordion">
                 <div class="card accordion-card">
@@ -641,7 +652,7 @@
                         aria-expanded="false"
                         aria-controls="step-2-4-collapse"
                       >
-                        Interpolation
+                        Image Sharpness
                       </button>
                     </h5>
                   </div>
@@ -656,8 +667,7 @@
                         <div style="margin-top: 12px; margin-left: 4px" id="color-ties-resolution-section">
                           <small>
                             <p style="margin-bottom: 4px">
-                              This setting determines which algorithm is used to resize the image to the target
-                              resolution
+                              This controls how smooth or crisp the image looks after resizing
                             </p>
                           </small>
                         </div>
@@ -668,7 +678,7 @@
                             id="interpolation-algorithm-button"
                             data-toggle="dropdown"
                           >
-                            Browser Default
+                            Standard
                           </button>
                           <div class="dropdown-menu" id="interpolation-algorithm-options"></div>
                         </div>
@@ -687,7 +697,7 @@
                         aria-expanded="false"
                         aria-controls="step-2-1-collapse"
                       >
-                        HSV
+                        Color Tone
                       </button>
                     </h5>
                   </div>
@@ -700,7 +710,7 @@
                     <div class="card-body accordion-card-body">
                       <div style="width: 100%">
                         <div>
-                          Hue adjustment:
+                          Hue:
                           <span id="hue-text">0<span>&#176;</span></span>
                         </div>
                         <div style="display: flex; direction: horizontal; width: 100%; margin-bottom: 8px">
@@ -718,7 +728,7 @@
                       </div>
                       <div style="width: 100%">
                         <div>
-                          Saturation adjustment:
+                          Color Intensity:
                           <span id="saturation-text">0%</span>
                         </div>
                         <div style="display: flex; direction: horizontal; width: 100%; margin-bottom: 8px">
@@ -736,7 +746,7 @@
                       </div>
                       <div style="width: 100%">
                         <div>
-                          Value adjustment:
+                          Lightness:
                           <span id="value-text">0%</span>
                         </div>
                         <div style="display: flex; direction: horizontal; width: 100%; margin-bottom: 8px">
@@ -752,7 +762,7 @@
                           <button class="btn btn-sm" id="value-increment" style="flex-grow: 0">+</button>
                         </div>
                       </div>
-                      <button class="btn btn-info" type="button" id="reset-hsv-button">Reset HSV</button>
+                      <button class="btn btn-info" type="button" id="reset-hsv-button">Reset Color Tone</button>
                     </div>
                   </div>
                 </div>
@@ -780,7 +790,7 @@
                     <div class="card-body accordion-card-body">
                       <div style="width: 100%">
                         <div>
-                          Brightness adjustment:
+                          Brightness:
                           <span id="brightness-text">0</span>
                         </div>
                         <div style="display: flex; direction: horizontal; width: 100%; margin-bottom: 8px">
@@ -824,7 +834,7 @@
                     <div class="card-body accordion-card-body">
                       <div style="width: 100%">
                         <div>
-                          Contrast adjustment:
+                          Contrast:
                           <span id="contrast-text">0</span>
                         </div>
                         <div style="display: flex; direction: horizontal; width: 100%; margin-bottom: 8px">
@@ -886,7 +896,7 @@
                         <div>
                           <small
                             >Determines how many discrete levels of depth you want the pixels of the image to have,
-                            where each level is one Lego plate deep</small
+                            where each level is one plate layer deep</small
                           >
                         </div>
                         <input
@@ -1015,14 +1025,14 @@
               <canvas id="step-3-canvas" hidden></canvas>
               <canvas id="step-3-canvas-upscaled" style="width: 100%"></canvas>
               <h4>Step 3</h4>
-              <small className="step-header-subtitle">Align to closest pixel from available colors</small>
+              <small className="step-header-subtitle">Match the image to available piece colors</small>
               <br />
               <span
                 data-toggle="tooltip"
-                title="This is the average per pixel quantization error. The lower this value is, the closer this image is to the image in step 2 (according to the chosen color distance function)"
+                title="This is the average per pixel quantization error. The lower this value is, the closer this image is to the image in step 2 (according to the selected color matching setting)"
                 data-placement="top"
               >
-                <small>Average</small> &#x3F5;:
+                <small>Color Match</small>:
                 <small id="step-3-quantization-error"></small>
               </span>
 
@@ -1149,7 +1159,7 @@
                         aria-expanded="false"
                         aria-controls="step-3-2-collapse"
                       >
-                        Available Colors
+                        Available Piece Colors
                       </button>
                     </h5>
                   </div>
@@ -1164,26 +1174,23 @@
                         <div style="margin-bottom: 20px">
                           <small>
                             <p style="margin-left: 4px; margin-bottom: 8px">
-                              &#9679; This section specifies how many pieces of each color you have available to create
-                              the image
+                              &#9679; This section controls which piece colors can be used to create the image
                             </p>
-                            <p style="margin-left: 4px; margin-bottom: 8px">&#9679; Color names are bricklink colors</p>
+                            <p style="margin-left: 4px; margin-bottom: 8px">&#9679; Color names follow common brick color names</p>
                             <p style="margin-left: 4px; margin-bottom: 8px">
-                              &#9679; Step 4 of the algorithm cannot run unless you select enough pieces to fill the
-                              picture ('Missing Pieces' must be 0)
+                              &#9679; The final preview works best when there are enough pieces to fill the picture
                             </p>
                             <p style="margin-left: 4px; margin-bottom: 8px">
-                              &#9679; If you're working with an existing set, then clear the available pieces and use
-                              the mix in option to add in the pieces from your set.
+                              &#9679; You can import a saved color list if you want to reuse the same piece colors later.
                             </p>
-                            <b>Required Pieces: <span id="required-studs"></span></b><br />
-                            <b>Available Pieces: <span id="available-studs"></span></b><br />
-                            <b>Missing Pieces: <span id="missing-studs"></span></b><br />
+                            <b>Pieces Needed: <span id="required-studs"></span></b><br />
+                            <b>Pieces Available: <span id="available-studs"></span></b><br />
+                            <b>Pieces Not Available: <span id="missing-studs"></span></b><br />
                           </small>
                         </div>
                         <div style="padding-bottom: 10px">
                           <button class="btn btn-warning" type="button" id="clear-custom-studs-button">
-                            Clear Available Pieces
+                            Clear Piece Colors
                           </button>
                         </div>
                         <div
@@ -1193,7 +1200,7 @@
                         >
                           <label class="checkbox-clickable">
                             <input type="checkbox" class="checkbox-clickable" id="infinite-piece-count-check" />
-                            <span style="font-size: 13px">Infinite Piece Counts</span>
+                            <span style="font-size: 13px">Use All Available Colors</span>
                           </label>
                         </div>
                         <div style="margin-left: 4px" id="forced-infinite-piece-count-warning" hidden>
@@ -1201,9 +1208,9 @@
                             <p>
                               <b>Important</b>: Infinite piece counts were used, since a linear error dithering
                               algorithm was selected in the
-                              <span style="font-weight: 550">'Quantization'</span>
+                              <span style="font-weight: 550">'Pixel Color Style'</span>
                               section, or a variable piece type was selected in the
-                              <span style="font-weight: 550">'Pixel Piece'</span>
+                              <span style="font-weight: 550">'Piece Style'</span>
                               section
                             </p>
                           </small>
@@ -1220,19 +1227,19 @@
                           <thead>
                             <tr>
                               <th scope="col">Color</th>
-                              <th scope="col">Number Available</th>
+                              <th scope="col">Quantity Available</th>
                             </tr>
                           </thead>
                           <tbody id="custom-stud-table-body"></tbody>
                         </table>
                         <div style="padding-bottom: 10px">
                           <button class="btn btn-success" id="add-custom-stud-button">
-                            <span class="glyphicon glyphicon-plus"></span>+ Add Stud
+                            <span class="glyphicon glyphicon-plus"></span>+ Add Color
                           </button>
                         </div>
                         <div style="padding-bottom: 10px">
                           <a id="export-stud-map-button" download="selected-studs.json" href="””">
-                            <button class="btn btn-info" type="button">Export Selected Studs</button>
+                            <button class="btn btn-info" type="button">Export Selected Colors</button>
                           </a>
                         </div>
                         <div class="btn-group">
@@ -1244,7 +1251,7 @@
                             aria-haspopup="true"
                             aria-expanded="false"
                           >
-                            Mix in Studs From Existing Set
+                            Import Colors From Saved List
                           </button>
                           <div
                             class="dropdown-menu"
@@ -1254,11 +1261,11 @@
                           <input type="file" id="import-stud-map-file-input" name="import-stud-map-file-input" hidden />
                         </div>
                         <div style="margin-left: 4px">
-                          <small><b>Mixed in studs are added to studs already selected</b></small>
+                          <small><b>Imported colors are added to the colors already selected</b></small>
                         </div>
                         <div style="margin-left: 4px; padding-top: 4px">
                           <small>
-                            <b>Make sure the set you're mixing in studs from matches the selected pixel piece</b></small
+                            <b>Make sure the imported colors match the selected piece style</b></small
                           >
                         </div>
                       </div>
@@ -1276,7 +1283,7 @@
                         aria-expanded="false"
                         aria-controls="step-3-3-collapse"
                       >
-                        Pixel Piece
+                        Piece Style
                       </button>
                     </h5>
                   </div>
@@ -1297,7 +1304,7 @@
                             aria-haspopup="true"
                             aria-expanded="false"
                           >
-                            Bricklink Pixel Piece
+                            Piece Type
                           </button>
                           <div
                             class="dropdown-menu"
@@ -1309,13 +1316,13 @@
                           <small>
                             <p style="margin-bottom: 8px">
                               <b>Important</b>: Since a variable size pixel type was selected,
-                              <span style="font-weight: 550">'Infinite Piece Counts'</span>
+                              <span style="font-weight: 550">'Use All Available Colors'</span>
                               under
-                              <span style="font-weight: 550">'Available Colors'</span>
+                              <span style="font-weight: 550">'Available Piece Colors'</span>
                               was enabled - be careful!
                             </p>
                           </small>
-                          <b>Available Dimensions:</b>
+                          <b>Available Sizes:</b>
                           <div id="pixel-dimensions-container"></div>
                         </div>
                       </div>
@@ -1333,7 +1340,7 @@
                         aria-expanded="false"
                         aria-controls="step-3-4-collapse"
                       >
-                        Quantization
+                        Pixel Color Style
                       </button>
                     </h5>
                   </div>
@@ -1346,10 +1353,10 @@
                     <div class="card-body accordion-card-body">
                       <div style="margin-left: 4px">
                         <small>
-                          <b style="margin-bottom: 2px">Color Distance Function </b>
+                          <b style="margin-bottom: 2px">Color Matching </b>
                           <p style="margin-bottom: 8px; margin-top: 4px">
                             &#9679; This setting determines which distance function is used to align pixels to their
-                            closest Lego colors
+                            closest available piece colors
                           </p>
                         </small>
                         <button
@@ -1358,13 +1365,13 @@
                           id="distance-function-button"
                           data-toggle="dropdown"
                         >
-                          Euclidean RGB
+                          Standard Matching
                         </button>
                         <div class="dropdown-menu" id="distance-function-options"></div>
                       </div>
                       <div style="margin-top: 12px; margin-left: 4px">
                         <small>
-                          <b style="margin-bottom: 2px">Quantization Algorithm </b>
+                          <b style="margin-bottom: 2px">Pixel Color Style </b>
                           <p style="margin-bottom: 8px; margin-top: 4px">
                             &#9679; This determines what strategy is used for aligning pixels
                           </p>
@@ -1379,7 +1386,7 @@
                           id="quantization-algorithm-button"
                           data-toggle="dropdown"
                         >
-                          2 Phase
+                          Balanced
                         </button>
                         <div class="dropdown-menu" id="quantization-algorithm-options"></div>
                       </div>
@@ -1391,9 +1398,9 @@
                         <small>
                           <p style="margin-bottom: 8px">
                             <b>Important</b>: Since this is a linear error dithering algorithm,
-                            <span style="font-weight: 550">'Infinite Piece Counts'</span>
+                            <span style="font-weight: 550">'Use All Available Colors'</span>
                             under
-                            <span style="font-weight: 550">'Available Colors'</span>
+                            <span style="font-weight: 550">'Available Piece Colors'</span>
                             was enabled - be careful!
                           </p>
                         </small>
@@ -1402,14 +1409,14 @@
                         <small>
                           <p>
                             It's often best to use
-                            <span style="font-weight: 550">'Euclidean RGB'</span>
+                            <span style="font-weight: 550">'Standard Matching'</span>
                             for the color distance function, for mathematical cleanliness
                           </p>
                         </small>
                       </div>
                       <div style="margin-top: 12px; margin-left: 4px" id="color-ties-resolution-section">
                         <small>
-                          <b style="margin-bottom: 2px">Color Tie Resolution Strategy </b>
+                          <b style="margin-bottom: 2px">Color Blending Strategy </b>
                           <p style="margin-bottom: 4px">
                             Changing this is useful if you have a large background but not enough pieces to fill it out
                             uniformly in step 4
@@ -1422,13 +1429,13 @@
                             id="color-ties-resolution-button"
                             data-toggle="dropdown"
                           >
-                            Strategy: Alternating Mod
+                            Strategy: Balanced Alternating
                           </button>
                           <div class="dropdown-menu" id="color-ties-resolution-options"></div>
                         </div>
                         <div style="padding-top: 4px; padding-right: 12px; width: 100%">
                           <div>
-                            Blocking Factor:
+                            Blending Block Size:
                             <span id="color-tie-grouping-factor-text">1</span>
                           </div>
                           <input
@@ -1551,17 +1558,17 @@
               <canvas id="bricklink-cache-canvas" hidden></canvas>
               <canvas id="step-4-canvas-upscaled" style="width: 100%"></canvas>
               <h4>Step 4</h4>
-              <small className="step-header-subtitle">Correct for available pieces, if piece counts are limited</small>
+              <small className="step-header-subtitle">Review the final preview and required pieces</small>
               <br />
               <div className="step-header-subtitle text-danger" id="nonzero-missing-pieces-warning" hidden>
-                <small>'Missing Pieces' under 'Available Colors' must be 0 </small>
+                <small>'Pieces Not Available' under 'Available Piece Colors' must be 0 </small>
               </div>
               <span
                 data-toggle="tooltip"
-                title="This is the average per pixel quantization error. The lower this value is, the closer this image is to the image in step 2 (according to the chosen color distance function). If this is significantly higher than the quantization error from step 3, see 'Pieces Missing From Step 3' under 'Pieces Used' to determine which additional pieces can be used to improve the image."
+                title="This is the average per pixel quantization error. The lower this value is, the closer this image is to the image in step 2 (according to the selected color matching setting). If this is significantly higher than the quantization error from step 3, see 'Pieces Still Needed' under 'Pieces Used' to determine which additional pieces can be used to improve the image."
                 data-placement="top"
               >
-                <small>Average</small> &#x3F5;:
+                <small>Color Match</small>:
                 <small id="step-4-quantization-error"></small>
               </span>
               <div id="step-4-accordion">
@@ -1575,7 +1582,7 @@
                         aria-expanded="false"
                         aria-controls="step-4-1-collapse"
                       >
-                        Pieces Used
+                        Final Parts List
                       </button>
                     </h5>
                   </div>
@@ -1587,32 +1594,32 @@
                   >
                     <div class="card-body accordion-card-body">
                       <div style="margin-left: 4px; margin-bottom: 2px; margin-top: 8px">
-                        <b>Pieces Used in Final Image </b>
+                        <b>Pieces Needed for Final Image </b>
                       </div>
                       <table class="table">
                         <thead>
                           <tr>
                             <th scope="col">Color</th>
                             <th scope="col" id="pieces-used-dimensions-header" hidden>Dimensions</th>
-                            <th scope="col">Number Used</th>
+                            <th scope="col">Quantity</th>
                           </tr>
                         </thead>
                         <tbody id="studs-used-table-body"></tbody>
                       </table>
                       <div id="studs-missing-container" hidden>
                         <div style="margin-left: 4px; margin-bottom: 2px; margin-top: 8px">
-                          <b>Pieces Missing From Step 3 </b>
+                          <b>Pieces Still Needed </b>
                         </div>
                         <div style="margin-left: 4px; margin-bottom: 2px; margin-top: 8px">
                           <small
-                            >Adding these pieces will allow the image from step 4 to match the image from step 3
+                            >Adding these pieces helps the final preview match the color-matched preview
                           </small>
                         </div>
                         <table class="table">
                           <thead>
                             <tr>
                               <th scope="col">Color</th>
-                              <th scope="col">Number Missing</th>
+                              <th scope="col">Quantity Missing</th>
                             </tr>
                           </thead>
                           <tbody id="studs-missing-table-body"></tbody>
@@ -1622,7 +1629,7 @@
                   </div>
                 </div>
 
-                <div class="card accordion-card" id="bricklink-export-card">
+                <div class="card accordion-card" id="bricklink-export-card" hidden>
                   <div class="card-header" id="step-4-2-heading">
                     <h5 class="mb-0">
                       <button
@@ -1632,7 +1639,7 @@
                         aria-expanded="false"
                         aria-controls="step-4-2-collapse"
                       >
-                        Export Piece List
+                        Export Parts List
                       </button>
                     </h5>
                   </div>
@@ -1649,12 +1656,12 @@
                         class="btn btn-info"
                         style="margin-bottom: 10px; margin-top: 8px"
                       >
-                        Copy Bricklink XML to Clipboard
+                        Copy Parts List XML
                       </button>
                       <br />
                       <small>
                         <p style="margin-left: 4px; margin-bottom: 4px">
-                          The type of piece used depends on 'Pixel Piece' under step 3
+                          The type of piece used depends on 'Piece Style' under step 3
                         </p>
                         <p style="margin-left: 4px; margin-bottom: 4px">Frame elements are not exported</p>
                         <p style="margin-left: 4px; margin-bottom: 4px">
@@ -1682,7 +1689,7 @@
                         aria-expanded="false"
                         aria-controls="step-4-3-collapse"
                       >
-                        Instructions
+                        Building Guide
                       </button>
                     </h5>
                   </div>
@@ -1708,19 +1715,19 @@
                         class="btn btn-info"
                         style="margin-top: 8px"
                       >
-                        Generate Instructions PDF
+                        Download Building Guide
                       </button>
                       <div class="checkbox" style="margin-top: 4px; margin-left: 4px">
                         <label class="checkbox-clickable">
                           <input type="checkbox" class="checkbox-clickable" id="high-quality-instructions-check" />
-                          <span style="font-size: 13px">High quality pdf</span>
+                          <span style="font-size: 13px">High quality PDF</span>
                         </label>
                       </div>
                       <small>
                         <p style="margin-left: 4px; margin-bottom: 4px">
                           Longer instructions may be split into multiple files
                         </p>
-                        <p style="margin-left: 4px; margin-bottom: 4px">Color names are Bricklink colors</p>
+                        <p style="margin-left: 4px; margin-bottom: 4px">Color names follow common brick color names</p>
                       </small>
                       <div style="margin-left: 4px; margin-bottom: 4px">
                         <small>
@@ -1860,7 +1867,7 @@
                         aria-expanded="false"
                         aria-controls="step-4-depth-2-collapse"
                       >
-                        Instructions
+                        Building Guide
                       </button>
                     </h5>
                   </div>
@@ -1895,7 +1902,7 @@
                             class="checkbox-clickable"
                             id="high-quality-depth-instructions-check"
                           />
-                          <span style="font-size: 13px">High quality pdf</span>
+                          <span style="font-size: 13px">High quality PDF</span>
                         </label>
                       </div>
                       <small>
@@ -1929,7 +1936,7 @@
                         aria-expanded="false"
                         aria-controls="step-4-depth-3-collapse"
                       >
-                        Pieces Used
+                        Final Parts List
                       </button>
                     </h5>
                   </div>
@@ -1947,7 +1954,7 @@
                         disabled
                         style="margin-bottom: 10px; margin-top: 8px"
                       >
-                        Copy Bricklink XML to Clipboard
+                        Copy Parts List XML
                       </button>
                       <small style="margin-left: 4px">
                         <a href="https://www.bricklink.com/v2/wanted/upload.page" target="_blank">
@@ -1978,7 +1985,7 @@
             <div class="row" style="margin-left: 0px">
               <div style="margin-right: 4px">
                 <span style="margin-left: 4px; margin-right: 8px; margin-top: 4px; font-weight: 600"
-                  >Input Pieces:</span
+                  >Starting Colors:</span
                 >
                 <span
                   data-toggle="tooltip"
@@ -1994,7 +2001,7 @@
                     aria-expanded="false"
                     disabled
                   >
-                    Input set
+                    Default colors
                   </button>
                   <div
                     class="dropdown-menu"
@@ -2014,7 +2021,7 @@
             <input type="file" id="input-image-selector-hidden" name="input-image-selector-hidden" hidden />
             <div style="margin-top: 12px">
               <button class="btn btn-success" type="button" id="input-image-selector" disabled>
-                Select Input Image
+                Upload Photo
               </button>
             </div>
           </span>
@@ -2042,7 +2049,7 @@
       </div>
     </div>
 
-    <div class="card card-body" style="padding-bottom: 10px; margin-top: 10px">
+    <div class="card card-body" style="padding-bottom: 10px; margin-top: 10px" hidden>
       <div class="row">
         <div class="col-sm">
           <h5>
@@ -2053,7 +2060,7 @@
               aria-controls="articles"
               id="toggle-tech-talk-button"
             >
-              Tech Talk + Other Media
+              Technical Notes
             </a>
           </h5>
           <div class="collapse" id="articles">
@@ -2083,12 +2090,12 @@
               </div>
             </div>
             <p style="margin-bottom: 4px; margin-top: 15px; font-weight: 600">
-              These are some other articles and videos featuring Lego Art Remix
+              These are some other articles and videos featuring DooPixel Pixel Art Maker
             </p>
             <small>
               <p style="margin-bottom: 4px">
                 Some are quite interesting even outside the context of this tool in particular, since they go into the
-                history of Lego mosaics
+                history of brick mosaics
               </p>
               <p style="margin-bottom: 4px">Note that some were made when the tool was older</p>
               <ul>
@@ -2141,71 +2148,34 @@
           <div class="collapse" id="about">
             <div style="margin-bottom: 15px">
               <small>
-                <span id="version-number"></span> &bull; <span>Made with ♥ by Deb</span> &bull;
-                <a href="https://github.com/debkbanerji/lego-art-remix" target="_blank">Source Code</a>
+                <span id="version-number"></span> &bull; <span>Open-source pixel art tool customized for DooPixel</span> &bull;
+                <a href="https://github.com/doopixel/doopixel-pixelizer" target="_blank">Source Code</a>
                 <span id="total-generated-count"></span>
               </small>
             </div>
             <h6>What is it?</h6>
             <p style="margin-bottom: 5px">
-              In 2020, The Lego Group released the
-              <a href="https://www.lego.com/en-us/campaigns/art" target="_blank">Lego Art</a>
-              theme, which allows people to create a predetermined image using lego studs.<br />
-              Lego Art Remix lets you upload your own image, and then uses computer vision to use the studs from a Lego
-              Art set that you already have to recreate the image.
+              DooPixel Pixel Art Maker lets you upload your own photo and turn it into brick pixel art. The tool
+              generates a preview, matches colors to available piece colors, and creates a parts list for building the
+              design.
             </p>
-            <p>This project is not affiliated with The Lego Group</p>
+            <p>DooPixel is an independent brick pixel art tool</p>
             <h6>Performance and Security</h6>
             <p style="margin-bottom: 5px">
-              The computer vision techniques used are pretty inexpensive (with the exception of optional depth map
-              generation), and the resolutions being dealt with are naturally quite low, so as of the time of writing,
-              the algorithm runs quite quickly. This allows for it to be run on the client, and on the machines that I
-              tested, it ran in near real time.
+              Image processing runs directly in your browser. The photo you choose is not uploaded by this page during
+              pixel art generation.
             </p>
             <p style="margin-bottom: 5px">
-              The most computationally expensive part of the process, apart from depth map generation, is generating the
-              instructions, since even pdf generation is done client side.
+              Building guide generation also runs in the browser and may take longer for larger artwork sizes.
             </p>
             <p style="margin-bottom: 5px">
-              Since it runs almost entirely within the browser (see the
-              <a href="https://github.com/debkbanerji/lego-art-remix" target="_blank">source code</a>), no image data is
-              sent to a server and so it's very secure. This also makes it much easier for me to maintain and host. The
-              only server code consists of simple increments to anonymously estimate usage for the purposes for tracking
-              performance in case the static deployment needs to be scaled up, and for the counter in the about section.
+              This project is customized from open-source browser-based mosaic software.
             </p>
-            <p style="margin-bottom: 5px">
-              Even the deep neural network to compute depth maps is being run entirely within the browser, in a web
-              worker, using a modified version of
-              <a href="https://github.com/microsoft/onnxjs" target="_blank">ONNX.js</a>. I've compiled a version of the
-              library based on
-              <a href="https://github.com/microsoft/onnxjs/pull/228" target="_blank">this pull request</a>, with a small
-              additional change I made to support the resize operation in v10. The model used is
-              <a href="https://github.com/intel-isl/MiDaS" target="_blank">MiDaS</a>
-              - more specifically, the small ONNX version which can be found
-              <a href="https://github.com/intel-isl/MiDaS/releases/tag/v2_1" target="_blank">here</a>.
-            </p>
-            <div class="card" style="margin-top: 4px; margin-bottom: 16px; padding: 4px">
-              <b>Citation for Model Used</b>
-              <span>
-                Ranftl, René, Katrin Lasinger, David Hafner, Konrad Schindler, and Vladlen Koltun. "Towards robust
-                monocular depth estimation: Mixing datasets for zero-shot cross-dataset transfer." (2020).
-                <i>IEEE Transactions on Pattern Analysis and Machine Intelligence</i></span
-              >
-            </div>
             <p></p>
-            <h6>Bugs, Feature Requests, and Algorithm Improvements</h6>
+            <h6>Feedback</h6>
             <em style="margin-bottom: 5px"
-              >Direct any concerns or ideas for improvements
-              <a href="https://github.com/debkbanerji/lego-art-remix/issues" target="_blank">here</a></em
+              >For questions or improvement ideas, contact DooPixel support.</em
             >
-            <p style="margin-bottom: 5px">
-              As of the time of writing, I don't have all of the sets, and I haven't had much time to test. As a result,
-              there's probably a few bugs, so let me know if you find any.
-            </p>
-            <p style="margin-bottom: 5px">
-              Algorithm improvement ideas are always welcome. Improvements that maintain the efficiency to within a
-              reasonable degree would allow the algorithm to keep running on the client, which I really like.
-            </p>
           </div>
         </div>
       </div>
@@ -2356,7 +2326,7 @@
 
     <footer>
       <small class="footer">
-        <p>This project is not affiliated with The Lego Group</p>
+        <p>DooPixel is an independent brick pixel art tool</p>
       </small>
     </footer>
   </body>
