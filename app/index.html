@@ -478,122 +478,7 @@
         }
       }
 
-      /* Customer layout: result first, settings below. The original step DOM stays intact for the algorithm. */
-      #steps-row:not([hidden]) {
-        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-        grid-template-areas:
-          "preview preview preview"
-          "crop adjust pieces" !important;
-      }
-
-      #step-1 {
-        grid-area: crop;
-      }
-
-      #step-2 {
-        grid-area: adjust;
-      }
-
-      #step-3 {
-        grid-area: pieces;
-      }
-
-      #step-4 {
-        grid-area: preview;
-      }
-
-      #step-4 > .card {
-        display: grid;
-        grid-template-columns: minmax(320px, 1.35fr) minmax(300px, 0.9fr);
-        gap: 16px;
-        align-items: start;
-      }
-
-      #step-4-canvas-upscaled {
-        margin-bottom: 0;
-      }
-
-      #step-4 h4,
-      #step-4 h4 + small,
-      #step-4 h4 + small + br,
-      #step-4 h4 + small + br + div,
-      #step-4 h4 + small + br + div + span {
-        grid-column: 2;
-      }
-
-      #step-4 #step-4-accordion {
-        grid-column: 2;
-      }
-
-      #step-1-canvas-upscaled,
-      #step-2-canvas-upscaled,
-      #step-3-canvas-upscaled {
-        max-height: 260px;
-        object-fit: contain;
-      }
-
-      #step-2-canvas-upscaled,
-      #step-3-canvas-upscaled {
-        display: none !important;
-      }
-
-      #step-1 > .card,
-      #step-2 > .card,
-      #step-3 > .card {
-        min-height: auto;
-      }
-
-      #step-1 h4,
-      #step-2 h4,
-      #step-3 h4 {
-        margin-top: 0;
-      }
-
-      #step-1-accordion,
-      #step-2-accordion,
-      #step-3-accordion {
-        margin-top: 10px;
-      }
-
-      @media (max-width: 1100px) {
-        #steps-row:not([hidden]) {
-          grid-template-columns: 1fr 1fr !important;
-          grid-template-areas:
-            "preview preview"
-            "crop adjust"
-            "pieces pieces" !important;
-        }
-
-        #step-4 > .card {
-          grid-template-columns: 1fr;
-        }
-
-        #step-4 h4,
-        #step-4 h4 + small,
-        #step-4 h4 + small + br,
-        #step-4 h4 + small + br + div,
-        #step-4 h4 + small + br + div + span,
-        #step-4 #step-4-accordion {
-          grid-column: 1;
-        }
-      }
-
-      @media (max-width: 720px) {
-        #steps-row:not([hidden]) {
-          grid-template-columns: 1fr !important;
-          grid-template-areas:
-            "preview"
-            "crop"
-            "adjust"
-            "pieces" !important;
-        }
-
-        #step-1-canvas-upscaled {
-          max-height: none;
-        }
-      }
-
-      /* DooPixel customer flow v2: upload first, result as the main view, controls as secondary settings. */
+      /* DooPixel workbench layout: upload first, result first, then practical edit controls. */
       body > div[style*="min-height"] {
         display: flex;
         flex-direction: column;
@@ -689,45 +574,119 @@
       }
 
       #steps-row:not([hidden]) {
-        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) minmax(320px, 430px) !important;
         grid-template-areas:
-          "preview preview preview"
-          "crop adjust pieces" !important;
-        gap: 12px;
+          "preview preview"
+          "crop crop"
+          "adjust pieces" !important;
+        gap: 14px;
         margin-top: 0;
+      }
+
+      #step-1 {
+        grid-area: crop;
+      }
+
+      #step-2 {
+        grid-area: adjust;
+      }
+
+      #step-3 {
+        grid-area: pieces;
+      }
+
+      #step-4 {
+        grid-area: preview;
+      }
+
+      #steps-row > [class*="col-"] {
+        width: auto !important;
+        max-width: none !important;
+        flex: none !important;
+        padding: 0 !important;
       }
 
       #steps-row > div > .card {
         padding: 12px !important;
+        height: auto !important;
       }
 
       #step-4 > .card {
+        display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(280px, 370px);
         gap: 14px;
+        align-items: start;
         padding: 12px !important;
       }
 
       #step-4-canvas-upscaled {
         display: block;
+        grid-column: 1;
+        grid-row: 1 / span 6;
         width: 100% !important;
         height: auto !important;
-        max-height: 72vh;
-        object-fit: contain;
+        max-height: none !important;
+        object-fit: initial !important;
+        margin-bottom: 0;
+      }
+
+      #step-4 h4,
+      #step-4 h4 + small,
+      #step-4 h4 + small + br,
+      #step-4 h4 + small + br + div,
+      #step-4 h4 + small + br + div + span,
+      #step-4 #step-4-accordion {
+        grid-column: 2;
+      }
+
+      #step-1-color-tab-content {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+        gap: 10px 14px;
+        align-items: start;
+      }
+
+      #step-1-color-tab-content > div:first-of-type {
+        grid-column: 1;
+        grid-row: 1 / span 5;
+        min-width: 0;
+        overflow: visible !important;
+      }
+
+      #step-1 h4,
+      #step-1 h4 + small,
+      #step-1-accordion {
+        grid-column: 2;
       }
 
       #step-1-canvas-upscaled {
-        max-height: 220px;
+        width: 100% !important;
+        height: auto !important;
+        max-height: none !important;
+        object-fit: initial !important;
+      }
+
+      #step-1 .cropper-container {
+        max-width: 100% !important;
+        max-height: none !important;
+        margin-bottom: 8px;
+      }
+
+      #step-2-canvas-upscaled,
+      #step-3-canvas-upscaled {
+        display: none !important;
       }
 
       #steps-row h4 {
         margin: 0 0 3px;
-        font-size: 15px;
-        font-weight: 700;
+        font-size: 16px;
+        font-weight: 600;
         line-height: 1.25;
       }
 
       #step-4 h4 {
-        font-size: 17px;
+        font-size: 18px;
       }
 
       #steps-row h4 + small,
@@ -777,15 +736,36 @@
 
       @media (max-width: 1100px) {
         #steps-row:not([hidden]) {
-          grid-template-columns: 1fr 1fr !important;
+          grid-template-columns: minmax(0, 1fr) !important;
           grid-template-areas:
-            "preview preview"
-            "crop adjust"
-            "pieces pieces" !important;
+            "preview"
+            "crop"
+            "adjust"
+            "pieces" !important;
         }
 
         #step-4 > .card {
           grid-template-columns: 1fr;
+        }
+
+        #step-4 h4,
+        #step-4 h4 + small,
+        #step-4 h4 + small + br,
+        #step-4 h4 + small + br + div,
+        #step-4 h4 + small + br + div + span,
+        #step-4 #step-4-accordion {
+          grid-column: 1;
+        }
+
+        #step-1-color-tab-content {
+          grid-template-columns: minmax(0, 1fr);
+        }
+
+        #step-1-color-tab-content > div:first-of-type,
+        #step-1 h4,
+        #step-1 h4 + small,
+        #step-1-accordion {
+          grid-column: 1;
         }
       }
 
@@ -837,10 +817,6 @@
             "adjust"
             "pieces" !important;
           gap: 10px;
-        }
-
-        #step-4-canvas-upscaled {
-          max-height: none;
         }
 
         #steps-row h4 {
@@ -984,10 +960,10 @@
                   <div class="card-header" id="step-1-1-heading">
                     <h5 class="mb-0">
                       <button
-                        class="btn btn-link collapsed"
+                        class="btn btn-link"
                         data-toggle="collapse"
                         data-target="#step-1-1-collapse"
-                        aria-expanded="false"
+                        aria-expanded="true"
                         aria-controls="step-1-1-collapse"
                       >
                         Artwork Size
@@ -996,7 +972,7 @@
                   </div>
                   <div
                     id="step-1-1-collapse"
-                    class="collapse"
+                    class="collapse show"
                     aria-labelledby="step-1-1-heading"
                     data-parent="#step-1-accordion"
                   >
