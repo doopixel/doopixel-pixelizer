@@ -2331,7 +2331,38 @@
     ></script>
     <script src="js/pixi.min.js"></script>
     <script src="js/bricklink-colors.js"></script>
+    <script>
+      if (typeof PIXEL_TYPE_OPTIONS !== "undefined") {
+        PIXEL_TYPE_OPTIONS.splice(
+          0,
+          PIXEL_TYPE_OPTIONS.length,
+          { name: "1x1 Round Tile", number: 98138 },
+          { name: "1x1 Round Plate", number: 4073 }
+        );
+      }
+    </script>
     <script src="js/stud-maps.js"></script>
+    <script>
+      if (typeof STUD_MAPS !== "undefined") {
+        const tileColors = STUD_MAPS.all_tile_colors;
+        const studColors = STUD_MAPS.all_stud_colors;
+
+        if (tileColors && studColors) {
+          tileColors.name = "All 1x1 Round Tile Colors";
+          tileColors.officialName = "All 1x1 Round Tile Colors";
+          tileColors.descriptionHTML = "Use all colors available for 1x1 round tile pieces.";
+
+          studColors.name = "All 1x1 Round Plate Colors";
+          studColors.officialName = "All 1x1 Round Plate Colors";
+          studColors.descriptionHTML = "Use all colors available for 1x1 round plate pieces.";
+
+          STUD_MAPS = {
+            all_tile_colors: tileColors,
+            all_stud_colors: studColors,
+          };
+        }
+      }
+    </script>
     <script src="js/heap.js"></script>
     <script src="js/algo.js"></script>
     <script src="js/index.js"></script>
