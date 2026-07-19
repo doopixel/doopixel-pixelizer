@@ -2336,68 +2336,111 @@
     <script src="js/algo.js"></script>
     <script src="js/index.js"></script>
     <script>
-      (function restrictDooPixelPieceMenus() {
-        const allowedPieceValues = new Set(["98138", "4073"]);
-        const allowedColorMaps = new Map([
-          [
-            "all_tile_colors",
-            {
-              name: "All 1x1 Round Tile Colors",
-              officialName: "All 1x1 Round Tile Colors",
-              descriptionHTML: "Use all colors available for 1x1 round tile pieces.",
-            },
-          ],
-          [
-            "all_stud_colors",
-            {
-              name: "All 1x1 Round Plate Colors",
-              officialName: "All 1x1 Round Plate Colors",
-              descriptionHTML: "Use all colors available for 1x1 round plate pieces.",
-            },
-          ],
-        ]);
+      (function setupDooPixelPieceChoices() {
+        const dooPixelPieces = [
+          { name: "1x1 Round Tile", number: 98138, colorMapKey: "all_tile_colors" },
+          { name: "1x1 Round Plate", number: 4073, colorMapKey: "all_stud_colors" },
+        ];
+        const dooPixelColorMaps = [
+          {
+            key: "all_tile_colors",
+            name: "All 1x1 Round Tile Colors",
+            descriptionHTML: "Use all colors available for 1x1 round tile pieces.",
+          },
+          {
+            key: "all_stud_colors",
+            name: "All 1x1 Round Plate Colors",
+            descriptionHTML: "Use all colors available for 1x1 round plate pieces.",
+          },
+        ];
+
+        const getMapLabel = (key) => dooPixelColorMaps.find((map) => map.key === key);
+        const setButtonText = (id, text) => {
+          const button = document.getElementById(id);
+          if (button) {
+            button.innerHTML = text;
+          }
+        };
+        const setDescription = (text) => {
+          const description = document.getElementById("input-stud-map-description");
+          if (description) {
+            description.innerHTML = text;
+          }
+        };
+        const runIfImageLoaded = () => {
+          if (typeof inputImage !== "undefined" && inputImage != null) {
+            runStep3();
+          }
+        };
 
         if (typeof STUD_MAPS !== "undefined") {
-          allowedColorMaps.forEach((label, key) => {
-            if (STUD_MAPS[key]) {
-              STUD_MAPS[key].name = label.name;
-              STUD_MAPS[key].officialName = label.officialName;
-              STUD_MAPS[key].descriptionHTML = label.descriptionHTML;
+          dooPixelColorMaps.forEach((map) => {
+            if (STUD_MAPS[map.key]) {
+              STUD_MAPS[map.key].name = map.name;
+              STUD_MAPS[map.key].officialName = map.name;
+              STUD_MAPS[map.key].descriptionHTML = map.descriptionHTML;
             }
           });
         }
 
-        const filterDropdown = (menuId, allowedValues) => {
+        const chooseStartingColors = (key, shouldRunAfterSelection) => {
+          if (!STUD_MAPS[key]) {
+            return;
+          }
+
+          customStudTableBody.innerHTML = "";
+          mixInStudMap(STUD_MAPS[key], shouldRunAfterSelection);
+
+          const label = getMapLabel(key);
+          if (label) {
+            setButtonText("select-starting-custom-stud-map-button", label.name);
+            setDescription(label.descriptionHTML);
+          }
+        };
+
+        const rebuildMenu = (menuId, entries, onClick) => {
           const menu = document.getElementById(menuId);
           if (!menu) {
             return;
           }
 
-          Array.from(menu.children).forEach((option) => {
-            const value = option.value || "";
-            if (!allowedValues.has(value)) {
-              option.remove();
-              return;
-            }
-
-            if (allowedColorMaps.has(value)) {
-              option.textContent = allowedColorMaps.get(value).name;
-            }
+          menu.innerHTML = "";
+          entries.forEach((entry) => {
+            const option = document.createElement("a");
+            option.className = "dropdown-item btn";
+            option.href = "#";
+            option.textContent = entry.name;
+            option.value = entry.key || entry.number;
+            option.addEventListener("click", (event) => {
+              event.preventDefault();
+              onClick(entry);
+            });
+            menu.appendChild(option);
           });
         };
 
-        filterDropdown("bricklink-piece-options", allowedPieceValues);
-        filterDropdown("select-starting-custom-stud-map-options", new Set(allowedColorMaps.keys()));
-        filterDropdown("mix-in-stud-map-options", new Set(allowedColorMaps.keys()));
+        rebuildMenu("bricklink-piece-options", dooPixelPieces, (piece) => {
+          setButtonText("bricklink-piece-button", piece.name);
+          selectedPixelPartNumber = piece.number;
+          document.getElementById("pixel-dimensions-container-wrapper").hidden = true;
 
-        const startingButton = document.getElementById("select-starting-custom-stud-map-button");
-        const startingDescription = document.getElementById("input-stud-map-description");
-        if (startingButton && allowedColorMaps.has("all_tile_colors")) {
-          startingButton.innerHTML = allowedColorMaps.get("all_tile_colors").name;
-        }
-        if (startingDescription && allowedColorMaps.has("all_tile_colors")) {
-          startingDescription.innerHTML = allowedColorMaps.get("all_tile_colors").descriptionHTML;
-        }
+          chooseStartingColors(piece.colorMapKey, false);
+          onInfinitePieceCountChange();
+          updateForceInfinitePieceCountText();
+          runIfImageLoaded();
+        });
+
+        rebuildMenu("select-starting-custom-stud-map-options", dooPixelColorMaps, (map) => {
+          chooseStartingColors(map.key, false);
+          runIfImageLoaded();
+        });
+
+        rebuildMenu("mix-in-stud-map-options", dooPixelColorMaps, (map) => {
+          mixInStudMap(STUD_MAPS[map.key], true);
+        });
+
+        setButtonText("bricklink-piece-button", dooPixelPieces[0].name);
+        chooseStartingColors(dooPixelPieces[0].colorMapKey, false);
       })();
     </script>
     <script src="js/metrics.js"></script>
@@ -2423,6 +2466,7 @@
     </footer>
   </body>
 </html>
+
 
 
 
