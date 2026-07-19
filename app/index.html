@@ -204,6 +204,279 @@
         display: block;
         margin: 6px 4px 10px;
       }
+
+      body {
+        color: #171717;
+      }
+
+      body > div[style*="min-height"] {
+        max-width: 1500px;
+        margin: 0 auto !important;
+        padding: 18px 18px 42px !important;
+        overflow: visible !important;
+      }
+
+      body > div[style*="min-height"] > h1 {
+        font-size: clamp(28px, 3vw, 42px);
+        font-weight: 800;
+        line-height: 1.08;
+        margin-top: 4px;
+      }
+
+      #image-input-card,
+      #steps-row > div > .card,
+      .card.card-body {
+        border: 1px solid #d9d9d9;
+        border-radius: 8px;
+        background-color: rgba(255, 255, 255, 0.94);
+      }
+
+      #image-input-card {
+        margin: 16px 0;
+        padding: 16px !important;
+      }
+
+      #image-input-card h3 {
+        margin-bottom: 6px;
+        font-size: 22px;
+      }
+
+      #image-input-card .btn-group,
+      #image-input-card .row {
+        max-width: 100%;
+      }
+
+      #steps-row[hidden] {
+        display: none !important;
+      }
+
+      #steps-row:not([hidden]) {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+        gap: 16px;
+        align-items: start;
+        margin: 0;
+      }
+
+      #steps-row > [class*="col-"] {
+        width: auto !important;
+        max-width: none !important;
+        flex: none !important;
+        padding: 0 !important;
+      }
+
+      #steps-row > div > .card {
+        height: 100%;
+        padding: 14px !important;
+        margin-bottom: 0 !important;
+      }
+
+      #steps-row h4 {
+        margin: 12px 0 2px;
+        font-size: 17px;
+        font-weight: 800;
+      }
+
+      #steps-row h4 + small,
+      #steps-row h4 + small + br + span,
+      #steps-row .text-danger {
+        color: #5f6368;
+        font-size: 12px;
+        line-height: 1.35;
+      }
+
+      #steps-row canvas[id$="upscaled"],
+      #step-4-canvas-3d-upscaled {
+        width: 100% !important;
+        border: 1px solid #e1e1e1;
+        border-radius: 8px;
+        background: #f7f7f7;
+        margin-bottom: 8px;
+      }
+
+      .accordion-card {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        overflow: hidden;
+        background-color: #ffffff;
+      }
+
+      .accordion-card .card-header {
+        background: #f7f7f7;
+      }
+
+      .accordion-card .btn-link {
+        min-height: 42px;
+        padding: 10px 12px;
+        color: #171717;
+        font-size: 14px;
+        font-weight: 800;
+        line-height: 1.25;
+        text-align: left;
+        white-space: normal;
+      }
+
+      .accordion-card-body {
+        padding: 12px;
+        overflow-x: auto;
+      }
+
+      .btn {
+        border-radius: 6px;
+        font-weight: 700;
+      }
+
+      .btn-success {
+        border-color: #111111;
+        background-color: #111111;
+        color: #ffffff;
+      }
+
+      .btn-success:hover,
+      .btn-success:focus {
+        border-color: #333333;
+        background-color: #333333;
+        color: #ffffff;
+      }
+
+      .btn-info {
+        border-color: #111111;
+        background-color: #ffffff;
+        color: #111111;
+      }
+
+      .btn-info:hover,
+      .btn-info:focus {
+        border-color: #111111;
+        background-color: #f1f1f1;
+        color: #111111;
+      }
+
+      .btn-outline-dark {
+        border-color: #c9c9c9;
+        background-color: #ffffff;
+        color: #171717;
+      }
+
+      .btn-warning {
+        border-color: #c98c00;
+        background-color: #fff3d1;
+        color: #3c2a00;
+      }
+
+      input[type="range"] {
+        min-height: 34px;
+        accent-color: #111111;
+      }
+
+      .table {
+        margin-bottom: 8px;
+        background: #ffffff;
+        font-size: 13px;
+      }
+
+      .table th {
+        background: #f7f7f7;
+        font-weight: 800;
+      }
+
+      #paintbrush-controls {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+
+      .paintbrush-controls-button {
+        min-width: 38px;
+        min-height: 38px;
+        border-radius: 6px;
+      }
+
+      .dropdown-menu {
+        border-radius: 8px;
+      }
+
+      .dropdown-item {
+        white-space: normal;
+      }
+
+      @media (min-width: 1280px) {
+        #steps-row:not([hidden]) {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 900px) {
+        body > div[style*="min-height"] {
+          padding: 12px 10px 32px !important;
+        }
+
+        #image-input-card,
+        #steps-row > div > .card,
+        .card.card-body {
+          border-radius: 8px;
+        }
+
+        #steps-row:not([hidden]) {
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
+
+        #steps-row > div > .card {
+          padding: 12px !important;
+        }
+
+        .btn-group {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+        }
+
+        .btn-group > .btn,
+        .btn-group > span,
+        .btn-group > div {
+          max-width: 100%;
+        }
+
+        .btn,
+        .dropdown-toggle {
+          white-space: normal;
+        }
+
+        #image-input-card .row {
+          display: block;
+        }
+
+        #image-input-card .btn {
+          width: 100%;
+          margin-top: 4px;
+        }
+
+        .dp-baseplate-note {
+          display: block;
+          margin: 2px 0 4px;
+        }
+      }
+
+      @media (max-width: 520px) {
+        body > div[style*="min-height"] > h1 {
+          font-size: 26px;
+        }
+
+        #steps-row h4 {
+          font-size: 16px;
+        }
+
+        .accordion-card .btn-link {
+          min-height: 40px;
+          padding: 9px 10px;
+          font-size: 13px;
+        }
+
+        .accordion-card-body {
+          padding: 10px;
+        }
+      }
     </style>
 
     <style class="dark-mode-stylesheet" disabled>
@@ -2536,5 +2809,6 @@
     </footer>
   </body>
 </html>
+
 
 
