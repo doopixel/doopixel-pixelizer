@@ -1,17 +1,32 @@
 (function () {
   const SHOPIFY_ADD_KIT_URL =
     window.DOOPIXEL_SHOPIFY_ADD_KIT_URL || "https://YOUR-SHOPIFY-DOMAIN.com/pages/add-pixel-kit";
-  const SKU_MAP_URL = window.DOOPIXEL_SKU_MAP_URL || "doopixel-pixelizer-sku-map.json";
+  const SKU_MAP_URL = window.DOOPIXEL_SKU_MAP_URL || "/doopixel-pixelizer-sku-map.json";
 
   let skuMapPromise = null;
 
   function loadSkuMap() {
     if (!skuMapPromise) {
-      skuMapPromise = fetch(SKU_MAP_URL).then(function (response) {
+      skuMapPromise = fetch(SKU_MAP_URL).then(async function (response) {
+        const responseText = await response.text();
+
         if (!response.ok) {
-          throw new Error("Could not load DooPixel SKU map.");
+          throw new Error(
+            "Could not load DooPixel SKU map from " +
+              SKU_MAP_URL +
+              ". Make sure doopixel-pixelizer-sku-map.json is uploaded to the app folder."
+          );
         }
-        return response.json();
+
+        if (responseText.trim().startsWith("<")) {
+          throw new Error(
+            "DooPixel SKU map URL returned HTML instead of JSON: " +
+              SKU_MAP_URL +
+              ". The JSON file is missing or uploaded to the wrong folder."
+          );
+        }
+
+        return JSON.parse(responseText);
       });
     }
 
@@ -143,3 +158,4 @@
     insertButton();
   }
 })();
+
