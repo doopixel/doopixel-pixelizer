@@ -2,6 +2,7 @@
   const SHOPIFY_ADD_KIT_URL =
     window.DOOPIXEL_SHOPIFY_ADD_KIT_URL || "https://YOUR-SHOPIFY-DOMAIN.com/pages/add-pixel-kit";
   const SKU_MAP_URL = window.DOOPIXEL_SKU_MAP_URL || "/doopixel-pixelizer-sku-map.json";
+  const CREATE_DESIGN_URL = window.DOOPIXEL_CREATE_DESIGN_URL || "/api/designs/create";
 
   let skuMapPromise = null;
 
@@ -41,6 +42,14 @@
       binary += String.fromCharCode(byte);
     });
     return btoa(binary);
+  }
+
+  function getPreviewImageDataUrl() {
+    if (!bricklinkCacheCanvas || bricklinkCacheCanvas.width === 0 || bricklinkCacheCanvas.height === 0) {
+      return null;
+    }
+
+    return bricklinkCacheCanvas.toDataURL("image/png");
   }
 
   function getPieceInfo() {
@@ -110,6 +119,29 @@
     };
   }
 
+  async function saveDesign(payload) {
+    const response = await fetch(CREATE_DESIGN_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...payload,
+        previewImageDataUrl: getPreviewImageDataUrl(),
+      }),
+    });
+
+    const result = await response.json();
+    if (!response.ok || !result.ok) {
+      throw new Error(result.error || "Could not save this DooPixel design.");
+    }
+
+    payload.id = result.id;
+    payload.shareId = result.id;
+    payload.shareUrl = new URL(result.shareUrl, window.location.origin).href;
+    return payload;
+  }
+
   async function handleAddToCartClick(button) {
     const originalText = button.textContent;
 
@@ -118,7 +150,9 @@
       button.textContent = "Preparing kit...";
       const skuMap = await loadSkuMap();
       const payload = buildPayload(skuMap);
-      const encoded = encodeURIComponent(encodePayload(payload));
+      button.textContent = "Saving design...";
+      const savedPayload = await saveDesign(payload);
+      const encoded = encodeURIComponent(encodePayload(savedPayload));
       window.location.href = SHOPIFY_ADD_KIT_URL + "#" + encoded;
     } catch (error) {
       console.error(error);
