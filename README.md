@@ -44,4 +44,4 @@ _Direct any concerns or ideas for improvements to the [issues tab](https://githu
 
 As of the time of writing, I don't have all of the sets, and I haven't had much time to test. As a result, there's probably a few bugs, so let me know if you find any.
 
-Algorithm improvement ideas are always welcome. Improvements that maintain the efficiency to within a reasonable degree would allow the algorithm to keep running on the client, which I really like.
+Algorithm improvement ideas are always welcome. Improvements that maintain the efficiency to within a reasonable degree would allow the algorithm to keep running on the client, which I really like. 
