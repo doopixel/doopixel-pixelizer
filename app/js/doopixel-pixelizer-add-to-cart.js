@@ -1,8 +1,10 @@
 (function () {
   const SHOPIFY_ADD_KIT_URL =
-    window.DOOPIXEL_SHOPIFY_ADD_KIT_URL || "https://YOUR-SHOPIFY-DOMAIN.com/pages/add-pixel-kit";
+    window.DOOPIXEL_SHOPIFY_ADD_KIT_URL || "https://doopixel.com/pages/add-pixel-kit";
   const SKU_MAP_URL = window.DOOPIXEL_SKU_MAP_URL || "/doopixel-pixelizer-sku-map.json";
   const CREATE_DESIGN_URL = window.DOOPIXEL_CREATE_DESIGN_URL || "/api/designs/create";
+
+  const KIT_SKU_PREFIX = window.DOOPIXEL_CUSTOM_KIT_SKU_PREFIX || "DP-KIT";
 
   let skuMapPromise = null;
 
@@ -70,12 +72,56 @@
     throw new Error("Please choose 1x1 Round Tile or 1x1 Round Plate before adding to cart.");
   }
 
+  function getSelectedFrame() {
+    const selector = document.getElementById("doopixel-frame-color-select");
+    const color = selector && selector.value === "white" ? "white" : "black";
+
+    return {
+      color: color,
+      label: color === "white" ? "White Frame" : "Black Frame",
+    };
+  }
+
+  function getBaseplateInfo(width, height) {
+    const baseplateWidth = Math.ceil(Number(width) / 16);
+    const baseplateHeight = Math.ceil(Number(height) / 16);
+
+    if (
+      !Number.isInteger(baseplateWidth) ||
+      !Number.isInteger(baseplateHeight) ||
+      baseplateWidth < 1 ||
+      baseplateHeight < 1 ||
+      baseplateWidth > 8 ||
+      baseplateHeight > 8
+    ) {
+      throw new Error("Artwork size must fit within 1 x 1 to 8 x 8 baseplates.");
+    }
+
+    const pricingWidth = Math.min(baseplateWidth, baseplateHeight);
+    const pricingHeight = Math.max(baseplateWidth, baseplateHeight);
+
+    return {
+      baseplateWidth: baseplateWidth,
+      baseplateHeight: baseplateHeight,
+      baseplateLayout: baseplateWidth + " x " + baseplateHeight,
+      pricingBaseplateWidth: pricingWidth,
+      pricingBaseplateHeight: pricingHeight,
+      pricingLayout: pricingWidth + " x " + pricingHeight,
+      totalBaseplates: baseplateWidth * baseplateHeight,
+      shopifyKitSku: KIT_SKU_PREFIX + "-" + pricingWidth + "X" + pricingHeight,
+    };
+  }
+
   function buildPayload(skuMap) {
     if (!bricklinkCacheCanvas || bricklinkCacheCanvas.width === 0 || bricklinkCacheCanvas.height === 0) {
       throw new Error("Please upload an image and generate the final pixel art first.");
     }
 
     const pieceInfo = getPieceInfo();
+    const frame = getSelectedFrame();
+    const width = Number(targetResolution[0]);
+    const height = Number(targetResolution[1]);
+    const baseplateInfo = getBaseplateInfo(width, height);
     const usedMap = getUsedPixelsStudMap(getPixelArrayFromCanvas(bricklinkCacheCanvas));
     const missingColors = [];
     const items = Object.keys(usedMap)
@@ -105,16 +151,32 @@
       );
     }
 
+    const totalPieces = items.reduce(function (sum, item) {
+      return sum + Number(item[1]);
+    }, 0);
     const designId = "DP-" + Date.now().toString(36).toUpperCase();
     const designName = window.prompt("Name this pixel art design:", "Custom Pixel Art") || "Custom Pixel Art";
 
     return {
-      v: 1,
+      v: 2,
+      orderMode: "generic-kit",
       id: designId,
       name: designName.trim() || "Custom Pixel Art",
       pieceType: String(selectedPixelPartNumber),
       pieceTypeName: pieceInfo.pieceTypeName,
-      size: [Number(targetResolution[0]), Number(targetResolution[1])],
+      frameColor: frame.color,
+      frameLabel: frame.label,
+      shopifyKitSku: baseplateInfo.shopifyKitSku,
+      size: [width, height],
+      baseplateWidth: baseplateInfo.baseplateWidth,
+      baseplateHeight: baseplateInfo.baseplateHeight,
+      baseplateLayout: baseplateInfo.baseplateLayout,
+      pricingBaseplateWidth: baseplateInfo.pricingBaseplateWidth,
+      pricingBaseplateHeight: baseplateInfo.pricingBaseplateHeight,
+      pricingLayout: baseplateInfo.pricingLayout,
+      totalBaseplates: baseplateInfo.totalBaseplates,
+      totalPieces: totalPieces,
+      colorLines: items.length,
       items: items,
     };
   }
@@ -162,8 +224,8 @@
     }
   }
 
-  function insertButton() {
-    if (document.getElementById("doopixel-add-to-cart-button")) {
+  function insertControls() {
+    if (document.getElementById("doopixel-cart-controls")) {
       return;
     }
 
@@ -172,24 +234,48 @@
       return;
     }
 
+    const wrapper = document.createElement("span");
+    wrapper.id = "doopixel-cart-controls";
+    wrapper.style.display = "inline-flex";
+    wrapper.style.alignItems = "center";
+    wrapper.style.gap = "8px";
+    wrapper.style.marginTop = "8px";
+    wrapper.style.marginLeft = "8px";
+    wrapper.style.verticalAlign = "middle";
+
+    const label = document.createElement("label");
+    label.htmlFor = "doopixel-frame-color-select";
+    label.textContent = "Frame";
+    label.style.margin = "0";
+    label.style.fontWeight = "600";
+
+    const select = document.createElement("select");
+    select.id = "doopixel-frame-color-select";
+    select.className = "form-control";
+    select.style.width = "auto";
+    select.style.minWidth = "128px";
+    select.innerHTML =
+      '<option value="black" selected>Black Frame</option><option value="white">White Frame</option>';
+
     const button = document.createElement("button");
     button.type = "button";
     button.id = "doopixel-add-to-cart-button";
     button.className = "btn btn-success";
-    button.style.marginTop = "8px";
-    button.style.marginLeft = "8px";
-    button.textContent = "Add All Pieces to Cart";
+    button.textContent = "Add Custom Kit to Cart";
     button.addEventListener("click", function () {
       handleAddToCartClick(button);
     });
 
-    downloadButton.insertAdjacentElement("afterend", button);
+    wrapper.appendChild(label);
+    wrapper.appendChild(select);
+    wrapper.appendChild(button);
+    downloadButton.insertAdjacentElement("afterend", wrapper);
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", insertButton);
+    document.addEventListener("DOMContentLoaded", insertControls);
   } else {
-    insertButton();
+    insertControls();
   }
 })();
 
