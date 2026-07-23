@@ -239,7 +239,15 @@ export async function onRequestGet({ params }) {
             <dd id="meta-total"></dd>
           </dl>
 
-          <button id="add-to-cart">Add These Pieces to Cart</button>
+          <label for="share-frame-color" style="display: block; font-weight: 700; margin-bottom: 6px;">
+            Frame Color
+          </label>
+          <select id="share-frame-color" style="margin-bottom: 10px;">
+            <option value="black" selected>Black Frame</option>
+            <option value="white">White Frame</option>
+          </select>
+
+          <button id="add-to-cart">Add Custom Kit to Cart</button>
 
           <form id="submit-form">
             <h2>Share Your Finished Build</h2>
@@ -274,16 +282,52 @@ export async function onRequestGet({ params }) {
         el.classList.remove("hidden");
       }
 
-      function getSharePayload(design) {
+      function getBaseplateInfo(size) {
+        const baseplateWidth = Math.ceil(Number(size[0]) / 16);
+        const baseplateHeight = Math.ceil(Number(size[1]) / 16);
+        const pricingWidth = Math.min(baseplateWidth, baseplateHeight);
+        const pricingHeight = Math.max(baseplateWidth, baseplateHeight);
+
         return {
-          v: 1,
+          baseplateWidth: baseplateWidth,
+          baseplateHeight: baseplateHeight,
+          baseplateLayout: baseplateWidth + " x " + baseplateHeight,
+          pricingBaseplateWidth: pricingWidth,
+          pricingBaseplateHeight: pricingHeight,
+          pricingLayout: pricingWidth + " x " + pricingHeight,
+          totalBaseplates: baseplateWidth * baseplateHeight,
+          shopifyKitSku: "DP-KIT-" + pricingWidth + "X" + pricingHeight,
+        };
+      }
+
+      function getSharePayload(design) {
+        const frameColor = document.getElementById("share-frame-color").value === "white" ? "white" : "black";
+        const frameLabel = frameColor === "white" ? "White Frame" : "Black Frame";
+        const baseplateInfo = getBaseplateInfo(design.size);
+        const totalPieces = design.parts.reduce((sum, part) => sum + Number(part.quantity), 0);
+
+        return {
+          v: 2,
+          orderMode: "generic-kit",
           id: design.id,
           shareId: design.id,
           shareUrl: window.location.href,
           name: design.title,
           pieceType: design.pieceType,
           pieceTypeName: design.pieceTypeName,
+          frameColor: frameColor,
+          frameLabel: frameLabel,
+          shopifyKitSku: baseplateInfo.shopifyKitSku,
           size: design.size,
+          baseplateWidth: baseplateInfo.baseplateWidth,
+          baseplateHeight: baseplateInfo.baseplateHeight,
+          baseplateLayout: baseplateInfo.baseplateLayout,
+          pricingBaseplateWidth: baseplateInfo.pricingBaseplateWidth,
+          pricingBaseplateHeight: baseplateInfo.pricingBaseplateHeight,
+          pricingLayout: baseplateInfo.pricingLayout,
+          totalBaseplates: baseplateInfo.totalBaseplates,
+          totalPieces: totalPieces,
+          colorLines: design.parts.length,
           items: design.parts.map((part) => [
             part.sku,
             part.quantity,
