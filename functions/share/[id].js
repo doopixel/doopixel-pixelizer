@@ -251,9 +251,12 @@ export async function onRequestGet({ params }) {
 
           <form id="submit-form">
             <h2>Share Your Finished Build</h2>
+            <p class="muted">
+              Upload a photo of your completed build. We will review it before it appears in the community gallery.
+            </p>
             <input type="file" id="finished-image" name="finishedImage" accept="image/png,image/jpeg,image/webp" required />
             <textarea id="caption" name="caption" maxlength="500" placeholder="Add a short note about your build"></textarea>
-            <button class="secondary" type="submit">Submit to Gallery Review</button>
+            <button id="submit-build" class="secondary" type="submit">Submit Finished Build for Review</button>
           </form>
 
           <div id="message" class="notice hidden"></div>
@@ -401,22 +404,34 @@ export async function onRequestGet({ params }) {
 
       document.getElementById("submit-form").addEventListener("submit", async (event) => {
         event.preventDefault();
-        const form = new FormData();
-        const file = document.getElementById("finished-image").files[0];
-        const caption = document.getElementById("caption").value;
-        form.append("finishedImage", file);
-        form.append("caption", caption);
+        const button = document.getElementById("submit-build");
+        button.disabled = true;
+        button.textContent = "Submitting...";
 
-        const response = await fetch("/api/designs/" + encodeURIComponent(DESIGN_ID) + "/submit", {
-          method: "POST",
-          body: form,
-        });
-        const result = await response.json();
-        if (!response.ok || !result.ok) {
-          throw new Error(result.error || "Could not submit this build.");
+        try {
+          const form = new FormData();
+          const file = document.getElementById("finished-image").files[0];
+          const caption = document.getElementById("caption").value;
+          form.append("finishedImage", file);
+          form.append("caption", caption);
+
+          const response = await fetch("/api/designs/" + encodeURIComponent(DESIGN_ID) + "/submit", {
+            method: "POST",
+            body: form,
+          });
+          const result = await response.json();
+          if (!response.ok || !result.ok) {
+            throw new Error(result.error || "Could not submit this build.");
+          }
+
+          showMessage("Submitted successfully. Your build is pending review and is not public yet.");
+          document.getElementById("submit-form").reset();
+        } catch (error) {
+          showMessage(error.message || "Could not submit this build.");
+        } finally {
+          button.disabled = false;
+          button.textContent = "Submit Finished Build for Review";
         }
-
-        showMessage("Submitted. Your build is now pending review.");
       });
 
       loadDesign().catch((error) => {
