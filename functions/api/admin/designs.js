@@ -37,9 +37,14 @@ export async function onRequestGet({ request, env }) {
 
     const url = new URL(request.url);
     const requestedStatus = url.searchParams.get("status") || "pending";
-    const status = ["pending", "approved", "rejected"].includes(requestedStatus)
+    const status = ["pending", "approved", "hidden", "rejected"].includes(requestedStatus)
       ? requestedStatus
       : "pending";
+    const search = String(url.searchParams.get("q") || "").trim().toLowerCase().slice(0, 100);
+    const page = Math.max(1, Number.parseInt(url.searchParams.get("page") || "1", 10) || 1);
+    const limit = 18;
+    const offset = (page - 1) * limit;
+    const searchPattern = `%${search}%`;
 
     const result = await env.DB.prepare(
       `SELECT
@@ -52,16 +57,59 @@ export async function onRequestGet({ request, env }) {
         preview_image_key,
         finished_image_key,
         customer_caption,
+        is_pinned,
+        pinned_at,
+        approved_at,
+        moderator_note,
         status,
         created_at,
         updated_at
       FROM designs
       WHERE status = ?
-      ORDER BY updated_at DESC
-      LIMIT 100`
+        AND (
+          ? = ''
+          OR LOWER(id) LIKE ?
+          OR LOWER(title) LIKE ?
+          OR LOWER(COALESCE(customer_caption, '')) LIKE ?
+        )
+      ORDER BY is_pinned DESC, pinned_at DESC, updated_at DESC
+      LIMIT ? OFFSET ?`
     )
-      .bind(status)
+      .bind(status, search, searchPattern, searchPattern, searchPattern, limit, offset)
       .all();
+
+    const totalRow = await env.DB.prepare(
+      `SELECT COUNT(*) AS total
+      FROM designs
+      WHERE status = ?
+        AND (
+          ? = ''
+          OR LOWER(id) LIKE ?
+          OR LOWER(title) LIKE ?
+          OR LOWER(COALESCE(customer_caption, '')) LIKE ?
+        )`
+    )
+      .bind(status, search, searchPattern, searchPattern, searchPattern)
+      .first();
+
+    const countResult = await env.DB.prepare(
+      `SELECT status, COUNT(*) AS total
+      FROM designs
+      WHERE status IN ('pending', 'approved', 'hidden', 'rejected')
+      GROUP BY status`
+    ).all();
+
+    const counts = {
+      pending: 0,
+      approved: 0,
+      hidden: 0,
+      rejected: 0,
+    };
+    (countResult.results || []).forEach((row) => {
+      if (Object.prototype.hasOwnProperty.call(counts, row.status)) {
+        counts[row.status] = Number(row.total || 0);
+      }
+    });
 
     const designs = (result.results || []).map((design) => {
       const parts = parseParts(design.parts_json);
@@ -75,14 +123,29 @@ export async function onRequestGet({ request, env }) {
         previewImageKey: design.preview_image_key,
         finishedImageKey: design.finished_image_key,
         customerCaption: design.customer_caption,
+        isPinned: Boolean(design.is_pinned),
+        pinnedAt: design.pinned_at,
+        approvedAt: design.approved_at,
+        moderatorNote: design.moderator_note,
         status: design.status,
         createdAt: design.created_at,
         updatedAt: design.updated_at,
       };
     });
 
-    return jsonResponse({ ok: true, status, designs });
+    const total = Number(totalRow?.total || 0);
+    return jsonResponse({
+      ok: true,
+      status,
+      search,
+      page,
+      total,
+      totalPages: Math.max(1, Math.ceil(total / limit)),
+      counts,
+      designs,
+    });
   } catch (error) {
     return jsonResponse({ ok: false, error: error.message || String(error) }, 500);
   }
 }
+
