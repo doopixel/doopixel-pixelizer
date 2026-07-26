@@ -12,10 +12,11 @@ export async function onRequestGet() {
         color-scheme: light;
         --text: #181818;
         --muted: #666;
-        --line: #d9d9d9;
+        --line: #d8d8d8;
         --soft: #f6f6f6;
         --green: #14733b;
         --red: #a32626;
+        --gold: #8a6300;
       }
       * { box-sizing: border-box; }
       body {
@@ -24,7 +25,7 @@ export async function onRequestGet() {
         background: #fff;
         font-family: Arial, Helvetica, sans-serif;
       }
-      .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 18px 60px; }
+      .wrap { max-width: 1220px; margin: 0 auto; padding: 28px 18px 60px; }
       header {
         display: flex;
         align-items: flex-end;
@@ -36,38 +37,49 @@ export async function onRequestGet() {
       h1 { margin: 0 0 5px; font-size: 28px; }
       p { line-height: 1.5; }
       .muted { color: var(--muted); margin: 0; }
-      .login {
+      .login, .toolbar, .search, .pagination, .actions, .dialog-actions {
         display: flex;
         align-items: center;
         gap: 8px;
       }
-      input, select, button {
+      input, select, textarea, button {
         min-height: 42px;
         border: 1px solid var(--line);
         background: #fff;
         color: var(--text);
         padding: 9px 12px;
         font: inherit;
+        border-radius: 0;
       }
       input { min-width: 230px; }
+      textarea { width: 100%; min-height: 100px; resize: vertical; }
       button { cursor: pointer; font-weight: 700; }
       button.primary { background: #111; border-color: #111; color: #fff; }
       button.approve { background: var(--green); border-color: var(--green); color: #fff; }
       button.reject { color: var(--red); border-color: var(--red); }
+      button.pin { color: var(--gold); border-color: var(--gold); }
       button:disabled { cursor: wait; opacity: .55; }
       .toolbar {
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin: 22px 0 16px;
+      }
+      .search input { min-width: min(360px, 55vw); }
+      .summary {
         display: flex;
         justify-content: space-between;
-        align-items: center;
         gap: 12px;
-        margin: 22px 0;
+        align-items: center;
+        margin-bottom: 14px;
+        color: var(--muted);
+        font-size: 14px;
       }
       .grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 18px;
       }
-      .card { border: 1px solid var(--line); background: #fff; }
+      .card { position: relative; border: 1px solid var(--line); background: #fff; }
       .card img {
         display: block;
         width: 100%;
@@ -75,9 +87,27 @@ export async function onRequestGet() {
         object-fit: contain;
         background: var(--soft);
       }
+      .badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        border: 1px solid #111;
+        background: #fff;
+        color: #111;
+        padding: 5px 8px;
+        font-size: 12px;
+        font-weight: 700;
+      }
       .body { padding: 14px; }
       .title { margin: 0 0 6px; font-size: 18px; }
       .caption { min-height: 42px; color: #444; }
+      .note {
+        border-left: 3px solid var(--line);
+        color: var(--muted);
+        margin: 12px 0 0;
+        padding-left: 9px;
+        font-size: 13px;
+      }
       .meta {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -85,8 +115,8 @@ export async function onRequestGet() {
         color: var(--muted);
         font-size: 13px;
       }
-      .actions { display: flex; gap: 8px; margin-top: 14px; }
-      .actions button, .actions a { flex: 1; text-align: center; }
+      .actions { flex-wrap: wrap; margin-top: 14px; }
+      .actions button, .actions a { flex: 1 1 82px; text-align: center; }
       .link {
         display: inline-flex;
         align-items: center;
@@ -105,6 +135,18 @@ export async function onRequestGet() {
         margin-top: 18px;
       }
       .hidden { display: none; }
+      dialog {
+        width: min(580px, calc(100vw - 28px));
+        border: 1px solid var(--line);
+        padding: 0;
+      }
+      dialog::backdrop { background: rgba(0, 0, 0, .42); }
+      .dialog-body { padding: 20px; }
+      .dialog-body h2 { margin: 0 0 18px; }
+      .field { display: grid; gap: 6px; margin-bottom: 14px; }
+      .field label { font-weight: 700; font-size: 14px; }
+      .field input { width: 100%; }
+      .dialog-actions { justify-content: flex-end; margin-top: 18px; }
       @media (max-width: 850px) {
         header { display: block; }
         .login { margin-top: 16px; }
@@ -112,9 +154,11 @@ export async function onRequestGet() {
       }
       @media (max-width: 560px) {
         .wrap { padding: 20px 14px 40px; }
-        .login, .toolbar, .actions { flex-wrap: wrap; }
-        .login input { width: 100%; min-width: 0; }
+        .login, .toolbar, .search, .pagination { align-items: stretch; flex-wrap: wrap; }
+        .login input, .search, .search input { width: 100%; min-width: 0; }
         .grid { grid-template-columns: 1fr; }
+        .summary { display: block; }
+        .pagination { margin-top: 9px; }
       }
     </style>
   </head>
@@ -123,7 +167,7 @@ export async function onRequestGet() {
       <header>
         <div>
           <h1>Gallery Review</h1>
-          <p class="muted">Approve finished builds before they appear in the public gallery.</p>
+          <p class="muted">Review, feature, hide, and edit community submissions.</p>
         </div>
         <form id="login" class="login">
           <input id="token" type="password" autocomplete="current-password" placeholder="Admin review password" />
@@ -135,26 +179,72 @@ export async function onRequestGet() {
         <div class="toolbar">
           <select id="status">
             <option value="pending">Pending Review</option>
-            <option value="approved">Approved</option>
+            <option value="approved">Published</option>
+            <option value="hidden">Hidden</option>
             <option value="rejected">Rejected</option>
           </select>
+          <form id="search-form" class="search">
+            <input id="search" type="search" placeholder="Search design name or ID" />
+            <button type="submit">Search</button>
+            <button id="clear-search" type="button">Clear</button>
+          </form>
           <button id="refresh" type="button">Refresh</button>
         </div>
+
+        <div class="summary">
+          <span id="result-summary"></span>
+          <div class="pagination">
+            <button id="previous" type="button">Previous</button>
+            <span id="page-summary"></span>
+            <button id="next" type="button">Next</button>
+          </div>
+        </div>
+
         <div id="grid" class="grid"></div>
         <div id="empty" class="notice hidden">No submissions in this section.</div>
       </div>
       <div id="message" class="notice hidden"></div>
     </div>
 
+    <dialog id="edit-dialog">
+      <form id="edit-form" class="dialog-body">
+        <h2>Edit Gallery Details</h2>
+        <input id="edit-id" type="hidden" />
+        <div class="field">
+          <label for="edit-title">Public title</label>
+          <input id="edit-title" maxlength="120" required />
+        </div>
+        <div class="field">
+          <label for="edit-caption">Public caption</label>
+          <textarea id="edit-caption" maxlength="500"></textarea>
+        </div>
+        <div class="field">
+          <label for="edit-note">Private moderator note</label>
+          <textarea id="edit-note" maxlength="500" placeholder="Only visible in this admin page"></textarea>
+        </div>
+        <div class="dialog-actions">
+          <button id="cancel-edit" type="button">Cancel</button>
+          <button class="primary" type="submit">Save Changes</button>
+        </div>
+      </form>
+    </dialog>
+
     <script>
       const loginForm = document.getElementById("login");
       const tokenInput = document.getElementById("token");
       const reviewArea = document.getElementById("review-area");
       const statusSelect = document.getElementById("status");
+      const searchInput = document.getElementById("search");
       const grid = document.getElementById("grid");
       const empty = document.getElementById("empty");
       const message = document.getElementById("message");
+      const previousButton = document.getElementById("previous");
+      const nextButton = document.getElementById("next");
+      const editDialog = document.getElementById("edit-dialog");
       let token = sessionStorage.getItem("doopixelGalleryAdminToken") || "";
+      let currentPage = 1;
+      let totalPages = 1;
+      let currentDesigns = [];
 
       function showMessage(text) {
         message.textContent = text;
@@ -181,9 +271,50 @@ export async function onRequestGet() {
         return item;
       }
 
+      function actionButton(label, className, handler) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = className || "";
+        button.textContent = label;
+        button.addEventListener("click", () => handler(button));
+        return button;
+      }
+
+      async function updateDesign(design, payload, button, confirmation) {
+        if (confirmation && !window.confirm(confirmation)) {
+          return;
+        }
+        button.disabled = true;
+        try {
+          await api("/api/admin/designs/" + encodeURIComponent(design.id) + "/review", {
+            method: "POST",
+            body: JSON.stringify(payload),
+          });
+          await loadDesigns();
+        } catch (error) {
+          showMessage(error.message);
+          button.disabled = false;
+        }
+      }
+
+      function openEditor(design) {
+        document.getElementById("edit-id").value = design.id;
+        document.getElementById("edit-title").value = design.title || "";
+        document.getElementById("edit-caption").value = design.customerCaption || "";
+        document.getElementById("edit-note").value = design.moderatorNote || "";
+        editDialog.showModal();
+      }
+
       function createCard(design) {
         const card = document.createElement("article");
         card.className = "card";
+
+        if (design.isPinned) {
+          const badge = document.createElement("span");
+          badge.className = "badge";
+          badge.textContent = "Pinned";
+          card.appendChild(badge);
+        }
 
         const image = document.createElement("img");
         image.alt = design.title + " finished build";
@@ -209,10 +340,17 @@ export async function onRequestGet() {
         meta.append(
           metaItem("ID", design.id),
           metaItem("Size", design.size.join(" x ")),
-          metaItem("Pieces", design.totalPieces),
+          metaItem("Pieces", Number(design.totalPieces).toLocaleString()),
           metaItem("Colors", design.colorLines)
         );
         body.appendChild(meta);
+
+        if (design.moderatorNote) {
+          const note = document.createElement("p");
+          note.className = "note";
+          note.textContent = "Private note: " + design.moderatorNote;
+          body.appendChild(note);
+        }
 
         const actions = document.createElement("div");
         actions.className = "actions";
@@ -224,21 +362,63 @@ export async function onRequestGet() {
         view.rel = "noopener";
         view.textContent = "View";
         actions.appendChild(view);
+        actions.appendChild(actionButton("Edit", "", () => openEditor(design)));
 
         if (design.status === "pending") {
-          const approve = document.createElement("button");
-          approve.className = "approve";
-          approve.type = "button";
-          approve.textContent = "Approve";
-          approve.addEventListener("click", () => review(design.id, "approved", approve));
-          actions.appendChild(approve);
+          actions.appendChild(
+            actionButton("Approve", "approve", (button) =>
+              updateDesign(design, { status: "approved" }, button)
+            )
+          );
+          actions.appendChild(
+            actionButton("Reject", "reject", (button) =>
+              updateDesign(
+                design,
+                { status: "rejected" },
+                button,
+                "Reject this gallery submission?"
+              )
+            )
+          );
+        }
 
-          const reject = document.createElement("button");
-          reject.className = "reject";
-          reject.type = "button";
-          reject.textContent = "Reject";
-          reject.addEventListener("click", () => review(design.id, "rejected", reject));
-          actions.appendChild(reject);
+        if (design.status === "approved") {
+          actions.appendChild(
+            actionButton(design.isPinned ? "Unpin" : "Pin", "pin", (button) =>
+              updateDesign(design, { isPinned: !design.isPinned }, button)
+            )
+          );
+          actions.appendChild(
+            actionButton("Hide", "reject", (button) =>
+              updateDesign(
+                design,
+                { status: "hidden" },
+                button,
+                "Hide this work from the public gallery? You can publish it again later."
+              )
+            )
+          );
+        }
+
+        if (design.status === "hidden") {
+          actions.appendChild(
+            actionButton("Publish Again", "approve", (button) =>
+              updateDesign(design, { status: "approved" }, button)
+            )
+          );
+          actions.appendChild(
+            actionButton("Reject", "reject", (button) =>
+              updateDesign(design, { status: "rejected" }, button)
+            )
+          );
+        }
+
+        if (design.status === "rejected") {
+          actions.appendChild(
+            actionButton("Return to Pending", "", (button) =>
+              updateDesign(design, { status: "pending" }, button)
+            )
+          );
         }
 
         body.appendChild(actions);
@@ -246,35 +426,50 @@ export async function onRequestGet() {
         return card;
       }
 
+      function updateStatusLabels(counts) {
+        const labels = {
+          pending: "Pending Review",
+          approved: "Published",
+          hidden: "Hidden",
+          rejected: "Rejected",
+        };
+        Array.from(statusSelect.options).forEach((option) => {
+          option.textContent = labels[option.value] + " (" + Number(counts[option.value] || 0) + ")";
+        });
+      }
+
       async function loadDesigns() {
         showMessage("Loading submissions...");
         grid.innerHTML = "";
         empty.classList.add("hidden");
-        const result = await api("/api/admin/designs?status=" + encodeURIComponent(statusSelect.value));
+        const query =
+          "?status=" +
+          encodeURIComponent(statusSelect.value) +
+          "&q=" +
+          encodeURIComponent(searchInput.value.trim()) +
+          "&page=" +
+          currentPage;
+        const result = await api("/api/admin/designs" + query);
+        currentDesigns = result.designs;
+        totalPages = result.totalPages;
         result.designs.forEach((design) => grid.appendChild(createCard(design)));
         empty.classList.toggle("hidden", result.designs.length !== 0);
+        document.getElementById("result-summary").textContent =
+          result.total + " result" + (result.total === 1 ? "" : "s");
+        document.getElementById("page-summary").textContent =
+          "Page " + result.page + " of " + result.totalPages;
+        previousButton.disabled = currentPage <= 1;
+        nextButton.disabled = currentPage >= result.totalPages;
+        updateStatusLabels(result.counts);
         reviewArea.classList.remove("hidden");
         showMessage("");
-      }
-
-      async function review(id, status, button) {
-        button.disabled = true;
-        try {
-          await api("/api/admin/designs/" + encodeURIComponent(id) + "/review", {
-            method: "POST",
-            body: JSON.stringify({ status }),
-          });
-          await loadDesigns();
-        } catch (error) {
-          showMessage(error.message);
-          button.disabled = false;
-        }
       }
 
       loginForm.addEventListener("submit", async (event) => {
         event.preventDefault();
         token = tokenInput.value.trim();
         sessionStorage.setItem("doopixelGalleryAdminToken", token);
+        currentPage = 1;
         try {
           await loadDesigns();
           tokenInput.value = "";
@@ -283,9 +478,66 @@ export async function onRequestGet() {
         }
       });
 
-      statusSelect.addEventListener("change", () => loadDesigns().catch((error) => showMessage(error.message)));
+      statusSelect.addEventListener("change", () => {
+        currentPage = 1;
+        loadDesigns().catch((error) => showMessage(error.message));
+      });
+
+      document.getElementById("search-form").addEventListener("submit", (event) => {
+        event.preventDefault();
+        currentPage = 1;
+        loadDesigns().catch((error) => showMessage(error.message));
+      });
+
+      document.getElementById("clear-search").addEventListener("click", () => {
+        searchInput.value = "";
+        currentPage = 1;
+        loadDesigns().catch((error) => showMessage(error.message));
+      });
+
       document.getElementById("refresh").addEventListener("click", () => {
         loadDesigns().catch((error) => showMessage(error.message));
+      });
+
+      previousButton.addEventListener("click", () => {
+        if (currentPage > 1) {
+          currentPage -= 1;
+          loadDesigns().catch((error) => showMessage(error.message));
+        }
+      });
+
+      nextButton.addEventListener("click", () => {
+        if (currentPage < totalPages) {
+          currentPage += 1;
+          loadDesigns().catch((error) => showMessage(error.message));
+        }
+      });
+
+      document.getElementById("cancel-edit").addEventListener("click", () => editDialog.close());
+
+      document.getElementById("edit-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const id = document.getElementById("edit-id").value;
+        const design = currentDesigns.find((entry) => entry.id === id);
+        const submitButton = event.submitter;
+        submitButton.disabled = true;
+        try {
+          await api("/api/admin/designs/" + encodeURIComponent(id) + "/review", {
+            method: "POST",
+            body: JSON.stringify({
+              title: document.getElementById("edit-title").value,
+              customerCaption: document.getElementById("edit-caption").value,
+              moderatorNote: document.getElementById("edit-note").value,
+              status: design.status,
+            }),
+          });
+          editDialog.close();
+          await loadDesigns();
+        } catch (error) {
+          showMessage(error.message);
+        } finally {
+          submitButton.disabled = false;
+        }
       });
 
       if (token) {
