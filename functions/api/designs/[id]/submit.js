@@ -70,6 +70,8 @@ export async function onRequestPost({ request, env, params }) {
         finished_image_key = ?,
         customer_caption = ?,
         status = 'pending',
+        is_pinned = 0,
+        pinned_at = NULL,
         updated_at = ?
       WHERE id = ?`
     )
