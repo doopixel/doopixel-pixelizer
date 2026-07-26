@@ -52,12 +52,24 @@ export async function onRequestGet() {
         gap: 22px;
       }
       .card { border: 1px solid var(--line); }
+      .image-wrap { position: relative; }
       .card img {
         display: block;
         width: 100%;
         aspect-ratio: 1 / 1;
         object-fit: contain;
         background: var(--soft);
+      }
+      .badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        border: 1px solid #111;
+        background: #fff;
+        color: #111;
+        padding: 5px 8px;
+        font-size: 12px;
+        font-weight: 700;
       }
       .body { padding: 15px; }
       .title { margin: 0 0 7px; font-size: 19px; }
@@ -68,6 +80,11 @@ export async function onRequestGet() {
         border: 1px solid var(--line);
         background: var(--soft);
         padding: 18px;
+      }
+      .more {
+        display: flex;
+        justify-content: center;
+        margin-top: 28px;
       }
       .hidden { display: none; }
       @media (max-width: 820px) {
@@ -96,6 +113,9 @@ export async function onRequestGet() {
         <div id="loading" class="notice">Loading community builds...</div>
         <div id="empty" class="notice hidden">No approved builds have been shared yet.</div>
         <div id="grid" class="grid hidden"></div>
+        <div id="more" class="more hidden">
+          <button id="load-more" class="button" type="button">Load More Builds</button>
+        </div>
       </main>
     </div>
 
@@ -103,16 +123,28 @@ export async function onRequestGet() {
       const loading = document.getElementById("loading");
       const empty = document.getElementById("empty");
       const grid = document.getElementById("grid");
+      const more = document.getElementById("more");
+      const loadMoreButton = document.getElementById("load-more");
+      let currentPage = 1;
 
       function createCard(design) {
         const card = document.createElement("article");
         card.className = "card";
 
+        const imageWrap = document.createElement("div");
+        imageWrap.className = "image-wrap";
         const image = document.createElement("img");
         image.alt = design.title + " finished build";
         image.loading = "lazy";
         image.src = "/api/images?key=" + encodeURIComponent(design.finishedImageKey);
-        card.appendChild(image);
+        imageWrap.appendChild(image);
+        if (design.isPinned) {
+          const badge = document.createElement("span");
+          badge.className = "badge";
+          badge.textContent = "Featured";
+          imageWrap.appendChild(badge);
+        }
+        card.appendChild(imageWrap);
 
         const body = document.createElement("div");
         body.className = "body";
@@ -148,23 +180,35 @@ export async function onRequestGet() {
         return card;
       }
 
-      fetch("/api/gallery")
-        .then((response) => response.json().then((result) => ({ response, result })))
-        .then(({ response, result }) => {
+      async function loadGallery(page) {
+        loadMoreButton.disabled = true;
+        loadMoreButton.textContent = "Loading...";
+        try {
+          const response = await fetch("/api/gallery?page=" + page);
+          const result = await response.json();
           if (!response.ok || !result.ok) {
             throw new Error(result.error || "Could not load the gallery.");
           }
           loading.classList.add("hidden");
-          if (!result.designs.length) {
+          if (page === 1 && !result.designs.length) {
             empty.classList.remove("hidden");
             return;
           }
           result.designs.forEach((design) => grid.appendChild(createCard(design)));
           grid.classList.remove("hidden");
-        })
-        .catch((error) => {
+          more.classList.toggle("hidden", !result.hasMore);
+          currentPage = page;
+        } catch (error) {
           loading.textContent = error.message;
-        });
+          loading.classList.remove("hidden");
+        } finally {
+          loadMoreButton.disabled = false;
+          loadMoreButton.textContent = "Load More Builds";
+        }
+      }
+
+      loadMoreButton.addEventListener("click", () => loadGallery(currentPage + 1));
+      loadGallery(1);
     </script>
   </body>
 </html>`,
@@ -176,3 +220,4 @@ export async function onRequestGet() {
     }
   );
 }
+
