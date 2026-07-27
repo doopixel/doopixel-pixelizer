@@ -37,11 +37,13 @@ export async function onRequestGet() {
       h1 { margin: 0 0 5px; font-size: 28px; }
       p { line-height: 1.5; }
       .muted { color: var(--muted); margin: 0; }
-      .login, .toolbar, .search, .pagination, .actions, .dialog-actions {
+      .login, .toolbar, .search, .pagination, .actions, .dialog-actions, .nav {
         display: flex;
         align-items: center;
         gap: 8px;
       }
+      .nav { margin-top: 10px; }
+      .nav a { color: #111; font-weight: 700; }
       input, select, textarea, button {
         min-height: 42px;
         border: 1px solid var(--line);
@@ -146,6 +148,7 @@ export async function onRequestGet() {
       .field { display: grid; gap: 6px; margin-bottom: 14px; }
       .field label { font-weight: 700; font-size: 14px; }
       .field input { width: 100%; }
+      .field input[type="checkbox"] { width: auto; min-width: 0; min-height: 0; margin-right: 7px; }
       .dialog-actions { justify-content: flex-end; margin-top: 18px; }
       @media (max-width: 850px) {
         header { display: block; }
@@ -168,6 +171,11 @@ export async function onRequestGet() {
         <div>
           <h1>Gallery Review</h1>
           <p class="muted">Review, feature, hide, and edit community submissions.</p>
+          <nav class="nav">
+            <a href="/admin/review">Artwork Review</a>
+            <a href="/admin/comments">Comment Review</a>
+            <a href="/gallery" target="_blank" rel="noopener">Open Gallery</a>
+          </nav>
         </div>
         <form id="login" class="login">
           <input id="token" type="password" autocomplete="current-password" placeholder="Admin review password" />
@@ -221,6 +229,20 @@ export async function onRequestGet() {
         <div class="field">
           <label for="edit-note">Private moderator note</label>
           <textarea id="edit-note" maxlength="500" placeholder="Only visible in this admin page"></textarea>
+        </div>
+        <div class="field">
+          <label for="edit-organic-likes">Organic likes</label>
+          <input id="edit-organic-likes" type="number" readonly />
+        </div>
+        <div class="field">
+          <label for="edit-displayed-likes">Displayed likes (cannot be lower than organic likes)</label>
+          <input id="edit-displayed-likes" type="number" min="0" max="999999" step="1" required />
+        </div>
+        <div class="field">
+          <label>
+            <input id="edit-comments-enabled" type="checkbox" />
+            Allow new visitor comments
+          </label>
         </div>
         <div class="dialog-actions">
           <button id="cancel-edit" type="button">Cancel</button>
@@ -302,6 +324,10 @@ export async function onRequestGet() {
         document.getElementById("edit-title").value = design.title || "";
         document.getElementById("edit-caption").value = design.customerCaption || "";
         document.getElementById("edit-note").value = design.moderatorNote || "";
+        document.getElementById("edit-organic-likes").value = design.organicLikeCount || 0;
+        document.getElementById("edit-displayed-likes").min = design.organicLikeCount || 0;
+        document.getElementById("edit-displayed-likes").value = design.displayedLikeCount || 0;
+        document.getElementById("edit-comments-enabled").checked = design.commentsEnabled;
         editDialog.showModal();
       }
 
@@ -341,7 +367,14 @@ export async function onRequestGet() {
           metaItem("ID", design.id),
           metaItem("Size", design.size.join(" x ")),
           metaItem("Pieces", Number(design.totalPieces).toLocaleString()),
-          metaItem("Colors", design.colorLines)
+          metaItem("Colors", design.colorLines),
+          metaItem("Likes", Number(design.displayedLikeCount).toLocaleString()),
+          metaItem(
+            "Comments",
+            design.approvedCommentCount +
+              (design.pendingCommentCount ? " (" + design.pendingCommentCount + " pending)" : "")
+          ),
+          metaItem("Shares", Number(design.shareCount).toLocaleString())
         );
         body.appendChild(meta);
 
@@ -528,6 +561,12 @@ export async function onRequestGet() {
               title: document.getElementById("edit-title").value,
               customerCaption: document.getElementById("edit-caption").value,
               moderatorNote: document.getElementById("edit-note").value,
+              manualLikeOffset: Math.max(
+                0,
+                Number(document.getElementById("edit-displayed-likes").value) -
+                  Number(design.organicLikeCount || 0)
+              ),
+              commentsEnabled: document.getElementById("edit-comments-enabled").checked,
               status: design.status,
             }),
           });
