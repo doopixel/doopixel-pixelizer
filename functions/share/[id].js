@@ -91,8 +91,94 @@ export async function onRequestGet({ params, env, request }) {
         color: var(--text);
         background: #fff;
       }
+
+      .dp-site-nav-wrap {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        border-top: 5px solid #f4ce21;
+        border-bottom: 1px solid #343434;
+        background: #181818;
+      }
+
+      .dp-site-nav {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        width: min(100% - 36px, 1220px);
+        min-height: 64px;
+        margin: 0 auto;
+      }
+
+      .dp-site-logo {
+        display: inline-flex;
+        flex: 0 0 auto;
+        align-items: center;
+      }
+
+      .dp-site-logo img {
+        display: block;
+        width: auto;
+        height: 34px;
+      }
+
+      .dp-site-links {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-left: auto;
+      }
+
+      .dp-site-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 40px;
+        border: 1px solid transparent;
+        padding: 8px 12px;
+        color: #fff;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .dp-site-link:hover {
+        border-color: #555;
+        color: #f4ce21;
+      }
+
+      .dp-site-link.is-active {
+        border-color: #f4ce21;
+        background: #f4ce21;
+        color: #181818;
+      }
+
+      .dp-site-cart {
+        border-color: #f4ce21;
+        color: #f4ce21;
+      }
+
+      .dp-site-menu-button,
+      .dp-site-mobile-cart {
+        display: none;
+      }
+
       .wrap { max-width: 1080px; margin: 0 auto; padding: 28px 18px 48px; }
-      header {
+      .breadcrumb {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-bottom: 16px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .breadcrumb a {
+        color: #181818;
+        font-weight: 700;
+      }
+      .design-header {
         display: flex;
         justify-content: space-between;
         gap: 16px;
@@ -196,20 +282,104 @@ export async function onRequestGet({ params, env, request }) {
       .notice { margin-top: 14px; padding: 12px; background: var(--soft); border: 1px solid var(--line); }
       .hidden { display: none; }
       @media (max-width: 760px) {
-        header, .grid { display: block; }
+        .dp-site-nav {
+          width: min(100% - 28px, 1220px);
+          min-height: 58px;
+          gap: 10px;
+        }
+        .dp-site-logo img { height: 29px; }
+        .dp-site-links {
+          position: absolute;
+          top: calc(100% + 1px);
+          right: -14px;
+          left: -14px;
+          display: none;
+          align-items: stretch;
+          margin-left: 0;
+          padding: 10px 14px 14px;
+          border-bottom: 1px solid #343434;
+          background: #181818;
+        }
+        .dp-site-links.is-open { display: grid; gap: 6px; }
+        .dp-site-link {
+          justify-content: flex-start;
+          min-height: 44px;
+          padding: 10px 12px;
+        }
+        .dp-site-links .dp-site-cart { display: none; }
+        .dp-site-mobile-cart,
+        .dp-site-menu-button {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 38px;
+          border: 1px solid #f4ce21;
+          background: transparent;
+          color: #f4ce21;
+          font-size: 13px;
+          font-weight: 800;
+        }
+        .dp-site-mobile-cart {
+          margin-left: auto;
+          padding: 7px 10px;
+          text-decoration: none;
+        }
+        .dp-site-menu-button {
+          width: 40px;
+          padding: 0;
+          cursor: pointer;
+        }
+        .design-header, .grid { display: block; }
         .panel { margin-top: 18px; }
         .share-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       }
     </style>
   </head>
   <body>
+    <div class="dp-site-nav-wrap">
+      <nav class="dp-site-nav" aria-label="DooPixel main navigation">
+        <a class="dp-site-logo" href="https://doopixel.com/" aria-label="DooPixel shop">
+          <img
+            src="https://cdn.shopify.com/s/files/1/0738/7562/0006/files/20260408-001830.png?v=1775578807"
+            alt="DooPixel"
+          />
+        </a>
+        <div class="dp-site-links" id="dp-site-menu">
+          <a class="dp-site-link" href="https://doopixel.com/">Shop</a>
+          <a class="dp-site-link" href="https://pixelizer.doopixel.com/">Pixel Art Maker</a>
+          <a
+            class="dp-site-link is-active"
+            href="https://pixelizer.doopixel.com/gallery"
+            aria-current="page"
+          >
+            Community Gallery
+          </a>
+          <a class="dp-site-link dp-site-cart" href="https://doopixel.com/cart">Cart</a>
+        </div>
+        <a class="dp-site-mobile-cart" href="https://doopixel.com/cart">Cart</a>
+        <button
+          class="dp-site-menu-button"
+          type="button"
+          aria-label="Open navigation menu"
+          aria-expanded="false"
+          aria-controls="dp-site-menu"
+        >
+          &#9776;
+        </button>
+      </nav>
+    </div>
+
     <div class="wrap">
-      <header>
+      <div class="breadcrumb">
+        <a href="https://pixelizer.doopixel.com/gallery">Back to Gallery</a>
+        <span aria-hidden="true">/</span>
+        <span id="breadcrumb-title">DooPixel Design</span>
+      </div>
+      <header class="design-header">
         <div>
           <h1 id="design-title">DooPixel Design</h1>
           <p class="muted" id="design-subtitle">${id}</p>
         </div>
-        <a class="button" href="/">Create Your Own</a>
       </header>
 
       <main id="loading"><p>Loading design...</p></main>
@@ -290,6 +460,26 @@ export async function onRequestGet({ params, env, request }) {
       const SHOPIFY_ADD_KIT_URL = "https://doopixel.com/pages/add-pixel-kit";
       let currentDesign = null;
       let currentEngagement = null;
+
+      function setupSiteNavigation() {
+        const button = document.querySelector(".dp-site-menu-button");
+        const menu = document.getElementById("dp-site-menu");
+        if (!button || !menu) return;
+
+        function setOpen(isOpen) {
+          menu.classList.toggle("is-open", isOpen);
+          button.setAttribute("aria-expanded", String(isOpen));
+          button.setAttribute("aria-label", isOpen ? "Close navigation menu" : "Open navigation menu");
+        }
+
+        button.addEventListener("click", () => setOpen(!menu.classList.contains("is-open")));
+        menu.addEventListener("click", (event) => {
+          if (event.target.closest("a")) setOpen(false);
+        });
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") setOpen(false);
+        });
+      }
 
       function encodePayload(payload) {
         const json = JSON.stringify(payload);
@@ -388,6 +578,7 @@ export async function onRequestGet({ params, env, request }) {
       function renderDesign(design) {
         currentDesign = design;
         document.getElementById("design-title").textContent = design.title;
+        document.getElementById("breadcrumb-title").textContent = design.title;
         document.getElementById("design-subtitle").textContent = design.id;
         document.getElementById("meta-id").textContent = design.id;
         document.getElementById("meta-size").textContent = design.size[0] + " x " + design.size[1];
@@ -647,6 +838,7 @@ export async function onRequestGet({ params, env, request }) {
         }
       });
 
+      setupSiteNavigation();
       loadDesign().catch((error) => {
         const loading = document.getElementById("loading");
         loading.textContent = error.message;
