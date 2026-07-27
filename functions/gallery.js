@@ -30,53 +30,83 @@ export async function onRequestGet() {
         font-family: Arial, Helvetica, sans-serif;
       }
 
-      .brand-rail {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        height: 6px;
+      .dp-site-nav-wrap {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        border-top: 5px solid var(--yellow);
+        border-bottom: 1px solid #343434;
+        background: var(--ink);
       }
 
-      .brand-rail span:nth-child(1) { background: var(--red); }
-      .brand-rail span:nth-child(2) { background: var(--pink); }
-      .brand-rail span:nth-child(3) { background: var(--green); }
-      .brand-rail span:nth-child(4) { background: var(--yellow); }
+      .dp-site-nav {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        width: min(100% - 36px, 1220px);
+        min-height: 64px;
+        margin: 0 auto;
+      }
+
+      .dp-site-logo {
+        display: inline-flex;
+        flex: 0 0 auto;
+        align-items: center;
+      }
+
+      .dp-site-logo img {
+        display: block;
+        width: auto;
+        height: 34px;
+      }
+
+      .dp-site-links {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-left: auto;
+      }
+
+      .dp-site-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 40px;
+        border: 1px solid transparent;
+        padding: 8px 12px;
+        color: #fff;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .dp-site-link:hover {
+        border-color: #555;
+        color: var(--yellow);
+      }
+
+      .dp-site-link.is-active {
+        border-color: var(--yellow);
+        background: var(--yellow);
+        color: var(--ink);
+      }
+
+      .dp-site-cart {
+        border-color: var(--yellow);
+        color: var(--yellow);
+      }
+
+      .dp-site-menu-button,
+      .dp-site-mobile-cart {
+        display: none;
+      }
 
       .shell {
         width: min(100% - 36px, 1220px);
         margin: 0 auto;
       }
-
-      header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 24px;
-        min-height: 74px;
-        border-bottom: 1px solid var(--line);
-      }
-
-      .brand {
-        display: inline-flex;
-        align-items: center;
-        gap: 11px;
-        color: var(--ink);
-        text-decoration: none;
-        font-size: 19px;
-        font-weight: 800;
-      }
-
-      .studs {
-        display: grid;
-        grid-template-columns: repeat(2, 10px);
-        grid-template-rows: repeat(2, 10px);
-        gap: 3px;
-      }
-
-      .studs span { border-radius: 50%; }
-      .studs span:nth-child(1) { background: var(--red); }
-      .studs span:nth-child(2) { background: var(--pink); }
-      .studs span:nth-child(3) { background: var(--green); }
-      .studs span:nth-child(4) { background: var(--yellow); }
 
       .button {
         min-height: 44px;
@@ -297,9 +327,53 @@ export async function onRequestGet() {
 
       @media (max-width: 680px) {
         .shell { width: min(100% - 28px, 1220px); }
-        header { min-height: 66px; }
-        .brand { font-size: 17px; }
-        header .button { min-height: 40px; padding: 8px 12px; }
+        .dp-site-nav {
+          width: min(100% - 28px, 1220px);
+          min-height: 58px;
+          gap: 10px;
+        }
+        .dp-site-logo img { height: 29px; }
+        .dp-site-links {
+          position: absolute;
+          top: calc(100% + 1px);
+          right: -14px;
+          left: -14px;
+          display: none;
+          align-items: stretch;
+          margin-left: 0;
+          padding: 10px 14px 14px;
+          border-bottom: 1px solid #343434;
+          background: var(--ink);
+        }
+        .dp-site-links.is-open { display: grid; gap: 6px; }
+        .dp-site-link {
+          justify-content: flex-start;
+          min-height: 44px;
+          padding: 10px 12px;
+        }
+        .dp-site-links .dp-site-cart { display: none; }
+        .dp-site-mobile-cart,
+        .dp-site-menu-button {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 38px;
+          border: 1px solid var(--yellow);
+          background: transparent;
+          color: var(--yellow);
+          font-size: 13px;
+          font-weight: 800;
+        }
+        .dp-site-mobile-cart {
+          margin-left: auto;
+          padding: 7px 10px;
+          text-decoration: none;
+        }
+        .dp-site-menu-button {
+          width: 40px;
+          padding: 0;
+          cursor: pointer;
+        }
         .intro { padding: 30px 0 28px; }
         h1 { font-size: 32px; }
         .intro-copy { font-size: 15px; }
@@ -316,21 +390,40 @@ export async function onRequestGet() {
     </style>
   </head>
   <body>
-    <div class="brand-rail" aria-hidden="true">
-      <span></span><span></span><span></span><span></span>
+    <div class="dp-site-nav-wrap">
+      <nav class="dp-site-nav" aria-label="DooPixel main navigation">
+        <a class="dp-site-logo" href="https://doopixel.com/" aria-label="DooPixel shop">
+          <img
+            src="https://cdn.shopify.com/s/files/1/0738/7562/0006/files/20260408-001830.png?v=1775578807"
+            alt="DooPixel"
+          />
+        </a>
+        <div class="dp-site-links" id="dp-site-menu">
+          <a class="dp-site-link" href="https://doopixel.com/">Shop</a>
+          <a class="dp-site-link" href="https://pixelizer.doopixel.com/">Pixel Art Maker</a>
+          <a
+            class="dp-site-link is-active"
+            href="https://pixelizer.doopixel.com/gallery"
+            aria-current="page"
+          >
+            Community Gallery
+          </a>
+          <a class="dp-site-link dp-site-cart" href="https://doopixel.com/cart">Cart</a>
+        </div>
+        <a class="dp-site-mobile-cart" href="https://doopixel.com/cart">Cart</a>
+        <button
+          class="dp-site-menu-button"
+          type="button"
+          aria-label="Open navigation menu"
+          aria-expanded="false"
+          aria-controls="dp-site-menu"
+        >
+          &#9776;
+        </button>
+      </nav>
     </div>
 
     <div class="shell">
-      <header>
-        <a class="brand" href="/">
-          <span class="studs" aria-hidden="true">
-            <span></span><span></span><span></span><span></span>
-          </span>
-          <span class="brand-word">DooPixel</span>
-        </a>
-        <a class="button" href="/">Create Pixel Art</a>
-      </header>
-
       <main>
         <section class="intro">
           <p class="eyebrow">Community Gallery</p>
@@ -373,6 +466,26 @@ export async function onRequestGet() {
       let currentPage = 1;
       let currentSort = "newest";
       let loadedCount = 0;
+
+      function setupSiteNavigation() {
+        const button = document.querySelector(".dp-site-menu-button");
+        const menu = document.getElementById("dp-site-menu");
+        if (!button || !menu) return;
+
+        function setOpen(isOpen) {
+          menu.classList.toggle("is-open", isOpen);
+          button.setAttribute("aria-expanded", String(isOpen));
+          button.setAttribute("aria-label", isOpen ? "Close navigation menu" : "Open navigation menu");
+        }
+
+        button.addEventListener("click", () => setOpen(!menu.classList.contains("is-open")));
+        menu.addEventListener("click", (event) => {
+          if (event.target.closest("a")) setOpen(false);
+        });
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") setOpen(false);
+        });
+      }
 
       function plural(value, singular, pluralValue) {
         return value === 1 ? singular : pluralValue;
@@ -523,6 +636,7 @@ export async function onRequestGet() {
       });
 
       loadMoreButton.addEventListener("click", () => loadGallery(currentPage + 1));
+      setupSiteNavigation();
       updateSortButtons();
       loadGallery(1);
     </script>
