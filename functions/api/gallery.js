@@ -60,6 +60,13 @@ export async function onRequestGet({ request, env }) {
       .bind(limit + 1, offset)
       .all();
 
+    const totalRow = await env.DB.prepare(
+      `SELECT COUNT(*) AS total
+      FROM designs
+      WHERE status = 'approved'
+        AND finished_image_key IS NOT NULL`
+    ).first();
+
     const rows = result.results || [];
     const hasMore = rows.length > limit;
     const designs = rows.slice(0, limit).map((design) => {
@@ -81,7 +88,14 @@ export async function onRequestGet({ request, env }) {
       };
     });
 
-    return jsonResponse({ ok: true, page, sort, hasMore, designs });
+    return jsonResponse({
+      ok: true,
+      page,
+      sort,
+      total: Number(totalRow?.total || 0),
+      hasMore,
+      designs,
+    });
   } catch (error) {
     return jsonResponse({ ok: false, error: error.message || String(error) }, 500);
   }
