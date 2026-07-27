@@ -10,134 +10,355 @@ export async function onRequestGet() {
     <style>
       :root {
         color-scheme: light;
-        --text: #181818;
-        --muted: #666;
-        --line: #dedede;
-        --soft: #f5f5f5;
+        --ink: #181818;
+        --muted: #66645f;
+        --paper: #ffffff;
+        --canvas: #f6f7f4;
+        --line: #d8d9d3;
+        --red: #d4141a;
+        --pink: #e899bc;
+        --green: #289b3a;
+        --yellow: #f4ce21;
       }
+
       * { box-sizing: border-box; }
+
       body {
         margin: 0;
-        color: var(--text);
-        background: #fff;
+        color: var(--ink);
+        background: var(--canvas);
         font-family: Arial, Helvetica, sans-serif;
       }
-      .wrap { max-width: 1200px; margin: 0 auto; padding: 30px 18px 64px; }
+
+      .brand-rail {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        height: 6px;
+      }
+
+      .brand-rail span:nth-child(1) { background: var(--red); }
+      .brand-rail span:nth-child(2) { background: var(--pink); }
+      .brand-rail span:nth-child(3) { background: var(--green); }
+      .brand-rail span:nth-child(4) { background: var(--yellow); }
+
+      .shell {
+        width: min(100% - 36px, 1220px);
+        margin: 0 auto;
+      }
+
       header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        min-height: 74px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 11px;
+        color: var(--ink);
+        text-decoration: none;
+        font-size: 19px;
+        font-weight: 800;
+      }
+
+      .studs {
+        display: grid;
+        grid-template-columns: repeat(2, 10px);
+        grid-template-rows: repeat(2, 10px);
+        gap: 3px;
+      }
+
+      .studs span { border-radius: 50%; }
+      .studs span:nth-child(1) { background: var(--red); }
+      .studs span:nth-child(2) { background: var(--pink); }
+      .studs span:nth-child(3) { background: var(--green); }
+      .studs span:nth-child(4) { background: var(--yellow); }
+
+      .button {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--ink);
+        border-radius: 4px;
+        padding: 10px 16px;
+        background: var(--yellow);
+        color: var(--ink);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .button:hover {
+        background: var(--red);
+        color: #fff;
+      }
+
+      .intro {
+        padding: 44px 0 38px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .eyebrow {
+        margin: 0 0 10px;
+        color: var(--red);
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        max-width: 720px;
+        margin: 0;
+        font-size: 42px;
+        line-height: 1.08;
+        letter-spacing: 0;
+      }
+
+      .intro-copy {
+        max-width: 650px;
+        margin: 14px 0 0;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.55;
+      }
+
+      .gallery-section { padding: 32px 0 64px; }
+
+      .gallery-toolbar {
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
         gap: 20px;
-        border-bottom: 1px solid var(--line);
-        padding-bottom: 20px;
-        margin-bottom: 26px;
+        margin-bottom: 24px;
       }
-      h1 { margin: 0 0 7px; font-size: 32px; }
-      .muted { color: var(--muted); margin: 0; line-height: 1.5; }
-      .gallery-tools {
-        display: flex;
-        justify-content: flex-end;
-        margin-bottom: 18px;
+
+      .gallery-toolbar h2 {
+        margin: 0 0 5px;
+        font-size: 23px;
       }
-      select {
-        min-height: 42px;
-        border: 1px solid var(--line);
-        background: #fff;
-        color: var(--text);
-        padding: 9px 12px;
+
+      .result-count {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .sort-control {
+        display: inline-grid;
+        grid-template-columns: 1fr 1fr;
+        min-width: 230px;
+        border: 1px solid var(--ink);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+
+      .sort-button {
+        min-height: 40px;
+        border: 0;
+        border-right: 1px solid var(--ink);
+        background: var(--paper);
+        color: var(--ink);
+        padding: 8px 12px;
         font: inherit;
-      }
-      .button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 44px;
-        border: 1px solid #111;
-        background: #111;
-        color: #fff;
-        padding: 10px 16px;
-        text-decoration: none;
+        font-size: 13px;
         font-weight: 700;
+        cursor: pointer;
       }
+
+      .sort-button:last-child { border-right: 0; }
+      .sort-button.active { background: var(--yellow); }
+
       .grid {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 22px;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 360px));
+        justify-content: center;
+        gap: 24px;
       }
-      .card { border: 1px solid var(--line); }
-      .image-wrap { position: relative; }
+
+      .card {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-top-width: 5px;
+        border-radius: 6px;
+        background: var(--paper);
+      }
+
+      .card.accent-0 { border-top-color: var(--red); }
+      .card.accent-1 { border-top-color: var(--pink); }
+      .card.accent-2 { border-top-color: var(--green); }
+      .card.accent-3 { border-top-color: var(--yellow); }
+
+      .image-wrap {
+        position: relative;
+        display: grid;
+        place-items: center;
+        aspect-ratio: 1 / 1;
+        overflow: hidden;
+        border-bottom: 1px solid var(--line);
+        background: #efefec;
+      }
+
       .card img {
         display: block;
         width: 100%;
-        aspect-ratio: 1 / 1;
+        height: 100%;
         object-fit: contain;
-        background: var(--soft);
       }
+
       .badge {
         position: absolute;
-        top: 10px;
-        left: 10px;
-        border: 1px solid #111;
-        background: #fff;
-        color: #111;
-        padding: 5px 8px;
-        font-size: 12px;
-        font-weight: 700;
+        top: 12px;
+        left: 12px;
+        border: 1px solid var(--ink);
+        border-radius: 3px;
+        background: var(--yellow);
+        color: var(--ink);
+        padding: 6px 9px;
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
       }
-      .body { padding: 15px; }
-      .title { margin: 0 0 7px; font-size: 19px; }
-      .caption { color: #444; min-height: 44px; line-height: 1.45; }
-      .meta { color: var(--muted); font-size: 13px; margin-bottom: 14px; }
-      .card .button { width: 100%; background: #fff; color: #111; }
-      .notice {
-        border: 1px solid var(--line);
-        background: var(--soft);
+
+      .card-body {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
         padding: 18px;
       }
+
+      .card-title {
+        margin: 0;
+        overflow-wrap: anywhere;
+        font-size: 20px;
+        line-height: 1.25;
+      }
+
+      .caption {
+        min-height: 44px;
+        margin: 9px 0 16px;
+        color: #45443f;
+        line-height: 1.45;
+      }
+
+      .specs {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .engagement {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 18px;
+        margin: 14px 0 18px;
+        padding-top: 13px;
+        border-top: 1px solid var(--line);
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .likes { color: var(--red); }
+      .comments { color: var(--green); }
+
+      .card .button {
+        width: 100%;
+        margin-top: auto;
+      }
+
+      .notice {
+        width: min(100%, 760px);
+        margin: 0 auto;
+        border: 1px solid var(--line);
+        border-left: 5px solid var(--yellow);
+        border-radius: 4px;
+        background: var(--paper);
+        padding: 18px;
+        color: var(--muted);
+      }
+
       .more {
         display: flex;
         justify-content: center;
-        margin-top: 28px;
+        margin-top: 30px;
       }
+
+      .more .button { min-width: 190px; }
       .hidden { display: none; }
-      @media (max-width: 820px) {
-        .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+      @media (max-width: 680px) {
+        .shell { width: min(100% - 28px, 1220px); }
+        header { min-height: 66px; }
+        .brand { font-size: 17px; }
+        header .button { min-height: 40px; padding: 8px 12px; }
+        .intro { padding: 30px 0 28px; }
+        h1 { font-size: 32px; }
+        .intro-copy { font-size: 15px; }
+        .gallery-section { padding: 24px 0 44px; }
+        .gallery-toolbar { display: block; }
+        .sort-control { width: 100%; margin-top: 16px; }
+        .grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+        .card { width: 100%; }
       }
-      @media (max-width: 560px) {
-        .wrap { padding: 20px 14px 44px; }
-        header { display: block; }
-        header .button { margin-top: 16px; }
-        h1 { font-size: 27px; }
-        .grid { grid-template-columns: 1fr; }
+
+      @media (max-width: 390px) {
+        h1 { font-size: 29px; }
       }
     </style>
   </head>
   <body>
-    <div class="wrap">
+    <div class="brand-rail" aria-hidden="true">
+      <span></span><span></span><span></span><span></span>
+    </div>
+
+    <div class="shell">
       <header>
-        <div>
-          <h1>DooPixel Community Gallery</h1>
-          <p class="muted">Finished pixel art builds shared by our community.</p>
-        </div>
-        <a class="button" href="/">Create Your Own</a>
+        <a class="brand" href="/">
+          <span class="studs" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
+          </span>
+          <span class="brand-word">DooPixel</span>
+        </a>
+        <a class="button" href="/">Create Pixel Art</a>
       </header>
 
       <main>
-        <div class="gallery-tools">
-          <label>
-            Sort:
-            <select id="sort">
-              <option value="newest">Newest</option>
-              <option value="popular">Most Liked</option>
-            </select>
-          </label>
-        </div>
-        <div id="loading" class="notice">Loading community builds...</div>
-        <div id="empty" class="notice hidden">No approved builds have been shared yet.</div>
-        <div id="grid" class="grid hidden"></div>
-        <div id="more" class="more hidden">
-          <button id="load-more" class="button" type="button">Load More Builds</button>
-        </div>
+        <section class="intro">
+          <p class="eyebrow">Community Gallery</p>
+          <h1>Built by the DooPixel community.</h1>
+          <p class="intro-copy">
+            Discover finished pixel art, see every color and piece used, or make the design your own.
+          </p>
+        </section>
+
+        <section class="gallery-section">
+          <div class="gallery-toolbar">
+            <div>
+              <h2>Community Builds</h2>
+              <p id="result-count" class="result-count">Loading builds...</p>
+            </div>
+            <div class="sort-control" role="group" aria-label="Sort gallery">
+              <button class="sort-button active" type="button" data-sort="newest">Newest</button>
+              <button class="sort-button" type="button" data-sort="popular">Most Liked</button>
+            </div>
+          </div>
+
+          <div id="loading" class="notice">Loading community builds...</div>
+          <div id="empty" class="notice hidden">No approved builds have been shared yet.</div>
+          <div id="grid" class="grid hidden"></div>
+          <div id="more" class="more hidden">
+            <button id="load-more" class="button" type="button">Load More Builds</button>
+          </div>
+        </section>
       </main>
     </div>
 
@@ -147,12 +368,19 @@ export async function onRequestGet() {
       const grid = document.getElementById("grid");
       const more = document.getElementById("more");
       const loadMoreButton = document.getElementById("load-more");
-      const sortSelect = document.getElementById("sort");
+      const resultCount = document.getElementById("result-count");
+      const sortButtons = Array.from(document.querySelectorAll("[data-sort]"));
       let currentPage = 1;
+      let currentSort = "newest";
+      let loadedCount = 0;
 
-      function createCard(design) {
+      function plural(value, singular, pluralValue) {
+        return value === 1 ? singular : pluralValue;
+      }
+
+      function createCard(design, index) {
         const card = document.createElement("article");
-        card.className = "card";
+        card.className = "card accent-" + (index % 4);
 
         const imageWrap = document.createElement("div");
         imageWrap.className = "image-wrap";
@@ -161,6 +389,7 @@ export async function onRequestGet() {
         image.loading = "lazy";
         image.src = "/api/images?key=" + encodeURIComponent(design.finishedImageKey);
         imageWrap.appendChild(image);
+
         if (design.isPinned) {
           const badge = document.createElement("span");
           badge.className = "badge";
@@ -170,10 +399,10 @@ export async function onRequestGet() {
         card.appendChild(imageWrap);
 
         const body = document.createElement("div");
-        body.className = "body";
+        body.className = "card-body";
 
-        const title = document.createElement("h2");
-        title.className = "title";
+        const title = document.createElement("h3");
+        title.className = "card-title";
         title.textContent = design.title;
         body.appendChild(title);
 
@@ -182,29 +411,50 @@ export async function onRequestGet() {
         caption.textContent = design.customerCaption || "Shared by a DooPixel builder.";
         body.appendChild(caption);
 
-        const meta = document.createElement("div");
-        meta.className = "meta";
-        meta.textContent =
+        const specs = document.createElement("p");
+        specs.className = "specs";
+        specs.textContent =
           design.size.join(" x ") +
-          " pixels · " +
+          " pixels | " +
           Number(design.totalPieces).toLocaleString() +
-          " pieces · " +
+          " pieces | " +
           design.colorLines +
-          " colors · " +
+          " colors";
+        body.appendChild(specs);
+
+        const engagement = document.createElement("div");
+        engagement.className = "engagement";
+        const likes = document.createElement("span");
+        likes.className = "likes";
+        likes.textContent =
           Number(design.likeCount).toLocaleString() +
-          " likes · " +
+          " " +
+          plural(design.likeCount, "Like", "Likes");
+        const comments = document.createElement("span");
+        comments.className = "comments";
+        comments.textContent =
           Number(design.commentCount).toLocaleString() +
-          " comments";
-        body.appendChild(meta);
+          " " +
+          plural(design.commentCount, "Comment", "Comments");
+        engagement.append(likes, comments);
+        body.appendChild(engagement);
 
         const link = document.createElement("a");
         link.className = "button";
         link.href = "/share/" + encodeURIComponent(design.id);
-        link.textContent = "View Pieces & Build This Design";
+        link.textContent = "View Design & Pieces";
         body.appendChild(link);
 
         card.appendChild(body);
         return card;
+      }
+
+      function updateSortButtons() {
+        sortButtons.forEach((button) => {
+          const isActive = button.dataset.sort === currentSort;
+          button.classList.toggle("active", isActive);
+          button.setAttribute("aria-pressed", String(isActive));
+        });
       }
 
       async function loadGallery(page) {
@@ -212,21 +462,34 @@ export async function onRequestGet() {
         loadMoreButton.textContent = "Loading...";
         try {
           const response = await fetch(
-            "/api/gallery?page=" + page + "&sort=" + encodeURIComponent(sortSelect.value)
+            "/api/gallery?page=" + page + "&sort=" + encodeURIComponent(currentSort)
           );
           const result = await response.json();
           if (!response.ok || !result.ok) {
             throw new Error(result.error || "Could not load the gallery.");
           }
+
           loading.classList.add("hidden");
           if (page === 1 && !result.designs.length) {
             empty.classList.remove("hidden");
+            resultCount.textContent = "No published builds yet";
             return;
           }
-          result.designs.forEach((design) => grid.appendChild(createCard(design)));
+
+          result.designs.forEach((design, index) => {
+            grid.appendChild(createCard(design, loadedCount + index));
+          });
+          loadedCount += result.designs.length;
+          currentPage = page;
+          resultCount.textContent =
+            "Showing " +
+            loadedCount.toLocaleString() +
+            " of " +
+            Number(result.total).toLocaleString() +
+            " published " +
+            plural(result.total, "build", "builds");
           grid.classList.remove("hidden");
           more.classList.toggle("hidden", !result.hasMore);
-          currentPage = page;
         } catch (error) {
           loading.textContent = error.message;
           loading.classList.remove("hidden");
@@ -236,16 +499,31 @@ export async function onRequestGet() {
         }
       }
 
-      loadMoreButton.addEventListener("click", () => loadGallery(currentPage + 1));
-      sortSelect.addEventListener("change", () => {
+      function resetGallery(sort) {
+        currentSort = sort;
         currentPage = 1;
+        loadedCount = 0;
         grid.innerHTML = "";
         grid.classList.add("hidden");
         empty.classList.add("hidden");
+        more.classList.add("hidden");
         loading.textContent = "Loading community builds...";
         loading.classList.remove("hidden");
+        resultCount.textContent = "Loading builds...";
+        updateSortButtons();
         loadGallery(1);
+      }
+
+      sortButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          if (button.dataset.sort !== currentSort) {
+            resetGallery(button.dataset.sort);
+          }
+        });
       });
+
+      loadMoreButton.addEventListener("click", () => loadGallery(currentPage + 1));
+      updateSortButtons();
       loadGallery(1);
     </script>
   </body>
