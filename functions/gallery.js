@@ -34,6 +34,19 @@ export async function onRequestGet() {
       }
       h1 { margin: 0 0 7px; font-size: 32px; }
       .muted { color: var(--muted); margin: 0; line-height: 1.5; }
+      .gallery-tools {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 18px;
+      }
+      select {
+        min-height: 42px;
+        border: 1px solid var(--line);
+        background: #fff;
+        color: var(--text);
+        padding: 9px 12px;
+        font: inherit;
+      }
       .button {
         display: inline-flex;
         align-items: center;
@@ -110,6 +123,15 @@ export async function onRequestGet() {
       </header>
 
       <main>
+        <div class="gallery-tools">
+          <label>
+            Sort:
+            <select id="sort">
+              <option value="newest">Newest</option>
+              <option value="popular">Most Liked</option>
+            </select>
+          </label>
+        </div>
         <div id="loading" class="notice">Loading community builds...</div>
         <div id="empty" class="notice hidden">No approved builds have been shared yet.</div>
         <div id="grid" class="grid hidden"></div>
@@ -125,6 +147,7 @@ export async function onRequestGet() {
       const grid = document.getElementById("grid");
       const more = document.getElementById("more");
       const loadMoreButton = document.getElementById("load-more");
+      const sortSelect = document.getElementById("sort");
       let currentPage = 1;
 
       function createCard(design) {
@@ -167,7 +190,11 @@ export async function onRequestGet() {
           Number(design.totalPieces).toLocaleString() +
           " pieces · " +
           design.colorLines +
-          " colors";
+          " colors · " +
+          Number(design.likeCount).toLocaleString() +
+          " likes · " +
+          Number(design.commentCount).toLocaleString() +
+          " comments";
         body.appendChild(meta);
 
         const link = document.createElement("a");
@@ -184,7 +211,9 @@ export async function onRequestGet() {
         loadMoreButton.disabled = true;
         loadMoreButton.textContent = "Loading...";
         try {
-          const response = await fetch("/api/gallery?page=" + page);
+          const response = await fetch(
+            "/api/gallery?page=" + page + "&sort=" + encodeURIComponent(sortSelect.value)
+          );
           const result = await response.json();
           if (!response.ok || !result.ok) {
             throw new Error(result.error || "Could not load the gallery.");
@@ -208,6 +237,15 @@ export async function onRequestGet() {
       }
 
       loadMoreButton.addEventListener("click", () => loadGallery(currentPage + 1));
+      sortSelect.addEventListener("change", () => {
+        currentPage = 1;
+        grid.innerHTML = "";
+        grid.classList.add("hidden");
+        empty.classList.add("hidden");
+        loading.textContent = "Loading community builds...";
+        loading.classList.remove("hidden");
+        loadGallery(1);
+      });
       loadGallery(1);
     </script>
   </body>
