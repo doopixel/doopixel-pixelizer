@@ -42,7 +42,9 @@ export async function onRequestPost({ request, env, params }) {
         is_pinned,
         pinned_at,
         approved_at,
-        moderator_note
+        moderator_note,
+        manual_like_offset,
+        comments_enabled
       FROM designs
       WHERE id = ?`
     )
@@ -77,9 +79,27 @@ export async function onRequestPost({ request, env, params }) {
       body.moderatorNote === undefined
         ? design.moderator_note
         : String(body.moderatorNote || "").trim().slice(0, 500);
+    const manualLikeOffset =
+      body.manualLikeOffset === undefined
+        ? Number(design.manual_like_offset || 0)
+        : Number(body.manualLikeOffset);
+    const commentsEnabled =
+      body.commentsEnabled === undefined
+        ? Boolean(design.comments_enabled)
+        : Boolean(body.commentsEnabled);
 
     if (!title) {
       return jsonResponse({ ok: false, error: "Title cannot be empty." }, 400);
+    }
+    if (
+      !Number.isInteger(manualLikeOffset) ||
+      manualLikeOffset < 0 ||
+      manualLikeOffset > 999999
+    ) {
+      return jsonResponse(
+        { ok: false, error: "Additional displayed likes must be between 0 and 999999." },
+        400
+      );
     }
 
     let isPinned =
@@ -110,6 +130,8 @@ export async function onRequestPost({ request, env, params }) {
         is_pinned = ?,
         pinned_at = ?,
         approved_at = ?,
+        manual_like_offset = ?,
+        comments_enabled = ?,
         updated_at = ?
       WHERE id = ?`
     )
@@ -121,6 +143,8 @@ export async function onRequestPost({ request, env, params }) {
         isPinned ? 1 : 0,
         pinnedAt,
         approvedAt,
+        manualLikeOffset,
+        commentsEnabled ? 1 : 0,
         now,
         id
       )
@@ -134,6 +158,8 @@ export async function onRequestPost({ request, env, params }) {
       title,
       customerCaption,
       moderatorNote,
+      manualLikeOffset,
+      commentsEnabled,
       updatedAt: now,
     });
   } catch (error) {
