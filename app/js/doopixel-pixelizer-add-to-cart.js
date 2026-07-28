@@ -236,12 +236,12 @@
 
     const wrapper = document.createElement("span");
     wrapper.id = "doopixel-cart-controls";
-    wrapper.style.display = "inline-flex";
+    wrapper.style.display = "grid";
+    wrapper.style.gridTemplateColumns = "auto minmax(0, 1fr)";
     wrapper.style.alignItems = "center";
     wrapper.style.gap = "8px";
-    wrapper.style.marginTop = "8px";
-    wrapper.style.marginLeft = "8px";
-    wrapper.style.verticalAlign = "middle";
+    wrapper.style.width = "100%";
+    wrapper.style.marginTop = "12px";
 
     const label = document.createElement("label");
     label.htmlFor = "doopixel-frame-color-select";
@@ -252,8 +252,8 @@
     const select = document.createElement("select");
     select.id = "doopixel-frame-color-select";
     select.className = "form-control";
-    select.style.width = "auto";
-    select.style.minWidth = "128px";
+    select.style.width = "100%";
+    select.style.minWidth = "0";
     select.innerHTML =
       '<option value="black" selected>Black Frame</option><option value="white">White Frame</option>';
 
@@ -261,7 +261,11 @@
     button.type = "button";
     button.id = "doopixel-add-to-cart-button";
     button.className = "btn btn-success";
-    button.textContent = "Add Custom Kit to Cart";
+    button.textContent = "Add All Pieces to Cart";
+    button.style.gridColumn = "1 / -1";
+    button.style.width = "100%";
+    button.style.minHeight = "44px";
+    button.style.whiteSpace = "normal";
     button.addEventListener("click", function () {
       handleAddToCartClick(button);
     });
@@ -278,4 +282,5 @@
     insertControls();
   }
 })();
+
 
