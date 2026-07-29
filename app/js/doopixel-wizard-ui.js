@@ -347,7 +347,7 @@
   function refreshCropperLayout() {
     window.setTimeout(function () {
       const cropBox = document.querySelector("#dp-size-preview .cropper-crop-box");
-      if (!cropBox || (cropBox.offsetWidth > 0 && cropBox.offsetHeight > 0)) {
+      if (cropBox && cropBox.offsetWidth >= 16 && cropBox.offsetHeight >= 16) {
         return;
       }
 
