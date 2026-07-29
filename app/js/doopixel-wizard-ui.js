@@ -442,6 +442,15 @@
     cropper.zoomTo(ratio);
   }
 
+  function restoreCropperFrame() {
+    const cropper = getCropperInstance();
+    if (!cropper || !fixedCropBoxData) {
+      return;
+    }
+    cropper.setCropBoxData(fixedCropBoxData);
+    isRestoringCropBox = false;
+  }
+
   function bindCropperControls() {
     const slider = document.getElementById("dp-crop-zoom");
     const zoomOut = document.getElementById("dp-crop-zoom-out");
@@ -481,6 +490,7 @@
     });
 
     window.syncDooPixelCropperControls = syncCropperControls;
+    window.restoreDooPixelCropperFrame = restoreCropperFrame;
   }
 
   function goToPage(page) {
