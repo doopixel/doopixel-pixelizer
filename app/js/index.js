@@ -178,8 +178,29 @@ function initializeCropper() {
     inputImageCropper = new Cropper(step1CanvasUpscaled, {
         aspectRatio: targetResolution[0] / targetResolution[1],
         viewMode: 3,
+        dragMode: "move",
+        autoCropArea: 0.92,
+        movable: true,
+        zoomable: true,
+        zoomOnTouch: true,
+        zoomOnWheel: false,
+        cropBoxMovable: false,
+        cropBoxResizable: false,
+        toggleDragModeOnDblclick: false,
+        scalable: false,
+        rotatable: false,
         minContainerWidth: 1,
         minContainerHeight: 1,
+        ready() {
+            if (typeof window.syncDooPixelCropperControls === "function") {
+                window.syncDooPixelCropperControls(true);
+            }
+        },
+        zoom() {
+            if (typeof window.syncDooPixelCropperControls === "function") {
+                window.requestAnimationFrame(() => window.syncDooPixelCropperControls(false));
+            }
+        },
         cropend() {
             overridePixelArray = new Array(targetResolution[0] * targetResolution[1] * 4).fill(null);
             overrideDepthPixelArray = new Array(targetResolution[0] * targetResolution[1] * 4).fill(null);
