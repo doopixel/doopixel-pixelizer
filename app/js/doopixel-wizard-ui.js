@@ -407,6 +407,14 @@
     const boardHeight = Math.ceil(height / 16);
     const physicalWidth = (width * 0.8).toFixed(1);
     const physicalHeight = (height * 0.8).toFixed(1);
+    const artworkAspect = width + " / " + height;
+
+    ["dp-size-preview", "dp-adjust-preview", "dp-final-preview"].forEach(function (id) {
+      const preview = document.getElementById(id);
+      if (preview) {
+        preview.style.setProperty("--dp-art-aspect", artworkAspect);
+      }
+    });
 
     document.getElementById("dp-board-layout").textContent = boardWidth + " × " + boardHeight;
     document.getElementById("dp-board-total").textContent = String(boardWidth * boardHeight);
