@@ -409,12 +409,18 @@
     const physicalHeight = (height * 0.8).toFixed(1);
     const artworkAspect = width + " / " + height;
 
-    ["dp-size-preview", "dp-adjust-preview", "dp-final-preview"].forEach(function (id) {
+    ["dp-adjust-preview", "dp-final-preview"].forEach(function (id) {
       const preview = document.getElementById(id);
       if (preview) {
         preview.style.setProperty("--dp-art-aspect", artworkAspect);
       }
     });
+
+    const sourceCanvas = document.getElementById("step-1-canvas-upscaled");
+    const sourcePreview = document.getElementById("dp-size-preview");
+    if (sourceCanvas && sourcePreview && sourceCanvas.width > 0 && sourceCanvas.height > 0) {
+      sourcePreview.style.setProperty("--dp-source-aspect", sourceCanvas.width + " / " + sourceCanvas.height);
+    }
 
     document.getElementById("dp-board-layout").textContent = boardWidth + " × " + boardHeight;
     document.getElementById("dp-board-total").textContent = String(boardWidth * boardHeight);
