@@ -4,6 +4,8 @@
   const RARE_PIECE_THRESHOLD = 5;
   let currentPage = 0;
   let summaryTimer = null;
+  let fixedCropBoxData = null;
+  let isRestoringCropBox = false;
 
   function onReady(callback) {
     if (document.readyState === "loading") {
@@ -395,6 +397,25 @@
       return;
     }
 
+    if (resetRange || !fixedCropBoxData) {
+      fixedCropBoxData = cropper.getCropBoxData();
+    } else if (!isRestoringCropBox) {
+      const currentCropBox = cropper.getCropBoxData();
+      const cropBoxChanged =
+        Math.abs(currentCropBox.left - fixedCropBoxData.left) > 0.5 ||
+        Math.abs(currentCropBox.top - fixedCropBoxData.top) > 0.5 ||
+        Math.abs(currentCropBox.width - fixedCropBoxData.width) > 0.5 ||
+        Math.abs(currentCropBox.height - fixedCropBoxData.height) > 0.5;
+
+      if (cropBoxChanged) {
+        isRestoringCropBox = true;
+        cropper.setCropBoxData(fixedCropBoxData);
+        window.requestAnimationFrame(function () {
+          isRestoringCropBox = false;
+        });
+      }
+    }
+
     if (resetRange || !Number(slider.dataset.minimumRatio)) {
       slider.dataset.minimumRatio = String(currentRatio);
     }
@@ -452,6 +473,11 @@
       window.requestAnimationFrame(function () {
         syncCropperControls(true);
       });
+    });
+    window.addEventListener("resize", function () {
+      window.setTimeout(function () {
+        syncCropperControls(true);
+      }, 150);
     });
 
     window.syncDooPixelCropperControls = syncCropperControls;
