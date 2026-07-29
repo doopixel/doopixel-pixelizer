@@ -300,6 +300,7 @@ body.dp-wizard-ready .dp-site-menu-button {
   display: grid;
   width: 100%;
   min-height: 360px;
+  aspect-ratio: var(--dp-art-aspect, 1 / 1);
   place-items: center;
   overflow: hidden;
   background-color: #eeeeef;
@@ -319,6 +320,8 @@ body.dp-wizard-ready .dp-site-menu-button {
 }
 
 .dp-preview-stage canvas {
+  width: 100% !important;
+  height: auto !important;
   image-rendering: auto;
 }
 
@@ -829,14 +832,7 @@ body.dp-wizard-ready .dp-site-menu-button {
 
   .dp-preview-stage {
     min-height: 0;
-    aspect-ratio: 1 / 1;
-  }
-
-  #dp-page-adjust:not(.dp-editor-fullscreen) .dp-preview-column {
-    position: sticky;
-    z-index: 45;
-    top: 119px;
-    background: var(--dp-soft);
+    aspect-ratio: var(--dp-art-aspect, 1 / 1);
   }
 
   #dp-page-adjust:not(.dp-editor-fullscreen) .dp-preview-frame {
@@ -884,7 +880,7 @@ body.dp-wizard-ready .dp-site-menu-button {
 
   #dp-page-adjust.dp-editor-fullscreen .dp-preview-stage {
     min-height: 0;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: var(--dp-art-aspect, 1 / 1);
   }
 
   .dp-loading-slot {
