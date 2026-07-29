@@ -201,9 +201,17 @@ function initializeCropper() {
                 window.requestAnimationFrame(() => window.syncDooPixelCropperControls(false));
             }
         },
+        cropmove() {
+            if (typeof window.syncDooPixelCropperControls === "function") {
+                window.requestAnimationFrame(() => window.syncDooPixelCropperControls(false));
+            }
+        },
         cropend() {
             overridePixelArray = new Array(targetResolution[0] * targetResolution[1] * 4).fill(null);
             overrideDepthPixelArray = new Array(targetResolution[0] * targetResolution[1] * 4).fill(null);
+            if (typeof window.syncDooPixelCropperControls === "function") {
+                window.syncDooPixelCropperControls(false);
+            }
         },
     });
 }
