@@ -80,9 +80,18 @@
           <div class="dp-preview-column">
             <div class="dp-preview-frame">
               <div class="dp-preview-stage" id="dp-size-preview"></div>
+              <div class="dp-crop-toolbar" aria-label="Photo zoom controls">
+                <button type="button" class="dp-crop-icon-button" id="dp-crop-zoom-out" aria-label="Zoom out" title="Zoom out">−</button>
+                <label class="dp-crop-slider-label" for="dp-crop-zoom">
+                  <span>Photo zoom</span>
+                  <input type="range" id="dp-crop-zoom" min="0" max="100" step="1" value="0" />
+                </label>
+                <button type="button" class="dp-crop-icon-button" id="dp-crop-zoom-in" aria-label="Zoom in" title="Zoom in">+</button>
+                <button type="button" class="dp-crop-reset-button" id="dp-crop-reset">Reset</button>
+              </div>
               <div class="dp-preview-caption">
-                <strong>Crop preview</strong>
-                <span>Drag and zoom the photo to position it.</span>
+                <strong>Position your photo</strong>
+                <span>Drag with one finger. Pinch with two fingers to zoom.</span>
               </div>
             </div>
           </div>
@@ -355,6 +364,97 @@
         console.warn("Could not refresh the crop area:", error);
       }
     }, 180);
+  }
+
+  function getCropperInstance() {
+    try {
+      return typeof inputImageCropper !== "undefined" ? inputImageCropper : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function getCropperRatio(cropper) {
+    const canvasData = cropper.getCanvasData();
+    const imageData = cropper.getImageData();
+    if (!canvasData || !imageData || !imageData.naturalWidth) {
+      return 0;
+    }
+    return canvasData.width / imageData.naturalWidth;
+  }
+
+  function syncCropperControls(resetRange) {
+    const cropper = getCropperInstance();
+    const slider = document.getElementById("dp-crop-zoom");
+    if (!cropper || !slider) {
+      return;
+    }
+
+    const currentRatio = getCropperRatio(cropper);
+    if (!currentRatio) {
+      return;
+    }
+
+    if (resetRange || !Number(slider.dataset.minimumRatio)) {
+      slider.dataset.minimumRatio = String(currentRatio);
+    }
+
+    const minimumRatio = Number(slider.dataset.minimumRatio);
+    const zoomPercent = (Math.log(currentRatio / minimumRatio) / Math.log(4)) * 100;
+    slider.value = String(Math.max(0, Math.min(100, Math.round(zoomPercent))));
+  }
+
+  function setCropperZoomFromSlider() {
+    const cropper = getCropperInstance();
+    const slider = document.getElementById("dp-crop-zoom");
+    if (!cropper || !slider) {
+      return;
+    }
+
+    const minimumRatio = Number(slider.dataset.minimumRatio);
+    if (!minimumRatio) {
+      syncCropperControls(true);
+      return;
+    }
+
+    const ratio = minimumRatio * Math.pow(4, Number(slider.value) / 100);
+    cropper.zoomTo(ratio);
+  }
+
+  function bindCropperControls() {
+    const slider = document.getElementById("dp-crop-zoom");
+    const zoomOut = document.getElementById("dp-crop-zoom-out");
+    const zoomIn = document.getElementById("dp-crop-zoom-in");
+    const reset = document.getElementById("dp-crop-reset");
+    if (!slider || !zoomOut || !zoomIn || !reset) {
+      return;
+    }
+
+    slider.addEventListener("input", setCropperZoomFromSlider);
+
+    function changeZoom(amount) {
+      slider.value = String(Math.max(0, Math.min(100, Number(slider.value) + amount)));
+      setCropperZoomFromSlider();
+    }
+
+    zoomOut.addEventListener("click", function () {
+      changeZoom(-10);
+    });
+    zoomIn.addEventListener("click", function () {
+      changeZoom(10);
+    });
+    reset.addEventListener("click", function () {
+      const cropper = getCropperInstance();
+      if (!cropper) {
+        return;
+      }
+      cropper.reset();
+      window.requestAnimationFrame(function () {
+        syncCropperControls(true);
+      });
+    });
+
+    window.syncDooPixelCropperControls = syncCropperControls;
   }
 
   function goToPage(page) {
@@ -730,6 +830,7 @@
     mountLoadingBar();
     mountLegacyControls();
     hideLegacyLayout(legacyApp, shell);
+    bindCropperControls();
     bindInteractions();
     friendlyPieceNames();
     bindPieceTypeMenu();
