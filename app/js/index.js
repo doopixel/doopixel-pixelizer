@@ -209,9 +209,12 @@ function initializeCropper() {
         cropend() {
             overridePixelArray = new Array(targetResolution[0] * targetResolution[1] * 4).fill(null);
             overrideDepthPixelArray = new Array(targetResolution[0] * targetResolution[1] * 4).fill(null);
-            if (typeof window.syncDooPixelCropperControls === "function") {
-                window.syncDooPixelCropperControls(false);
-            }
+            window.requestAnimationFrame(() => {
+                if (typeof window.restoreDooPixelCropperFrame === "function") {
+                    window.restoreDooPixelCropperFrame();
+                }
+                runStep1();
+            });
         },
     });
 }
