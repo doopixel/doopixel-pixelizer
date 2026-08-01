@@ -191,7 +191,7 @@ function initializeCropper() {
     }
     inputImageCropper = new Cropper(step1CanvasUpscaled, {
         aspectRatio: targetResolution[0] / targetResolution[1],
-        viewMode: 1,
+        viewMode: 3,
         dragMode: "move",
         autoCropArea: 0.92,
         movable: true,
