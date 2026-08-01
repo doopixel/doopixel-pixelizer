@@ -180,6 +180,31 @@ function lockCropperFrame() {
     }
 }
 
+function fitCropperFrame() {
+    if (inputImageCropper == null) {
+        return;
+    }
+    const containerData = inputImageCropper.getContainerData();
+    const aspectRatio = Number(targetResolution[0]) / Number(targetResolution[1]);
+    const maxWidth = containerData.width * 0.92;
+    const maxHeight = containerData.height * 0.92;
+    let width = maxWidth;
+    let height = width / aspectRatio;
+
+    if (height > maxHeight) {
+        height = maxHeight;
+        width = height * aspectRatio;
+    }
+
+    inputImageCropper.setCropBoxData({
+        left: (containerData.width - width) / 2,
+        top: (containerData.height - height) / 2,
+        width,
+        height,
+    });
+    lockCropperFrame();
+}
+
 function restoreLockedCropperFrame() {
     if (inputImageCropper == null || lockedCropBoxData == null || isLockingCropBox) {
         return;
@@ -198,6 +223,7 @@ function moveCropperPhoto(deltaX, deltaY) {
 }
 
 window.lockDooPixelCropperFrame = lockCropperFrame;
+window.fitDooPixelCropperFrame = fitCropperFrame;
 window.moveDooPixelCropperPhoto = moveCropperPhoto;
 
 function finishCropperInteraction() {
@@ -235,7 +261,7 @@ function initializeCropper() {
         minContainerWidth: 1,
         minContainerHeight: 1,
         ready() {
-            lockCropperFrame();
+            fitCropperFrame();
             if (typeof window.syncDooPixelCropperControls === "function") {
                 window.syncDooPixelCropperControls(true);
             }
