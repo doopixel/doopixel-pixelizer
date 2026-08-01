@@ -314,10 +314,18 @@ body.dp-wizard-ready .dp-site-menu-button {
 }
 
 #dp-size-preview {
-  aspect-ratio: var(--dp-source-aspect, 1 / 1);
+  min-height: 0;
+  aspect-ratio: 1 / 1;
+}
+
+#dp-size-preview > canvas {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 #dp-size-preview .cropper-container {
+  width: 100% !important;
+  height: 100% !important;
   touch-action: none;
 }
 
