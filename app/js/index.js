@@ -170,6 +170,23 @@ document.getElementById("height-text").title = `${(targetResolution[1] * PIXEL_W
 ).toFixed(1)}″`;
 
 let inputImageCropper;
+let cropperFinishFrame = null;
+
+function finishCropperInteraction() {
+    overridePixelArray = new Array(targetResolution[0] * targetResolution[1] * 4).fill(null);
+    overrideDepthPixelArray = new Array(targetResolution[0] * targetResolution[1] * 4).fill(null);
+
+    if (cropperFinishFrame != null) {
+        window.cancelAnimationFrame(cropperFinishFrame);
+    }
+    cropperFinishFrame = window.requestAnimationFrame(() => {
+        cropperFinishFrame = null;
+        if (typeof window.restoreDooPixelCropperFrame === "function") {
+            window.restoreDooPixelCropperFrame();
+        }
+        runStep1();
+    });
+}
 
 function initializeCropper() {
     if (inputImageCropper != null) {
@@ -178,7 +195,7 @@ function initializeCropper() {
     inputImageCropper = new Cropper(step1CanvasUpscaled, {
         aspectRatio: targetResolution[0] / targetResolution[1],
         viewMode: 3,
-        dragMode: "move",
+        dragMode: "none",
         autoCropArea: 0.92,
         movable: true,
         zoomable: true,
@@ -201,25 +218,11 @@ function initializeCropper() {
                 window.requestAnimationFrame(() => window.syncDooPixelCropperControls(false));
             }
         },
-        cropmove() {
-            if (typeof window.syncDooPixelCropperControls === "function") {
-                window.requestAnimationFrame(() => window.syncDooPixelCropperControls(false));
-            }
-        },
         cropend() {
-            overridePixelArray = new Array(targetResolution[0] * targetResolution[1] * 4).fill(null);
-            overrideDepthPixelArray = new Array(targetResolution[0] * targetResolution[1] * 4).fill(null);
-            window.requestAnimationFrame(() => {
-                if (typeof window.restoreDooPixelCropperFrame === "function") {
-                    window.restoreDooPixelCropperFrame();
-                }
-                runStep1();
-            });
+            finishCropperInteraction();
         },
     });
 }
-
-step1CanvasUpscaled.addEventListener("cropend", runStep1);
 
 window.addEventListener("resize", () => {
     [step4Canvas].forEach((canvas) => {
