@@ -180,7 +180,25 @@ function lockCropperFrame() {
     }
 }
 
+function restoreLockedCropperFrame() {
+    if (inputImageCropper == null || lockedCropBoxData == null || isLockingCropBox) {
+        return;
+    }
+    isLockingCropBox = true;
+    inputImageCropper.setCropBoxData(lockedCropBoxData);
+    isLockingCropBox = false;
+}
+
+function moveCropperPhoto(deltaX, deltaY) {
+    if (inputImageCropper == null) {
+        return;
+    }
+    inputImageCropper.move(deltaX, deltaY);
+    restoreLockedCropperFrame();
+}
+
 window.lockDooPixelCropperFrame = lockCropperFrame;
+window.moveDooPixelCropperPhoto = moveCropperPhoto;
 
 function finishCropperInteraction() {
     overridePixelArray = new Array(targetResolution[0] * targetResolution[1] * 4).fill(null);
@@ -203,7 +221,7 @@ function initializeCropper() {
     inputImageCropper = new Cropper(step1CanvasUpscaled, {
         aspectRatio: targetResolution[0] / targetResolution[1],
         viewMode: 3,
-        dragMode: "move",
+        dragMode: "none",
         autoCropArea: 0.92,
         movable: true,
         zoomable: true,
@@ -228,14 +246,10 @@ function initializeCropper() {
             }
         },
         cropmove() {
-            if (lockedCropBoxData == null || isLockingCropBox) {
-                return;
-            }
-            isLockingCropBox = true;
-            inputImageCropper.setCropBoxData(lockedCropBoxData);
-            isLockingCropBox = false;
+            restoreLockedCropperFrame();
         },
         cropend() {
+            restoreLockedCropperFrame();
             finishCropperInteraction();
         },
     });
