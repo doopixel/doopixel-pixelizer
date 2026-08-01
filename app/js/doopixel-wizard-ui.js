@@ -451,20 +451,35 @@
     isRestoringCropBox = false;
   }
 
+  function finishCropperChange() {
+    try {
+      if (typeof finishCropperInteraction === "function") {
+        finishCropperInteraction();
+      } else if (typeof runStep1 === "function") {
+        runStep1();
+      }
+    } catch (error) {
+      console.warn("Could not update the crop preview:", error);
+    }
+  }
+
   function bindCropperControls() {
     const slider = document.getElementById("dp-crop-zoom");
     const zoomOut = document.getElementById("dp-crop-zoom-out");
     const zoomIn = document.getElementById("dp-crop-zoom-in");
     const reset = document.getElementById("dp-crop-reset");
-    if (!slider || !zoomOut || !zoomIn || !reset) {
+    const preview = document.getElementById("dp-size-preview");
+    if (!slider || !zoomOut || !zoomIn || !reset || !preview) {
       return;
     }
 
     slider.addEventListener("input", setCropperZoomFromSlider);
+    slider.addEventListener("change", finishCropperChange);
 
     function changeZoom(amount) {
       slider.value = String(Math.max(0, Math.min(100, Number(slider.value) + amount)));
       setCropperZoomFromSlider();
+      finishCropperChange();
     }
 
     zoomOut.addEventListener("click", function () {
@@ -481,8 +496,64 @@
       cropper.reset();
       window.requestAnimationFrame(function () {
         syncCropperControls(true);
+        finishCropperChange();
       });
     });
+
+    const cropPointers = new Set();
+    let panPointerId = null;
+    let lastPointerX = 0;
+    let lastPointerY = 0;
+
+    preview.addEventListener("pointerdown", function (event) {
+      if (event.pointerType === "mouse" && event.button !== 0) {
+        return;
+      }
+      cropPointers.add(event.pointerId);
+      if (cropPointers.size !== 1) {
+        panPointerId = null;
+        return;
+      }
+      panPointerId = event.pointerId;
+      lastPointerX = event.clientX;
+      lastPointerY = event.clientY;
+      if (preview.setPointerCapture) {
+        preview.setPointerCapture(event.pointerId);
+      }
+    });
+
+    preview.addEventListener("pointermove", function (event) {
+      if (cropPointers.size !== 1 || event.pointerId !== panPointerId) {
+        return;
+      }
+      const cropper = getCropperInstance();
+      if (!cropper) {
+        return;
+      }
+      const deltaX = event.clientX - lastPointerX;
+      const deltaY = event.clientY - lastPointerY;
+      lastPointerX = event.clientX;
+      lastPointerY = event.clientY;
+      cropper.move(deltaX, deltaY);
+      event.preventDefault();
+    });
+
+    function endCropPointer(event) {
+      cropPointers.delete(event.pointerId);
+      if (event.pointerId === panPointerId) {
+        panPointerId = null;
+      }
+      if (preview.hasPointerCapture && preview.hasPointerCapture(event.pointerId)) {
+        preview.releasePointerCapture(event.pointerId);
+      }
+      if (cropPointers.size === 0) {
+        finishCropperChange();
+      }
+    }
+
+    preview.addEventListener("pointerup", endCropPointer);
+    preview.addEventListener("pointercancel", endCropPointer);
+
     window.addEventListener("resize", function () {
       window.setTimeout(function () {
         syncCropperControls(true);
