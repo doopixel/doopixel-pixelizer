@@ -526,8 +526,8 @@
 
     window.addEventListener("resize", function () {
       window.setTimeout(function () {
-        if (typeof window.lockDooPixelCropperFrame === "function") {
-          window.lockDooPixelCropperFrame();
+        if (typeof window.fitDooPixelCropperFrame === "function") {
+          window.fitDooPixelCropperFrame();
         }
         syncCropperControls(true);
       }, 150);
