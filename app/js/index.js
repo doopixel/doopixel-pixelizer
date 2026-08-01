@@ -181,9 +181,6 @@ function finishCropperInteraction() {
     }
     cropperFinishFrame = window.requestAnimationFrame(() => {
         cropperFinishFrame = null;
-        if (typeof window.restoreDooPixelCropperFrame === "function") {
-            window.restoreDooPixelCropperFrame();
-        }
         runStep1();
     });
 }
@@ -194,8 +191,8 @@ function initializeCropper() {
     }
     inputImageCropper = new Cropper(step1CanvasUpscaled, {
         aspectRatio: targetResolution[0] / targetResolution[1],
-        viewMode: 3,
-        dragMode: "none",
+        viewMode: 1,
+        dragMode: "move",
         autoCropArea: 0.92,
         movable: true,
         zoomable: true,
@@ -2859,28 +2856,17 @@ function handleInputImage(e, dontClearDepth, dontLog) {
             }
             drawPixelsOnCanvas(inputImagePixels, inputCanvas);
 
-            if (!dontClearDepth) {
-                inputDepthCanvas.width = SERIALIZE_EDGE_LENGTH;
-                inputDepthCanvas.height = SERIALIZE_EDGE_LENGTH;
-                inputDepthCanvasContext.fillStyle = "black";
-                inputDepthCanvasContext.fillRect(0, 0, inputDepthCanvas.width, inputDepthCanvas.height);
-            }
-        };
-        inputImage.src = event.target.result;
-        document.getElementById("steps-row").hidden = false;
-        document.getElementById("input-image-selector").innerHTML = "Reselect Input Image";
-        document.getElementById("image-input-new").appendChild(document.getElementById("image-input"));
-        document.getElementById("image-input-card").hidden = true;
-        document.getElementById("run-example-input-container").hidden = true;
-        setTimeout(() => {
-            step1CanvasUpscaled.width = SERIALIZE_EDGE_LENGTH;
-            step1CanvasUpscaled.height = Math.floor((SERIALIZE_EDGE_LENGTH * inputImage.height) / inputImage.width);
+            const sourceWidth = inputImage.naturalWidth || inputImage.width;
+            const sourceHeight = inputImage.naturalHeight || inputImage.height;
+            const previewScale = SERIALIZE_EDGE_LENGTH / Math.max(sourceWidth, sourceHeight);
+            step1CanvasUpscaled.width = Math.max(1, Math.round(sourceWidth * previewScale));
+            step1CanvasUpscaled.height = Math.max(1, Math.round(sourceHeight * previewScale));
             step1CanvasUpscaledContext.drawImage(
-                inputCanvas,
+                inputImage,
                 0,
                 0,
-                SERIALIZE_EDGE_LENGTH,
-                SERIALIZE_EDGE_LENGTH,
+                sourceWidth,
+                sourceHeight,
                 0,
                 0,
                 step1CanvasUpscaled.width,
@@ -2889,9 +2875,23 @@ function handleInputImage(e, dontClearDepth, dontLog) {
 
             overridePixelArray = new Array(targetResolution[0] * targetResolution[1] * 4).fill(null);
             overrideDepthPixelArray = new Array(targetResolution[0] * targetResolution[1] * 4).fill(null);
+
+            if (!dontClearDepth) {
+                inputDepthCanvas.width = SERIALIZE_EDGE_LENGTH;
+                inputDepthCanvas.height = SERIALIZE_EDGE_LENGTH;
+                inputDepthCanvasContext.fillStyle = "black";
+                inputDepthCanvasContext.fillRect(0, 0, inputDepthCanvas.width, inputDepthCanvas.height);
+            }
+
             initializeCropper();
             runStep1();
-        }, 50); // TODO: find better way to check that input is finished
+        };
+        inputImage.src = event.target.result;
+        document.getElementById("steps-row").hidden = false;
+        document.getElementById("input-image-selector").innerHTML = "Reselect Input Image";
+        document.getElementById("image-input-new").appendChild(document.getElementById("image-input"));
+        document.getElementById("image-input-card").hidden = true;
+        document.getElementById("run-example-input-container").hidden = true;
 
         if (!dontLog) {
             perfLoggingDatabase.ref("input-image-count/total").transaction(incrementTransaction);
