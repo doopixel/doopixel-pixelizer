@@ -170,119 +170,24 @@ document.getElementById("height-text").title = `${(targetResolution[1] * PIXEL_W
 ).toFixed(1)}″`;
 
 let inputImageCropper;
-let cropperFinishFrame = null;
-let lockedCropBoxData = null;
-let isLockingCropBox = false;
-
-function lockCropperFrame() {
-    if (inputImageCropper != null) {
-        lockedCropBoxData = inputImageCropper.getCropBoxData();
-    }
-}
-
-function fitCropperFrame() {
-    if (inputImageCropper == null) {
-        return;
-    }
-    const containerData = inputImageCropper.getContainerData();
-    const aspectRatio = Number(targetResolution[0]) / Number(targetResolution[1]);
-    const maxWidth = containerData.width * 0.92;
-    const maxHeight = containerData.height * 0.92;
-    let width = maxWidth;
-    let height = width / aspectRatio;
-
-    if (height > maxHeight) {
-        height = maxHeight;
-        width = height * aspectRatio;
-    }
-
-    inputImageCropper.setCropBoxData({
-        left: (containerData.width - width) / 2,
-        top: (containerData.height - height) / 2,
-        width,
-        height,
-    });
-    lockCropperFrame();
-}
-
-function restoreLockedCropperFrame() {
-    if (inputImageCropper == null || lockedCropBoxData == null || isLockingCropBox) {
-        return;
-    }
-    isLockingCropBox = true;
-    inputImageCropper.setCropBoxData(lockedCropBoxData);
-    isLockingCropBox = false;
-}
-
-function moveCropperPhoto(deltaX, deltaY) {
-    if (inputImageCropper == null) {
-        return;
-    }
-    inputImageCropper.move(deltaX, deltaY);
-    restoreLockedCropperFrame();
-}
-
-window.lockDooPixelCropperFrame = lockCropperFrame;
-window.fitDooPixelCropperFrame = fitCropperFrame;
-window.moveDooPixelCropperPhoto = moveCropperPhoto;
-
-function finishCropperInteraction() {
-    overridePixelArray = new Array(targetResolution[0] * targetResolution[1] * 4).fill(null);
-    overrideDepthPixelArray = new Array(targetResolution[0] * targetResolution[1] * 4).fill(null);
-
-    if (cropperFinishFrame != null) {
-        window.cancelAnimationFrame(cropperFinishFrame);
-    }
-    cropperFinishFrame = window.requestAnimationFrame(() => {
-        cropperFinishFrame = null;
-        runStep1();
-    });
-}
 
 function initializeCropper() {
     if (inputImageCropper != null) {
         inputImageCropper.destroy();
     }
-    lockedCropBoxData = null;
     inputImageCropper = new Cropper(step1CanvasUpscaled, {
         aspectRatio: targetResolution[0] / targetResolution[1],
         viewMode: 3,
-        dragMode: "none",
-        autoCropArea: 0.92,
-        movable: true,
-        zoomable: true,
-        zoomOnTouch: true,
-        zoomOnWheel: false,
-        cropBoxMovable: false,
-        cropBoxResizable: false,
-        toggleDragModeOnDblclick: false,
-        scalable: false,
-        rotatable: false,
         minContainerWidth: 1,
         minContainerHeight: 1,
-        ready() {
-            fitCropperFrame();
-            if (typeof window.syncDooPixelCropperControls === "function") {
-                window.syncDooPixelCropperControls(true);
-            }
-        },
-        zoom() {
-            window.requestAnimationFrame(() => {
-                restoreLockedCropperFrame();
-                if (typeof window.syncDooPixelCropperControls === "function") {
-                    window.syncDooPixelCropperControls(false);
-                }
-            });
-        },
-        cropmove() {
-            restoreLockedCropperFrame();
-        },
         cropend() {
-            restoreLockedCropperFrame();
-            finishCropperInteraction();
+            overridePixelArray = new Array(targetResolution[0] * targetResolution[1] * 4).fill(null);
+            overrideDepthPixelArray = new Array(targetResolution[0] * targetResolution[1] * 4).fill(null);
         },
     });
 }
+
+step1CanvasUpscaled.addEventListener("cropend", runStep1);
 
 window.addEventListener("resize", () => {
     [step4Canvas].forEach((canvas) => {
@@ -2919,17 +2824,28 @@ function handleInputImage(e, dontClearDepth, dontLog) {
             }
             drawPixelsOnCanvas(inputImagePixels, inputCanvas);
 
-            const sourceWidth = inputImage.naturalWidth || inputImage.width;
-            const sourceHeight = inputImage.naturalHeight || inputImage.height;
-            const previewScale = SERIALIZE_EDGE_LENGTH / Math.max(sourceWidth, sourceHeight);
-            step1CanvasUpscaled.width = Math.max(1, Math.round(sourceWidth * previewScale));
-            step1CanvasUpscaled.height = Math.max(1, Math.round(sourceHeight * previewScale));
+            if (!dontClearDepth) {
+                inputDepthCanvas.width = SERIALIZE_EDGE_LENGTH;
+                inputDepthCanvas.height = SERIALIZE_EDGE_LENGTH;
+                inputDepthCanvasContext.fillStyle = "black";
+                inputDepthCanvasContext.fillRect(0, 0, inputDepthCanvas.width, inputDepthCanvas.height);
+            }
+        };
+        inputImage.src = event.target.result;
+        document.getElementById("steps-row").hidden = false;
+        document.getElementById("input-image-selector").innerHTML = "Reselect Input Image";
+        document.getElementById("image-input-new").appendChild(document.getElementById("image-input"));
+        document.getElementById("image-input-card").hidden = true;
+        document.getElementById("run-example-input-container").hidden = true;
+        setTimeout(() => {
+            step1CanvasUpscaled.width = SERIALIZE_EDGE_LENGTH;
+            step1CanvasUpscaled.height = Math.floor((SERIALIZE_EDGE_LENGTH * inputImage.height) / inputImage.width);
             step1CanvasUpscaledContext.drawImage(
-                inputImage,
+                inputCanvas,
                 0,
                 0,
-                sourceWidth,
-                sourceHeight,
+                SERIALIZE_EDGE_LENGTH,
+                SERIALIZE_EDGE_LENGTH,
                 0,
                 0,
                 step1CanvasUpscaled.width,
@@ -2938,23 +2854,9 @@ function handleInputImage(e, dontClearDepth, dontLog) {
 
             overridePixelArray = new Array(targetResolution[0] * targetResolution[1] * 4).fill(null);
             overrideDepthPixelArray = new Array(targetResolution[0] * targetResolution[1] * 4).fill(null);
-
-            if (!dontClearDepth) {
-                inputDepthCanvas.width = SERIALIZE_EDGE_LENGTH;
-                inputDepthCanvas.height = SERIALIZE_EDGE_LENGTH;
-                inputDepthCanvasContext.fillStyle = "black";
-                inputDepthCanvasContext.fillRect(0, 0, inputDepthCanvas.width, inputDepthCanvas.height);
-            }
-
             initializeCropper();
             runStep1();
-        };
-        inputImage.src = event.target.result;
-        document.getElementById("steps-row").hidden = false;
-        document.getElementById("input-image-selector").innerHTML = "Reselect Input Image";
-        document.getElementById("image-input-new").appendChild(document.getElementById("image-input"));
-        document.getElementById("image-input-card").hidden = true;
-        document.getElementById("run-example-input-container").hidden = true;
+        }, 50); // TODO: find better way to check that input is finished
 
         if (!dontLog) {
             perfLoggingDatabase.ref("input-image-count/total").transaction(incrementTransaction);
