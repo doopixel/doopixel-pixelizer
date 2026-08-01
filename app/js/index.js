@@ -241,9 +241,12 @@ function initializeCropper() {
             }
         },
         zoom() {
-            if (typeof window.syncDooPixelCropperControls === "function") {
-                window.requestAnimationFrame(() => window.syncDooPixelCropperControls(false));
-            }
+            window.requestAnimationFrame(() => {
+                restoreLockedCropperFrame();
+                if (typeof window.syncDooPixelCropperControls === "function") {
+                    window.syncDooPixelCropperControls(false);
+                }
+            });
         },
         cropmove() {
             restoreLockedCropperFrame();
