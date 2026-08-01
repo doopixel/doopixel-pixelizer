@@ -469,6 +469,61 @@
       });
     });
 
+    const preview = document.getElementById("dp-size-preview");
+    const activePointers = new Set();
+    let panPointerId = null;
+    let lastPointerX = 0;
+    let lastPointerY = 0;
+
+    if (preview) {
+      preview.addEventListener("pointerdown", function (event) {
+        if (event.pointerType === "mouse" && event.button !== 0) {
+          return;
+        }
+        activePointers.add(event.pointerId);
+        if (activePointers.size === 1) {
+          panPointerId = event.pointerId;
+          lastPointerX = event.clientX;
+          lastPointerY = event.clientY;
+          if (preview.setPointerCapture) {
+            preview.setPointerCapture(event.pointerId);
+          }
+        } else {
+          panPointerId = null;
+        }
+      });
+
+      preview.addEventListener("pointermove", function (event) {
+        if (activePointers.size !== 1 || event.pointerId !== panPointerId) {
+          return;
+        }
+        const deltaX = event.clientX - lastPointerX;
+        const deltaY = event.clientY - lastPointerY;
+        lastPointerX = event.clientX;
+        lastPointerY = event.clientY;
+        if (typeof window.moveDooPixelCropperPhoto === "function") {
+          window.moveDooPixelCropperPhoto(deltaX, deltaY);
+        }
+        event.preventDefault();
+      });
+
+      function endPointer(event) {
+        activePointers.delete(event.pointerId);
+        if (event.pointerId === panPointerId) {
+          panPointerId = null;
+        }
+        if (preview.hasPointerCapture && preview.hasPointerCapture(event.pointerId)) {
+          preview.releasePointerCapture(event.pointerId);
+        }
+        if (activePointers.size === 0) {
+          finishCropperChange();
+        }
+      }
+
+      preview.addEventListener("pointerup", endPointer);
+      preview.addEventListener("pointercancel", endPointer);
+    }
+
     window.addEventListener("resize", function () {
       window.setTimeout(function () {
         if (typeof window.lockDooPixelCropperFrame === "function") {
