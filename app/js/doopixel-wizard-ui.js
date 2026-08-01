@@ -79,16 +79,7 @@
         <div class="dp-workspace">
           <div class="dp-preview-column">
             <div class="dp-preview-frame">
-              <div class="dp-preview-stage" id="dp-size-preview"></div>
-              <div class="dp-crop-toolbar" aria-label="Photo zoom controls">
-                <button type="button" class="dp-crop-icon-button" id="dp-crop-zoom-out" aria-label="Zoom out" title="Zoom out">−</button>
-                <label class="dp-crop-slider-label" for="dp-crop-zoom">
-                  <span>Photo zoom</span>
-                  <input type="range" id="dp-crop-zoom" min="0" max="100" step="1" value="0" />
-                </label>
-                <button type="button" class="dp-crop-icon-button" id="dp-crop-zoom-in" aria-label="Zoom in" title="Zoom in">+</button>
-                <button type="button" class="dp-crop-reset-button" id="dp-crop-reset">Reset</button>
-              </div>
+              <div class="dp-original-cropper-slot" id="dp-size-preview"></div>
               <div class="dp-preview-caption">
                 <strong>Position your photo</strong>
                 <span>Drag with one finger. Pinch with two fingers to zoom.</span>
@@ -241,7 +232,7 @@
     const sizePreview = document.getElementById("dp-size-preview");
     const sizeCanvas = document.getElementById("step-1-canvas-upscaled");
     if (sizePreview && sizeCanvas) {
-      sizePreview.appendChild(sizeCanvas);
+      sizePreview.appendChild(sizeCanvas.parentElement);
     }
 
     moveBodyContents("step-1-1-collapse", document.getElementById("dp-size-controls"));
@@ -344,198 +335,6 @@
     });
   }
 
-  function refreshCropperLayout() {
-    window.setTimeout(function () {
-      const cropBox = document.querySelector("#dp-size-preview .cropper-crop-box");
-      if (cropBox && cropBox.offsetWidth >= 16 && cropBox.offsetHeight >= 16) {
-        return;
-      }
-
-      try {
-        if (typeof initializeCropper === "function") {
-          initializeCropper();
-          window.requestAnimationFrame(function () {
-            if (typeof runStep1 === "function") {
-              runStep1();
-            }
-          });
-        }
-      } catch (error) {
-        console.warn("Could not refresh the crop area:", error);
-      }
-    }, 180);
-  }
-
-  function getCropperInstance() {
-    try {
-      return typeof inputImageCropper !== "undefined" ? inputImageCropper : null;
-    } catch (error) {
-      return null;
-    }
-  }
-
-  function getCropperRatio(cropper) {
-    const canvasData = cropper.getCanvasData();
-    const imageData = cropper.getImageData();
-    if (!canvasData || !imageData || !imageData.naturalWidth) {
-      return 0;
-    }
-    return canvasData.width / imageData.naturalWidth;
-  }
-
-  function syncCropperControls(resetRange) {
-    const cropper = getCropperInstance();
-    const slider = document.getElementById("dp-crop-zoom");
-    if (!cropper || !slider) {
-      return;
-    }
-
-    const currentRatio = getCropperRatio(cropper);
-    if (!currentRatio) {
-      return;
-    }
-
-    if (resetRange || !Number(slider.dataset.minimumRatio)) {
-      slider.dataset.minimumRatio = String(currentRatio);
-    }
-
-    const minimumRatio = Number(slider.dataset.minimumRatio);
-    const zoomPercent = (Math.log(currentRatio / minimumRatio) / Math.log(4)) * 100;
-    slider.value = String(Math.max(0, Math.min(100, Math.round(zoomPercent))));
-  }
-
-  function setCropperZoomFromSlider() {
-    const cropper = getCropperInstance();
-    const slider = document.getElementById("dp-crop-zoom");
-    if (!cropper || !slider) {
-      return;
-    }
-
-    const minimumRatio = Number(slider.dataset.minimumRatio);
-    if (!minimumRatio) {
-      syncCropperControls(true);
-      return;
-    }
-
-    const ratio = minimumRatio * Math.pow(4, Number(slider.value) / 100);
-    cropper.zoomTo(ratio);
-  }
-
-  function finishCropperChange() {
-    try {
-      if (typeof finishCropperInteraction === "function") {
-        finishCropperInteraction();
-      } else if (typeof runStep1 === "function") {
-        runStep1();
-      }
-    } catch (error) {
-      console.warn("Could not update the crop preview:", error);
-    }
-  }
-
-  function bindCropperControls() {
-    const slider = document.getElementById("dp-crop-zoom");
-    const zoomOut = document.getElementById("dp-crop-zoom-out");
-    const zoomIn = document.getElementById("dp-crop-zoom-in");
-    const reset = document.getElementById("dp-crop-reset");
-    if (!slider || !zoomOut || !zoomIn || !reset) {
-      return;
-    }
-
-    slider.addEventListener("input", setCropperZoomFromSlider);
-    slider.addEventListener("change", finishCropperChange);
-
-    function changeZoom(amount) {
-      slider.value = String(Math.max(0, Math.min(100, Number(slider.value) + amount)));
-      setCropperZoomFromSlider();
-      finishCropperChange();
-    }
-
-    zoomOut.addEventListener("click", function () {
-      changeZoom(-10);
-    });
-    zoomIn.addEventListener("click", function () {
-      changeZoom(10);
-    });
-    reset.addEventListener("click", function () {
-      const cropper = getCropperInstance();
-      if (!cropper) {
-        return;
-      }
-      cropper.reset();
-      window.requestAnimationFrame(function () {
-        syncCropperControls(true);
-        finishCropperChange();
-      });
-    });
-
-    const preview = document.getElementById("dp-size-preview");
-    const activePointers = new Set();
-    let panPointerId = null;
-    let lastPointerX = 0;
-    let lastPointerY = 0;
-
-    if (preview) {
-      preview.addEventListener("pointerdown", function (event) {
-        if (event.pointerType === "mouse" && event.button !== 0) {
-          return;
-        }
-        activePointers.add(event.pointerId);
-        if (activePointers.size === 1) {
-          panPointerId = event.pointerId;
-          lastPointerX = event.clientX;
-          lastPointerY = event.clientY;
-          if (preview.setPointerCapture) {
-            preview.setPointerCapture(event.pointerId);
-          }
-        } else {
-          panPointerId = null;
-        }
-      });
-
-      preview.addEventListener("pointermove", function (event) {
-        if (activePointers.size !== 1 || event.pointerId !== panPointerId) {
-          return;
-        }
-        const deltaX = event.clientX - lastPointerX;
-        const deltaY = event.clientY - lastPointerY;
-        lastPointerX = event.clientX;
-        lastPointerY = event.clientY;
-        if (typeof window.moveDooPixelCropperPhoto === "function") {
-          window.moveDooPixelCropperPhoto(deltaX, deltaY);
-        }
-        event.preventDefault();
-      });
-
-      function endPointer(event) {
-        activePointers.delete(event.pointerId);
-        if (event.pointerId === panPointerId) {
-          panPointerId = null;
-        }
-        if (preview.hasPointerCapture && preview.hasPointerCapture(event.pointerId)) {
-          preview.releasePointerCapture(event.pointerId);
-        }
-        if (activePointers.size === 0) {
-          finishCropperChange();
-        }
-      }
-
-      preview.addEventListener("pointerup", endPointer);
-      preview.addEventListener("pointercancel", endPointer);
-    }
-
-    window.addEventListener("resize", function () {
-      window.setTimeout(function () {
-        if (typeof window.fitDooPixelCropperFrame === "function") {
-          window.fitDooPixelCropperFrame();
-        }
-        syncCropperControls(true);
-      }, 150);
-    });
-
-    window.syncDooPixelCropperControls = syncCropperControls;
-  }
-
   function goToPage(page) {
     currentPage = page;
     document.getElementById("dp-upload-screen").hidden = page !== 0;
@@ -543,10 +342,6 @@
       section.hidden = Number(section.dataset.page) !== page;
     });
     updateProgress(page);
-
-    if (page === 1) {
-      refreshCropperLayout();
-    }
 
     if (page === 2) {
       try {
@@ -801,10 +596,8 @@
     const imageInput = document.getElementById("input-image-selector-hidden");
     if (imageInput) {
       imageInput.addEventListener("change", function () {
-        setTimeout(function () {
-          document.body.classList.add("dp-has-image");
-          goToPage(1);
-        }, 100);
+        document.body.classList.add("dp-has-image");
+        goToPage(1);
       });
     }
 
@@ -903,7 +696,6 @@
     mountLoadingBar();
     mountLegacyControls();
     hideLegacyLayout(legacyApp, shell);
-    bindCropperControls();
     bindInteractions();
     friendlyPieceNames();
     bindPieceTypeMenu();
