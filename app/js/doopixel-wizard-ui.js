@@ -4,8 +4,6 @@
   const RARE_PIECE_THRESHOLD = 5;
   let currentPage = 0;
   let summaryTimer = null;
-  let fixedCropBoxData = null;
-  let isRestoringCropBox = false;
 
   function onReady(callback) {
     if (document.readyState === "loading") {
@@ -397,25 +395,6 @@
       return;
     }
 
-    if (resetRange || !fixedCropBoxData) {
-      fixedCropBoxData = cropper.getCropBoxData();
-    } else if (!isRestoringCropBox) {
-      const currentCropBox = cropper.getCropBoxData();
-      const cropBoxChanged =
-        Math.abs(currentCropBox.left - fixedCropBoxData.left) > 0.5 ||
-        Math.abs(currentCropBox.top - fixedCropBoxData.top) > 0.5 ||
-        Math.abs(currentCropBox.width - fixedCropBoxData.width) > 0.5 ||
-        Math.abs(currentCropBox.height - fixedCropBoxData.height) > 0.5;
-
-      if (cropBoxChanged) {
-        isRestoringCropBox = true;
-        cropper.setCropBoxData(fixedCropBoxData);
-        window.requestAnimationFrame(function () {
-          isRestoringCropBox = false;
-        });
-      }
-    }
-
     if (resetRange || !Number(slider.dataset.minimumRatio)) {
       slider.dataset.minimumRatio = String(currentRatio);
     }
@@ -442,15 +421,6 @@
     cropper.zoomTo(ratio);
   }
 
-  function restoreCropperFrame() {
-    const cropper = getCropperInstance();
-    if (!cropper || !fixedCropBoxData) {
-      return;
-    }
-    cropper.setCropBoxData(fixedCropBoxData);
-    isRestoringCropBox = false;
-  }
-
   function finishCropperChange() {
     try {
       if (typeof finishCropperInteraction === "function") {
@@ -468,8 +438,7 @@
     const zoomOut = document.getElementById("dp-crop-zoom-out");
     const zoomIn = document.getElementById("dp-crop-zoom-in");
     const reset = document.getElementById("dp-crop-reset");
-    const preview = document.getElementById("dp-size-preview");
-    if (!slider || !zoomOut || !zoomIn || !reset || !preview) {
+    if (!slider || !zoomOut || !zoomIn || !reset) {
       return;
     }
 
@@ -500,60 +469,6 @@
       });
     });
 
-    const cropPointers = new Set();
-    let panPointerId = null;
-    let lastPointerX = 0;
-    let lastPointerY = 0;
-
-    preview.addEventListener("pointerdown", function (event) {
-      if (event.pointerType === "mouse" && event.button !== 0) {
-        return;
-      }
-      cropPointers.add(event.pointerId);
-      if (cropPointers.size !== 1) {
-        panPointerId = null;
-        return;
-      }
-      panPointerId = event.pointerId;
-      lastPointerX = event.clientX;
-      lastPointerY = event.clientY;
-      if (preview.setPointerCapture) {
-        preview.setPointerCapture(event.pointerId);
-      }
-    });
-
-    preview.addEventListener("pointermove", function (event) {
-      if (cropPointers.size !== 1 || event.pointerId !== panPointerId) {
-        return;
-      }
-      const cropper = getCropperInstance();
-      if (!cropper) {
-        return;
-      }
-      const deltaX = event.clientX - lastPointerX;
-      const deltaY = event.clientY - lastPointerY;
-      lastPointerX = event.clientX;
-      lastPointerY = event.clientY;
-      cropper.move(deltaX, deltaY);
-      event.preventDefault();
-    });
-
-    function endCropPointer(event) {
-      cropPointers.delete(event.pointerId);
-      if (event.pointerId === panPointerId) {
-        panPointerId = null;
-      }
-      if (preview.hasPointerCapture && preview.hasPointerCapture(event.pointerId)) {
-        preview.releasePointerCapture(event.pointerId);
-      }
-      if (cropPointers.size === 0) {
-        finishCropperChange();
-      }
-    }
-
-    preview.addEventListener("pointerup", endCropPointer);
-    preview.addEventListener("pointercancel", endCropPointer);
-
     window.addEventListener("resize", function () {
       window.setTimeout(function () {
         syncCropperControls(true);
@@ -561,7 +476,6 @@
     });
 
     window.syncDooPixelCropperControls = syncCropperControls;
-    window.restoreDooPixelCropperFrame = restoreCropperFrame;
   }
 
   function goToPage(page) {
@@ -622,12 +536,6 @@
         preview.style.setProperty("--dp-art-aspect", artworkAspect);
       }
     });
-
-    const sourceCanvas = document.getElementById("step-1-canvas-upscaled");
-    const sourcePreview = document.getElementById("dp-size-preview");
-    if (sourceCanvas && sourcePreview && sourceCanvas.width > 0 && sourceCanvas.height > 0) {
-      sourcePreview.style.setProperty("--dp-source-aspect", sourceCanvas.width + " / " + sourceCanvas.height);
-    }
 
     document.getElementById("dp-board-layout").textContent = boardWidth + " × " + boardHeight;
     document.getElementById("dp-board-total").textContent = String(boardWidth * boardHeight);
