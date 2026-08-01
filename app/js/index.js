@@ -171,6 +171,16 @@ document.getElementById("height-text").title = `${(targetResolution[1] * PIXEL_W
 
 let inputImageCropper;
 let cropperFinishFrame = null;
+let lockedCropBoxData = null;
+let isLockingCropBox = false;
+
+function lockCropperFrame() {
+    if (inputImageCropper != null) {
+        lockedCropBoxData = inputImageCropper.getCropBoxData();
+    }
+}
+
+window.lockDooPixelCropperFrame = lockCropperFrame;
 
 function finishCropperInteraction() {
     overridePixelArray = new Array(targetResolution[0] * targetResolution[1] * 4).fill(null);
@@ -189,6 +199,7 @@ function initializeCropper() {
     if (inputImageCropper != null) {
         inputImageCropper.destroy();
     }
+    lockedCropBoxData = null;
     inputImageCropper = new Cropper(step1CanvasUpscaled, {
         aspectRatio: targetResolution[0] / targetResolution[1],
         viewMode: 3,
@@ -206,6 +217,7 @@ function initializeCropper() {
         minContainerWidth: 1,
         minContainerHeight: 1,
         ready() {
+            lockCropperFrame();
             if (typeof window.syncDooPixelCropperControls === "function") {
                 window.syncDooPixelCropperControls(true);
             }
@@ -214,6 +226,14 @@ function initializeCropper() {
             if (typeof window.syncDooPixelCropperControls === "function") {
                 window.requestAnimationFrame(() => window.syncDooPixelCropperControls(false));
             }
+        },
+        cropmove() {
+            if (lockedCropBoxData == null || isLockingCropBox) {
+                return;
+            }
+            isLockingCropBox = true;
+            inputImageCropper.setCropBoxData(lockedCropBoxData);
+            isLockingCropBox = false;
         },
         cropend() {
             finishCropperInteraction();
