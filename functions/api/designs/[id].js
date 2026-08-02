@@ -36,7 +36,7 @@ export async function onRequestGet({ env, params }) {
       .bind(id)
       .first();
 
-    if (!design) {
+    if (!design || design.status !== "approved") {
       return jsonResponse(
         {
           ok: false,

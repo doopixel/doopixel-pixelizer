@@ -1,0 +1,273 @@
+<div
+  id="doopixel-kit-add"
+  style="
+    display: block;
+    max-width: 720px;
+    margin: 40px auto;
+    padding: 20px 16px;
+    color: #111;
+    background: #fff;
+    border: 1px solid #ddd;
+    position: relative;
+    z-index: 2;
+  "
+>
+  <h1 style="font-size: 28px; margin-bottom: 12px;">Adding your DooPixel kit...</h1>
+  <p id="doopixel-kit-status" style="font-size: 16px; line-height: 1.5;">
+    Please wait while we add your custom kit to the cart.
+  </p>
+  <pre
+    id="doopixel-kit-error"
+    style="display: none; white-space: pre-wrap; background: #f7f7f7; padding: 12px; border: 1px solid #ddd;"
+  ></pre>
+</div>
+
+<script>
+  (function () {
+    const KIT_PRODUCT_HANDLE = "doopixel-custom-pixel-art-kit";
+    const KIT_SKU_PREFIX = "DP-KIT";
+
+    const statusEl = document.getElementById("doopixel-kit-status");
+    const errorEl = document.getElementById("doopixel-kit-error");
+
+    function getShopifyRoot() {
+      if (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) {
+        return window.Shopify.routes.root;
+      }
+
+      return "/";
+    }
+
+    function setStatus(message) {
+      statusEl.textContent = message;
+    }
+
+    function showError(message) {
+      statusEl.textContent = "We could not add this kit to the cart.";
+      errorEl.style.display = "block";
+      errorEl.textContent = message;
+    }
+
+    function decodePayloadFromHash() {
+      const encoded = window.location.hash.slice(1);
+      if (!encoded) {
+        throw new Error("Missing DooPixel kit data.");
+      }
+
+      const base64 = decodeURIComponent(encoded);
+      const binary = atob(base64);
+      const bytes = Uint8Array.from(binary, function (char) {
+        return char.charCodeAt(0);
+      });
+      return JSON.parse(new TextDecoder().decode(bytes));
+    }
+
+    async function fetchProduct(handle) {
+      const urlsToTry = Array.from(
+        new Set([
+          getShopifyRoot() + "products/" + handle + ".js",
+          "/products/" + handle + ".js",
+          window.location.origin + "/products/" + handle + ".js",
+        ])
+      );
+      const failedUrls = [];
+
+      for (const url of urlsToTry) {
+        const response = await fetch(url, {
+          credentials: "same-origin",
+        });
+
+        if (response.ok) {
+          return response.json();
+        }
+
+        failedUrls.push(url + " (" + response.status + ")");
+      }
+
+      throw new Error(
+        "Could not load product handle: " +
+          handle +
+          ". Tried:\n" +
+          failedUrls.join("\n") +
+          "\n\nMake sure this product is Active and available on the Online Store sales channel."
+      );
+    }
+
+    function getBaseplateInfo(payload) {
+      const size = Array.isArray(payload.size) ? payload.size : [0, 0];
+      const baseplateWidth = Number(payload.baseplateWidth) || Math.ceil(Number(size[0]) / 16);
+      const baseplateHeight = Number(payload.baseplateHeight) || Math.ceil(Number(size[1]) / 16);
+
+      if (
+        !Number.isInteger(baseplateWidth) ||
+        !Number.isInteger(baseplateHeight) ||
+        baseplateWidth < 1 ||
+        baseplateHeight < 1 ||
+        baseplateWidth > 8 ||
+        baseplateHeight > 8
+      ) {
+        throw new Error("Invalid baseplate layout. It must be between 1 x 1 and 8 x 8.");
+      }
+
+      const pricingWidth = Math.min(baseplateWidth, baseplateHeight);
+      const pricingHeight = Math.max(baseplateWidth, baseplateHeight);
+
+      return {
+        baseplateWidth: baseplateWidth,
+        baseplateHeight: baseplateHeight,
+        baseplateLayout: baseplateWidth + " x " + baseplateHeight,
+        pricingBaseplateWidth: pricingWidth,
+        pricingBaseplateHeight: pricingHeight,
+        pricingLayout: pricingWidth + " x " + pricingHeight,
+        totalBaseplates: baseplateWidth * baseplateHeight,
+        shopifyKitSku: KIT_SKU_PREFIX + "-" + pricingWidth + "X" + pricingHeight,
+      };
+    }
+
+    function getKitSku(payload) {
+      return payload.shopifyKitSku || getBaseplateInfo(payload).shopifyKitSku;
+    }
+
+    function findVariantIdBySku(product, sku) {
+      const variant = product.variants.find(function (item) {
+        return item.sku === sku;
+      });
+
+      if (!variant) {
+        throw new Error(
+          "Could not find Shopify kit variant SKU: " +
+            sku +
+            "\n\nCreate the 36 baseplate-size variants under product handle: " +
+            KIT_PRODUCT_HANDLE
+        );
+      }
+
+      return variant.id;
+    }
+
+    function getTotalPieces(payload) {
+      if (Number(payload.totalPieces) > 0) {
+        return Number(payload.totalPieces);
+      }
+
+      if (!Array.isArray(payload.items)) {
+        return 0;
+      }
+
+      return payload.items.reduce(function (sum, entry) {
+        return sum + Number(entry[1] || 0);
+      }, 0);
+    }
+
+    function getColorLines(payload) {
+      if (Number(payload.colorLines) > 0) {
+        return Number(payload.colorLines);
+      }
+
+      return Array.isArray(payload.items) ? payload.items.length : 0;
+    }
+
+    function buildKitCartItem(payload, variantId) {
+      const designId = payload.shareId || payload.id || "";
+      if (!payload.projectId || !payload.projectToken || !payload.projectUrl) {
+        throw new Error("Missing private DooPixel project data. Please return to the Pixel Art Maker and add the kit again.");
+      }
+      const frameLabel =
+        payload.frameLabel || (payload.frameColor === "white" ? "White Frame" : "Black Frame");
+      const width = Array.isArray(payload.size) ? payload.size[0] : "";
+      const height = Array.isArray(payload.size) ? payload.size[1] : "";
+      const baseplateInfo = getBaseplateInfo(payload);
+      const totalPieces = getTotalPieces(payload);
+      const colorLines = getColorLines(payload);
+
+      return {
+        id: variantId,
+        quantity: 1,
+        properties: {
+          "DooPixel Design": payload.name || "Custom Pixel Art",
+          "Frame Color": frameLabel,
+          "Piece Type": payload.pieceTypeName || "",
+          "Artwork Size": width && height ? width + " x " + height : "",
+          "Baseplate Layout": baseplateInfo.baseplateLayout,
+          "Pricing Layout": baseplateInfo.pricingLayout,
+          "Total Baseplates": String(baseplateInfo.totalBaseplates),
+          "Total Pieces": String(totalPieces),
+          "Color Lines": String(colorLines),
+          "_doopixel_order_mode": "generic-kit",
+          "_doopixel_design_id": designId,
+          "_doopixel_share_url": payload.shareUrl || "",
+          "_doopixel_frame_color": payload.frameColor || "",
+          "_doopixel_piece_type": payload.pieceType || "",
+          "_doopixel_baseplate_layout": baseplateInfo.baseplateLayout,
+          "_doopixel_pricing_layout": baseplateInfo.pricingLayout,
+          "_doopixel_total_baseplates": String(baseplateInfo.totalBaseplates),
+          "_doopixel_total_pieces": String(totalPieces),
+          "_doopixel_color_lines": String(colorLines),
+          "_doopixel_cart_group_id": designId + "-" + Date.now(),
+          "_DooPixel Design ID": designId,
+          "_DooPixel Project ID": payload.projectId,
+          "_DooPixel Project Token": payload.projectToken,
+          "_DooPixel Project URL": payload.projectUrl,
+        },
+      };
+    }
+
+    async function addKitToCart(item) {
+      const response = await fetch(getShopifyRoot() + "cart/add.js", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ items: [item] }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        let shopifyMessage = errorText;
+        try {
+          const parsedError = JSON.parse(errorText);
+          shopifyMessage = parsedError.description || parsedError.message || errorText;
+        } catch (_error) {
+          // Keep the raw response text.
+        }
+
+        throw new Error("Shopify could not add the custom kit:\n" + shopifyMessage);
+      }
+    }
+
+    async function run() {
+      try {
+        setStatus("Reading DooPixel kit data...");
+        const payload = decodePayloadFromHash();
+        if (!payload || !payload.id) {
+          throw new Error("Invalid DooPixel kit data.");
+        }
+
+        setStatus("Loading DooPixel custom kit product...");
+        const product = await fetchProduct(KIT_PRODUCT_HANDLE);
+        const kitSku = getKitSku(payload);
+        const variantId = findVariantIdBySku(product, kitSku);
+
+        setStatus("Adding custom kit to cart...");
+        await addKitToCart(buildKitCartItem(payload, variantId));
+
+        setStatus("Done. Redirecting to cart...");
+        window.location.href = getShopifyRoot() + "cart";
+      } catch (error) {
+        console.error(error);
+        showError(error.message || String(error));
+      }
+    }
+
+    window.addEventListener("error", function (event) {
+      showError(event.message || "A page script error happened.");
+    });
+
+    window.addEventListener("unhandledrejection", function (event) {
+      const reason = event.reason;
+      showError((reason && reason.message) || String(reason) || "A request failed.");
+    });
+
+    run();
+  })();
+</script>

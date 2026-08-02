@@ -1054,7 +1054,11 @@ function generateInstructionTitlePage(
 
     ctx.fillStyle = "#000000";
     ctx.font = `${scalingFactor * 2}px Arial`;
-    ctx.fillText("Lego Art Remix", pictureWidth * 0.75, pictureHeight * 0.28);
+    ctx.fillText(
+        typeof DOOPIXEL_INSTRUCTION_BRAND !== "undefined" ? DOOPIXEL_INSTRUCTION_BRAND : "Lego Art Remix",
+        pictureWidth * 0.75,
+        pictureHeight * 0.28
+    );
     ctx.font = `${scalingFactor / 2}px Arial`;
     ctx.fillText(
         `Resolution: ${width} x ${pixelArray.length / (4 * width)}`,

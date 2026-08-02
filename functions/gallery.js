@@ -408,6 +408,7 @@ export async function onRequestGet() {
           >
             Community Gallery
           </a>
+          <a class="dp-site-link" href="https://pixelizer.doopixel.com/find-project">Find My Project</a>
           <a class="dp-site-link dp-site-cart" href="https://doopixel.com/cart">Cart</a>
         </div>
         <a class="dp-site-mobile-cart" href="https://doopixel.com/cart">Cart</a>
@@ -650,4 +651,3 @@ export async function onRequestGet() {
     }
   );
 }
-

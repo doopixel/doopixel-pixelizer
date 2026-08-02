@@ -354,6 +354,7 @@ export async function onRequestGet({ params, env, request }) {
           >
             Community Gallery
           </a>
+          <a class="dp-site-link" href="https://pixelizer.doopixel.com/find-project">Find My Project</a>
           <a class="dp-site-link dp-site-cart" href="https://doopixel.com/cart">Cart</a>
         </div>
         <a class="dp-site-mobile-cart" href="https://doopixel.com/cart">Cart</a>
@@ -440,15 +441,6 @@ export async function onRequestGet({ params, env, request }) {
             <option value="white">White Frame</option>
           </select>
           <button id="add-to-cart">Add Custom Kit to Cart</button>
-
-          <form id="submit-form">
-            <h2>Share Your Finished Build</h2>
-            <p class="muted">Upload a photo of your completed build. We will review it before it appears in the community gallery.</p>
-            <input type="file" id="finished-image" name="finishedImage" accept="image/png,image/jpeg,image/webp" required />
-            <textarea id="caption" name="caption" maxlength="500" placeholder="Add a short note about your build"></textarea>
-            <button id="submit-build" class="secondary" type="submit">Submit Finished Build for Review</button>
-          </form>
-          <div id="message" class="notice hidden"></div>
         </aside>
       </main>
     </div>
@@ -487,12 +479,6 @@ export async function onRequestGet({ params, env, request }) {
         let binary = "";
         bytes.forEach((byte) => { binary += String.fromCharCode(byte); });
         return btoa(binary);
-      }
-
-      function showMessage(message) {
-        const element = document.getElementById("message");
-        element.textContent = message;
-        element.classList.remove("hidden");
       }
 
       function showCommentMessage(message) {
@@ -748,10 +734,33 @@ export async function onRequestGet({ params, env, request }) {
         }
       }
 
-      document.getElementById("add-to-cart").addEventListener("click", () => {
+      document.getElementById("add-to-cart").addEventListener("click", async (event) => {
         if (!currentDesign) return;
-        const encoded = encodeURIComponent(encodePayload(getSharePayload(currentDesign)));
-        window.location.href = SHOPIFY_ADD_KIT_URL + "#" + encoded;
+        const button = event.currentTarget;
+        button.disabled = true;
+        button.textContent = "Preparing your project...";
+        try {
+          const response = await fetch(
+            "/api/designs/" + encodeURIComponent(currentDesign.id) + "/projects",
+            { method: "POST" }
+          );
+          const result = await response.json();
+          if (!response.ok || !result.ok) throw new Error(result.error || "Could not prepare this project.");
+          const payload = getSharePayload(currentDesign);
+          payload.v = 3;
+          payload.id = result.designId;
+          payload.shareId = result.designId;
+          payload.shareUrl = new URL(result.shareUrl, window.location.origin).href;
+          payload.projectId = result.projectId;
+          payload.projectToken = result.projectToken;
+          payload.projectUrl = new URL(result.projectUrl, window.location.origin).href;
+          const encoded = encodeURIComponent(encodePayload(payload));
+          window.location.href = SHOPIFY_ADD_KIT_URL + "#" + encoded;
+        } catch (error) {
+          showCommentMessage(error.message || "Could not prepare this project.");
+          button.disabled = false;
+          button.textContent = "Add Custom Kit to Cart";
+        }
       });
 
       document.getElementById("like-button").addEventListener("click", toggleLike);
@@ -808,33 +817,6 @@ export async function onRequestGet({ params, env, request }) {
         } finally {
           submitButton.disabled = false;
           submitButton.textContent = "Submit Comment for Review";
-        }
-      });
-
-      document.getElementById("submit-form").addEventListener("submit", async (event) => {
-        event.preventDefault();
-        const button = document.getElementById("submit-build");
-        button.disabled = true;
-        button.textContent = "Submitting...";
-        try {
-          const form = new FormData();
-          const file = document.getElementById("finished-image").files[0];
-          const caption = document.getElementById("caption").value;
-          form.append("finishedImage", file);
-          form.append("caption", caption);
-          const response = await fetch(
-            "/api/designs/" + encodeURIComponent(DESIGN_ID) + "/submit",
-            { method: "POST", body: form }
-          );
-          const result = await response.json();
-          if (!response.ok || !result.ok) throw new Error(result.error || "Could not submit this build.");
-          showMessage("Submitted successfully. Your build is pending review and is not public yet.");
-          document.getElementById("submit-form").reset();
-        } catch (error) {
-          showMessage(error.message || "Could not submit this build.");
-        } finally {
-          button.disabled = false;
-          button.textContent = "Submit Finished Build for Review";
         }
       });
 

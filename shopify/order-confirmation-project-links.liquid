@@ -1,0 +1,45 @@
+{% comment %}
+  Place this block in the Order confirmation notification where project links
+  should appear. It reads the private URL saved on each DooPixel line item.
+{% endcomment %}
+
+{% assign doopixel_project_count = 0 %}
+{% capture doopixel_project_rows %}
+  {% for line in subtotal_line_items %}
+    {% assign doopixel_project_url = blank %}
+    {% for property in line.properties %}
+      {% if property.first == '_DooPixel Project URL' and property.last != blank %}
+        {% assign doopixel_project_url = property.last %}
+      {% endif %}
+    {% endfor %}
+
+    {% if doopixel_project_url != blank %}
+      {% assign doopixel_project_count = doopixel_project_count | plus: 1 %}
+      <tr>
+        <td style="padding: 0 0 12px;">
+          <div style="font-size: 15px; font-weight: 600; margin-bottom: 7px;">
+            {{ line.title }}
+          </div>
+          <a
+            href="{{ doopixel_project_url }}"
+            style="display: inline-block; padding: 12px 18px; background: #1d1d1d; color: #ffffff; text-decoration: none; border-radius: 3px; font-weight: 700;"
+          >View Project &amp; Download Instructions</a>
+        </td>
+      </tr>
+    {% endif %}
+  {% endfor %}
+{% endcapture %}
+
+{% if doopixel_project_count > 0 %}
+  <table class="row section" style="width: 100%; margin-top: 24px;">
+    <tr>
+      <td>
+        <h2 style="font-size: 20px; margin: 0 0 8px;">Your DooPixel Projects</h2>
+        <p style="margin: 0 0 16px; color: #666666; line-height: 1.5;">
+          Keep these private links. You will need the building instructions to assemble or rebuild your pixel art.
+        </p>
+        <table style="width: 100%;">{{ doopixel_project_rows }}</table>
+      </td>
+    </tr>
+  </table>
+{% endif %}
