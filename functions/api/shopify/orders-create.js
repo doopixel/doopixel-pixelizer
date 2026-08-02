@@ -15,6 +15,14 @@ function jsonResponse(body, status = 200) {
   });
 }
 
+function logWebhook(outcome, details = {}) {
+  console.log(JSON.stringify({
+    event: "doopixel_shopify_order_webhook",
+    outcome,
+    ...details,
+  }));
+}
+
 function propertiesToMap(properties) {
   const result = new Map();
   (Array.isArray(properties) ? properties : []).forEach((property) => {
@@ -34,6 +42,11 @@ function findProperty(properties, names) {
 
 export async function onRequestPost({ request, env }) {
   if (!env.DB || !env.SHOPIFY_WEBHOOK_SECRET || !env.ORDER_LOOKUP_PEPPER) {
+    logWebhook("missing_configuration", {
+      hasDb: Boolean(env.DB),
+      hasWebhookSecret: Boolean(env.SHOPIFY_WEBHOOK_SECRET),
+      hasLookupPepper: Boolean(env.ORDER_LOOKUP_PEPPER),
+    });
     return jsonResponse({ ok: false, error: "Missing order integration configuration." }, 500);
   }
 
@@ -44,12 +57,14 @@ export async function onRequestPost({ request, env }) {
     env.SHOPIFY_WEBHOOK_SECRET
   );
   if (!validHmac) {
+    logWebhook("invalid_hmac");
     return jsonResponse({ ok: false, error: "Invalid webhook signature." }, 401);
   }
 
   const expectedShop = String(env.SHOPIFY_STORE_DOMAIN || "").trim().toLowerCase();
   const sourceShop = String(request.headers.get("x-shopify-shop-domain") || "").trim().toLowerCase();
   if (expectedShop && sourceShop !== expectedShop) {
+    logWebhook("unexpected_shop", { sourceShop, expectedShop });
     return jsonResponse({ ok: false, error: "Unexpected Shopify store." }, 403);
   }
 
@@ -57,6 +72,7 @@ export async function onRequestPost({ request, env }) {
     request.headers.get("x-shopify-webhook-id") || request.headers.get("webhook-id") || ""
   ).trim();
   if (!deliveryId) {
+    logWebhook("missing_delivery_id", { sourceShop });
     return jsonResponse({ ok: false, error: "Missing webhook delivery id." }, 400);
   }
 
@@ -64,6 +80,7 @@ export async function onRequestPost({ request, env }) {
     .bind(deliveryId)
     .first();
   if (existingDelivery) {
+    logWebhook("duplicate", { deliveryId });
     return jsonResponse({ ok: true, duplicate: true });
   }
 
@@ -71,6 +88,7 @@ export async function onRequestPost({ request, env }) {
   try {
     order = JSON.parse(rawBody);
   } catch (_error) {
+    logWebhook("invalid_json", { deliveryId });
     return jsonResponse({ ok: false, error: "Invalid webhook JSON." }, 400);
   }
 
@@ -79,6 +97,11 @@ export async function onRequestPost({ request, env }) {
   const email = String(order.email || order.contact_email || "").trim().toLowerCase();
   const emailHash = await hashEmail(email, env.ORDER_LOOKUP_PEPPER);
   if (!orderId || !orderNumber) {
+    logWebhook("missing_order_identity", {
+      deliveryId,
+      hasOrderId: Boolean(orderId),
+      hasOrderNumber: Boolean(orderNumber),
+    });
     return jsonResponse({ ok: false, error: "Order is missing its id or number." }, 400);
   }
 
@@ -132,5 +155,12 @@ export async function onRequestPost({ request, env }) {
     return total + Number(result?.meta?.changes || 0);
   }, 0);
 
+  logWebhook("accepted", {
+    deliveryId,
+    sourceShop,
+    projectCandidates: projectUpdates.length,
+    updatedProjects,
+    lookupAvailable: Boolean(emailHash),
+  });
   return jsonResponse({ ok: true, updatedProjects, lookupAvailable: Boolean(emailHash) });
 }
