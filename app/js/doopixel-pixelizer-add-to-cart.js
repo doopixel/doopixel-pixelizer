@@ -112,7 +112,7 @@
     };
   }
 
-  function buildPayload(skuMap) {
+  async function buildPayload(skuMap) {
     if (!bricklinkCacheCanvas || bricklinkCacheCanvas.width === 0 || bricklinkCacheCanvas.height === 0) {
       throw new Error("Please upload an image and generate the final pixel art first.");
     }
@@ -122,7 +122,8 @@
     const width = Number(targetResolution[0]);
     const height = Number(targetResolution[1]);
     const baseplateInfo = getBaseplateInfo(width, height);
-    const usedMap = getUsedPixelsStudMap(getPixelArrayFromCanvas(bricklinkCacheCanvas));
+    const finalPixelArray = getPixelArrayFromCanvas(bricklinkCacheCanvas);
+    const usedMap = getUsedPixelsStudMap(finalPixelArray);
     const missingColors = [];
     const items = Object.keys(usedMap)
       .sort()
@@ -157,8 +158,27 @@
     const designId = "DP-" + Date.now().toString(36).toUpperCase();
     const designName = window.prompt("Name this pixel art design:", "Custom Pixel Art") || "Custom Pixel Art";
 
+    const instructionPalette = items.map(function (item) {
+      return {
+        sku: item[0],
+        doopixelNo: item[2],
+        colorName: item[3],
+        hex: item[4],
+        bricklinkColorId: item[5],
+      };
+    });
+    const instructionData = await window.DooPixelInstructionData.create({
+      width: width,
+      height: height,
+      plateWidth: 16,
+      pieceType: String(selectedPixelPartNumber),
+      pixelArray: finalPixelArray,
+      palette: instructionPalette,
+      paletteOrder: selectedSortedStuds,
+    });
+
     return {
-      v: 2,
+      v: 3,
       orderMode: "generic-kit",
       id: designId,
       name: designName.trim() || "Custom Pixel Art",
@@ -178,6 +198,7 @@
       totalPieces: totalPieces,
       colorLines: items.length,
       items: items,
+      instructionData: instructionData,
     };
   }
 
@@ -201,6 +222,9 @@
     payload.id = result.id;
     payload.shareId = result.id;
     payload.shareUrl = new URL(result.shareUrl, window.location.origin).href;
+    payload.projectId = result.projectId;
+    payload.projectToken = result.projectToken;
+    payload.projectUrl = new URL(result.projectUrl, window.location.origin).href;
     return payload;
   }
 
@@ -211,7 +235,7 @@
       button.disabled = true;
       button.textContent = "Preparing kit...";
       const skuMap = await loadSkuMap();
-      const payload = buildPayload(skuMap);
+      const payload = await buildPayload(skuMap);
       button.textContent = "Saving design...";
       const savedPayload = await saveDesign(payload);
       const encoded = encodeURIComponent(encodePayload(savedPayload));
@@ -282,5 +306,3 @@
     insertControls();
   }
 })();
-
-
