@@ -27,6 +27,8 @@ export async function onRequestGet({ env, params }) {
         preview_image_key,
         finished_image_key,
         customer_caption,
+        is_verified,
+        instruction_pdf_key,
         status,
         created_at,
         updated_at
@@ -58,6 +60,12 @@ export async function onRequestGet({ env, params }) {
         previewImageKey: design.preview_image_key,
         finishedImageKey: design.finished_image_key,
         customerCaption: design.customer_caption,
+        isVerified: Boolean(design.is_verified),
+        instructionsAvailable: Boolean(design.is_verified && design.instruction_pdf_key),
+        instructionsUrl:
+          design.is_verified && design.instruction_pdf_key
+            ? `/api/designs/${encodeURIComponent(design.id)}/instructions`
+            : null,
         status: design.status,
         createdAt: design.created_at,
         updatedAt: design.updated_at,

@@ -23,6 +23,7 @@ export async function onRequestGet({ params, env, request }) {
         customer_caption,
         preview_image_key,
         finished_image_key,
+        is_verified,
         status
       FROM designs
       WHERE id = ?`
@@ -31,7 +32,9 @@ export async function onRequestGet({ params, env, request }) {
       .first();
 
     if (socialDesign?.status === "approved") {
-      socialTitle = `${socialDesign.title} | DooPixel Community`;
+      socialTitle = socialDesign.is_verified
+        ? `${socialDesign.title} | DooPixel Verified`
+        : `${socialDesign.title} | DooPixel Community`;
       socialDescription =
         String(socialDesign.customer_caption || "").trim() ||
         "A finished pixel art build shared by the DooPixel community.";
@@ -191,6 +194,15 @@ export async function onRequestGet({ params, env, request }) {
       h2 { font-size: 21px; margin: 24px 0 12px; }
       p { line-height: 1.5; }
       .muted { color: var(--muted); margin: 0; }
+      .verified-badge {
+        display: inline-flex;
+        margin-top: 10px;
+        border: 1px solid #181818;
+        background: #f4ce21;
+        padding: 5px 8px;
+        font-size: 12px;
+        font-weight: 800;
+      }
       .grid {
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
@@ -233,6 +245,7 @@ export async function onRequestGet({ params, env, request }) {
         border-radius: 0;
       }
       button.secondary, .button.secondary { background: #fff; color: var(--accent); }
+      .button.full { width: 100%; margin-bottom: 10px; }
       button.active { background: #fff; color: var(--accent); }
       button:disabled { opacity: .55; cursor: wait; }
       .social-actions { display: flex; gap: 10px; margin: 14px 0; }
@@ -380,6 +393,7 @@ export async function onRequestGet({ params, env, request }) {
         <div>
           <h1 id="design-title">DooPixel Design</h1>
           <p class="muted" id="design-subtitle">${id}</p>
+          <span id="verified-badge" class="verified-badge hidden">DooPixel Verified</span>
         </div>
       </header>
 
@@ -440,6 +454,9 @@ export async function onRequestGet({ params, env, request }) {
             <option value="black" selected>Black Frame</option>
             <option value="white">White Frame</option>
           </select>
+          <a id="download-verified-instructions" class="button secondary full hidden" href="#" download>
+            Download Building Instructions
+          </a>
           <button id="add-to-cart">Add Custom Kit to Cart</button>
         </aside>
       </main>
@@ -566,6 +583,7 @@ export async function onRequestGet({ params, env, request }) {
         document.getElementById("design-title").textContent = design.title;
         document.getElementById("breadcrumb-title").textContent = design.title;
         document.getElementById("design-subtitle").textContent = design.id;
+        document.getElementById("verified-badge").classList.toggle("hidden", !design.isVerified);
         document.getElementById("meta-id").textContent = design.id;
         document.getElementById("meta-size").textContent = design.size[0] + " x " + design.size[1];
         document.getElementById("meta-piece").textContent = design.pieceTypeName;
@@ -586,6 +604,11 @@ export async function onRequestGet({ params, env, request }) {
         }
 
         renderParts(design.parts);
+        const instructionsLink = document.getElementById("download-verified-instructions");
+        if (design.isVerified && design.instructionsAvailable && design.instructionsUrl) {
+          instructionsLink.href = design.instructionsUrl;
+          instructionsLink.classList.remove("hidden");
+        }
         document.getElementById("loading").classList.add("hidden");
         document.getElementById("content").classList.remove("hidden");
 

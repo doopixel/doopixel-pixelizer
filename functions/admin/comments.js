@@ -82,6 +82,7 @@ export async function onRequestGet() {
           <h1>Comment Review</h1>
           <p class="muted">Approve and manage visitor comments.</p>
           <nav class="nav">
+            <a href="/admin/verified">Add Verified Design</a>
             <a href="/admin/review">Artwork Review</a>
             <a href="/admin/comments">Comment Review</a>
             <a href="/gallery" target="_blank" rel="noopener">Open Gallery</a>

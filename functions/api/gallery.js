@@ -43,6 +43,7 @@ export async function onRequestGet({ request, env }) {
         parts_json,
         finished_image_key,
         customer_caption,
+        is_verified,
         is_pinned,
         pinned_at,
         approved_at,
@@ -80,6 +81,7 @@ export async function onRequestGet({ request, env }) {
         colorLines: parts.length,
         finishedImageKey: design.finished_image_key,
         customerCaption: design.customer_caption,
+        isVerified: Boolean(design.is_verified),
         isPinned: Boolean(design.is_pinned),
         likeCount: Number(design.displayed_like_count || 0),
         commentCount: Number(design.approved_comment_count || 0),
@@ -100,4 +102,3 @@ export async function onRequestGet({ request, env }) {
     return jsonResponse({ ok: false, error: error.message || String(error) }, 500);
   }
 }
-

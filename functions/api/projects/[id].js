@@ -41,6 +41,7 @@ export async function onRequestGet({ request, env, params }) {
         d.height,
         d.parts_json,
         d.preview_image_key,
+        d.instruction_pdf_key,
         d.status AS gallery_status
       FROM projects p
       JOIN designs d ON d.id = p.design_id
@@ -77,6 +78,20 @@ export async function onRequestGet({ request, env, params }) {
       return jsonResponse({ ok: true, project: responseProject, instructionsAvailable: false });
     }
 
+    if (project.instruction_pdf_key) {
+      const instructionObject = await env.DESIGN_IMAGES.get(project.instruction_pdf_key);
+      if (!instructionObject) {
+        throw new Error("Instruction PDF is unavailable for this project.");
+      }
+      return jsonResponse({
+        ok: true,
+        project: responseProject,
+        instructionsAvailable: true,
+        instructionType: "pdf",
+        instructionsUrl: `/api/projects/${encodeURIComponent(project.project_id)}/instructions`,
+      });
+    }
+
     const instructionObject = await env.DESIGN_IMAGES.get(`instruction-data/${project.design_id}.json`);
     if (!instructionObject) {
       throw new Error("Instruction data is unavailable for this project.");
@@ -86,6 +101,7 @@ export async function onRequestGet({ request, env, params }) {
       ok: true,
       project: responseProject,
       instructionsAvailable: true,
+      instructionType: "generated",
       instructionData: await instructionObject.json(),
     });
   } catch (error) {

@@ -57,6 +57,8 @@ export async function onRequestGet({ request, env }) {
         preview_image_key,
         finished_image_key,
         customer_caption,
+        is_verified,
+        instruction_pdf_key,
         is_pinned,
         pinned_at,
         approved_at,
@@ -129,6 +131,8 @@ export async function onRequestGet({ request, env }) {
         previewImageKey: design.preview_image_key,
         finishedImageKey: design.finished_image_key,
         customerCaption: design.customer_caption,
+        isVerified: Boolean(design.is_verified),
+        instructionsAvailable: Boolean(design.instruction_pdf_key),
         isPinned: Boolean(design.is_pinned),
         pinnedAt: design.pinned_at,
         approvedAt: design.approved_at,
@@ -162,4 +166,3 @@ export async function onRequestGet({ request, env }) {
     return jsonResponse({ ok: false, error: error.message || String(error) }, 500);
   }
 }
-

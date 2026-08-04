@@ -140,7 +140,6 @@ export async function onRequestGet() {
         color: var(--red);
         font-size: 12px;
         font-weight: 800;
-        text-transform: uppercase;
       }
 
       h1 {
@@ -241,10 +240,17 @@ export async function onRequestGet() {
         object-fit: contain;
       }
 
-      .badge {
+      .badge-stack {
         position: absolute;
         top: 10px;
         left: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        max-width: calc(100% - 20px);
+      }
+
+      .badge {
         border: 1px solid #d3b109;
         border-radius: 3px;
         background: var(--yellow);
@@ -389,9 +395,13 @@ export async function onRequestGet() {
           gap: 10px;
         }
         .card { width: 100%; }
-        .badge {
+        .badge-stack {
           top: 6px;
           left: 6px;
+          gap: 4px;
+          max-width: calc(100% - 12px);
+        }
+        .badge {
           padding: 4px 6px;
           font-size: 9px;
         }
@@ -463,8 +473,8 @@ export async function onRequestGet() {
     <div class="shell">
       <main>
         <section class="intro">
-          <p class="eyebrow">Community Gallery</p>
-          <h1>Choose a community design to build.</h1>
+          <p class="eyebrow">DooPixel Gallery</p>
+          <h1>Choose a pixel art design to build.</h1>
           <p class="intro-copy">
             View every required piece, add the full kit to cart, and receive building instructions after checkout.
           </p>
@@ -482,7 +492,7 @@ export async function onRequestGet() {
             </div>
           </div>
 
-          <div id="loading" class="notice">Loading community builds...</div>
+          <div id="loading" class="notice">Loading pixel art designs...</div>
           <div id="empty" class="notice hidden">No approved builds have been shared yet.</div>
           <div id="grid" class="grid hidden"></div>
           <div id="more" class="more hidden">
@@ -540,11 +550,22 @@ export async function onRequestGet() {
         image.src = "/api/images?key=" + encodeURIComponent(design.finishedImageKey);
         imageWrap.appendChild(image);
 
-        if (design.isPinned) {
-          const badge = document.createElement("span");
-          badge.className = "badge";
-          badge.textContent = "Featured";
-          imageWrap.appendChild(badge);
+        if (design.isPinned || design.isVerified) {
+          const badgeStack = document.createElement("div");
+          badgeStack.className = "badge-stack";
+          if (design.isVerified) {
+            const verifiedBadge = document.createElement("span");
+            verifiedBadge.className = "badge";
+            verifiedBadge.textContent = "DooPixel Verified";
+            badgeStack.appendChild(verifiedBadge);
+          }
+          if (design.isPinned) {
+            const featuredBadge = document.createElement("span");
+            featuredBadge.className = "badge";
+            featuredBadge.textContent = "Featured";
+            badgeStack.appendChild(featuredBadge);
+          }
+          imageWrap.appendChild(badgeStack);
         }
         card.appendChild(imageWrap);
 
@@ -657,7 +678,7 @@ export async function onRequestGet() {
         grid.classList.add("hidden");
         empty.classList.add("hidden");
         more.classList.add("hidden");
-        loading.textContent = "Loading community builds...";
+        loading.textContent = "Loading pixel art designs...";
         loading.classList.remove("hidden");
         resultCount.textContent = "Loading builds...";
         updateSortButtons();

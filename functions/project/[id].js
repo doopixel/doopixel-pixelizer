@@ -204,6 +204,23 @@ export async function onRequestGet({ params }) {
         const status = document.getElementById("download-status");
         button.disabled = true;
         try {
+          if (currentResult.instructionType === "pdf") {
+            const response = await fetch(currentResult.instructionsUrl, {
+              headers: { authorization: "Bearer " + PROJECT_TOKEN },
+            });
+            if (!response.ok) throw new Error("Could not download instructions.");
+            const blob = await response.blob();
+            const downloadUrl = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = downloadUrl;
+            link.download = (currentResult.project.title || "DooPixel Instructions") + ".pdf";
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(downloadUrl);
+            status.textContent = "Instructions downloaded. Keep the PDF in a safe place.";
+            return;
+          }
           await window.DooPixelProjectInstructions.generate(currentResult.instructionData, {
             title: currentResult.project.title,
             onProgress: function (done, total) {
