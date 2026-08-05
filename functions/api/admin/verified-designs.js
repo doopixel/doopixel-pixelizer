@@ -1,3 +1,5 @@
+import { PIECE_TYPES } from "../../_lib/piece-types.js";
+
 function jsonResponse(body, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
@@ -30,7 +32,7 @@ async function hasPdfSignature(file) {
   return String.fromCharCode(...header) === "%PDF-";
 }
 
-function validateParts(rawParts, pieceType) {
+function validateParts(rawParts) {
   let parsed;
   try {
     parsed = JSON.parse(String(rawParts || "[]"));
@@ -42,9 +44,10 @@ function validateParts(rawParts, pieceType) {
     throw new Error("Add at least one required color.");
   }
 
-  const skuPrefix = pieceType === "98138" ? "DP-FLAT-" : "DP-STUD-";
   const seenSkus = new Set();
   return parsed.map((entry) => {
+    const pieceType = String(entry?.pieceType || "").trim();
+    const pieceTypeInfo = PIECE_TYPES[pieceType];
     const sku = String(entry?.sku || "").trim().toUpperCase();
     const quantity = Number(entry?.quantity);
     const doopixelNo = String(entry?.doopixelNo || "").trim().slice(0, 20);
@@ -52,8 +55,8 @@ function validateParts(rawParts, pieceType) {
     const hex = String(entry?.hex || "").trim().toLowerCase();
     const bricklinkColorId = String(entry?.bricklinkColorId || "").trim().slice(0, 20);
 
-    if (!sku.startsWith(skuPrefix) || seenSkus.has(sku)) {
-      throw new Error("Each required color must be unique and match the selected piece type.");
+    if (!pieceTypeInfo || !sku.startsWith(pieceTypeInfo.skuPrefix) || seenSkus.has(sku)) {
+      throw new Error("Each required piece must have a valid type, color, and unique SKU.");
     }
     if (!Number.isInteger(quantity) || quantity < 1 || quantity > 50000) {
       throw new Error(`Invalid quantity for ${colorName || sku}.`);
@@ -62,7 +65,16 @@ function validateParts(rawParts, pieceType) {
       throw new Error("A required piece is missing its DooPixel color information.");
     }
     seenSkus.add(sku);
-    return { sku, quantity, doopixelNo, colorName, hex, bricklinkColorId };
+    return {
+      pieceType,
+      pieceTypeName: pieceTypeInfo.customerName,
+      sku,
+      quantity,
+      doopixelNo,
+      colorName,
+      hex,
+      bricklinkColorId,
+    };
   });
 }
 
@@ -83,8 +95,6 @@ export async function onRequestPost({ request, env }) {
     const form = await request.formData();
     const title = String(form.get("title") || "").trim().slice(0, 120);
     const caption = String(form.get("caption") || "").trim().slice(0, 500);
-    const pieceType = String(form.get("pieceType") || "").trim();
-    const pieceTypeName = pieceType === "98138" ? "1x1 Round Tile" : "1x1 Round Plate";
     const width = Number(form.get("width"));
     const height = Number(form.get("height"));
     const artworkImage = form.get("artworkImage");
@@ -92,7 +102,6 @@ export async function onRequestPost({ request, env }) {
 
     if (!title) throw new Error("Enter a public title.");
     if (!caption) throw new Error("Enter a short public description.");
-    if (!["98138", "4073"].includes(pieceType)) throw new Error("Select a supported piece type.");
     if (
       !Number.isInteger(width) ||
       !Number.isInteger(height) ||
@@ -121,7 +130,10 @@ export async function onRequestPost({ request, env }) {
       throw new Error("The instruction file is not a valid PDF.");
     }
 
-    const parts = validateParts(form.get("parts"), pieceType);
+    const parts = validateParts(form.get("parts"));
+    const pieceTypes = [...new Set(parts.map((part) => part.pieceType))];
+    const pieceType = pieceTypes.length === 1 ? pieceTypes[0] : "mixed";
+    const pieceTypeName = pieceTypes.length === 1 ? PIECE_TYPES[pieceTypes[0]].customerName : "Mixed Pieces (Flat + Raised)";
     const imageExtension = getImageExtension(artworkImage);
     const id = makeDesignId();
     imageKey = `finished/verified/${id}.${imageExtension}`;
