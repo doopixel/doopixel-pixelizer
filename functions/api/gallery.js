@@ -1,3 +1,5 @@
+import { getPieceTypeDisplayName } from "../_lib/piece-types.js";
+
 function jsonResponse(body, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
@@ -75,7 +77,7 @@ export async function onRequestGet({ request, env }) {
       return {
         id: design.id,
         title: design.title,
-        pieceTypeName: design.piece_type_name,
+        pieceTypeName: getPieceTypeDisplayName(design.piece_type),
         size: [design.width, design.height],
         totalPieces: parts.reduce((sum, part) => sum + Number(part.quantity || 0), 0),
         colorLines: parts.length,
