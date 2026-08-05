@@ -9,6 +9,8 @@ const ADMIN_TOKEN = "test-admin-token";
 
 function makePart(overrides = {}) {
   return {
+    pieceType: "98138",
+    pieceTypeName: "Flat Pixel Pieces (1x1 Round Tile)",
     sku: "DP-FLAT-001",
     quantity: 120,
     doopixelNo: "001",
@@ -102,6 +104,29 @@ test("rejects duplicate colors before writing files", async () => {
   assert.match(result.error, /unique/);
   assert.equal(harness.writes.length, 0);
   assert.equal(harness.dbCalls.length, 0);
+});
+
+test("publishes mixed tile and plate pieces with per-row type metadata", async () => {
+  const harness = makeEnv();
+  const response = await onRequestPost({
+    request: makeRequest([
+      makePart(),
+      makePart({
+        pieceType: "4073",
+        pieceTypeName: "Raised Pixel Pieces (1x1 Round Plate)",
+        sku: "DP-STUD-001",
+      }),
+    ]),
+    env: harness.env,
+  });
+  const result = await response.json();
+
+  assert.equal(response.status, 200);
+  assert.equal(result.ok, true);
+  assert.equal(harness.dbCalls.length, 1);
+  assert.equal(harness.dbCalls[0].values[2], "mixed");
+  assert.equal(harness.dbCalls[0].values[3], "Mixed Pieces (Flat + Raised)");
+  assert.deepEqual(JSON.parse(harness.dbCalls[0].values[6]).map((part) => part.pieceType), ["98138", "4073"]);
 });
 
 test("creates an order project for a verified PDF design without copying pixel data", async () => {

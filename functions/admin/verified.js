@@ -47,7 +47,7 @@ export async function onRequestGet() {
       .piece-head { display: flex; justify-content: space-between; gap: 16px; align-items: center; margin-bottom: 12px; }
       .piece-head h2 { margin: 0; }
       .parts { display: grid; gap: 8px; }
-      .part-row { display: grid; grid-template-columns: minmax(0, 1fr) 120px 90px; gap: 8px; align-items: center; }
+      .part-row { display: grid; grid-template-columns: 190px minmax(0, 1fr) 120px 90px; gap: 8px; align-items: center; }
       .part-row select, .part-row input { width: 100%; min-width: 0; }
       .part-color { display: flex; align-items: center; gap: 8px; min-width: 0; }
       .swatch { display: inline-block; flex: 0 0 18px; width: 18px; height: 18px; border: 1px solid #aaa; }
@@ -106,13 +106,6 @@ export async function onRequestGet() {
               <textarea id="caption" name="caption" maxlength="500" required></textarea>
             </div>
             <div class="field">
-              <label for="piece-type">Piece type</label>
-              <select id="piece-type" name="pieceType" required>
-                <option value="98138">1x1 Round Tile (Flat)</option>
-                <option value="4073">1x1 Round Plate (Stud)</option>
-              </select>
-            </div>
-            <div class="field">
               <label>Baseplate layout</label>
               <p id="layout-summary" class="help">3 x 3 baseplates</p>
             </div>
@@ -159,12 +152,15 @@ export async function onRequestGet() {
       const loginForm = document.getElementById("login");
       const verifiedForm = document.getElementById("verified-form");
       const tokenInput = document.getElementById("token");
-      const pieceTypeSelect = document.getElementById("piece-type");
       const partsElement = document.getElementById("parts");
       const message = document.getElementById("message");
       const publishButton = document.getElementById("publish");
       let token = sessionStorage.getItem("doopixelGalleryAdminToken") || "";
       let skuMap = null;
+      const PIECE_TYPES = {
+        "98138": "Flat Pixel Pieces (1x1 Round Tile)",
+        "4073": "Raised Pixel Pieces (1x1 Round Plate)",
+      };
 
       function showMessage(text, type) {
         message.innerHTML = "";
@@ -199,35 +195,50 @@ export async function onRequestGet() {
           width + " x " + height + " baseplates · " + width * height + " total";
       }
 
-      function availableColors() {
-        const skuField = pieceTypeSelect.value === "98138" ? "flatSku" : "studSku";
+      function availableColors(pieceType) {
+        const skuField = pieceType === "98138" ? "flatSku" : "studSku";
         return Object.keys(skuMap || {})
           .map(function (hex) { return Object.assign({ hex: hex }, skuMap[hex]); })
           .filter(function (color) { return Boolean(color[skuField]); })
           .sort(function (a, b) { return String(a.doopixelNo).localeCompare(String(b.doopixelNo)); });
       }
 
-      function createColorSelect() {
+      function createPieceTypeSelect(selectedType) {
         const select = document.createElement("select");
-        select.className = "color-select";
-        availableColors().forEach(function (color) {
+        select.className = "piece-type-select";
+        select.setAttribute("aria-label", "Piece type");
+        Object.keys(PIECE_TYPES).forEach(function (pieceType) {
           const option = document.createElement("option");
-          option.value = color.hex;
-          option.textContent = color.doopixelNo + " - " + color.colorName;
+          option.value = pieceType;
+          option.textContent = PIECE_TYPES[pieceType];
+          option.selected = pieceType === (selectedType || "98138");
           select.appendChild(option);
         });
         return select;
       }
 
-      function addPartRow(selectedHex, quantity) {
+      function createColorSelect(pieceType, selectedHex) {
+        const select = document.createElement("select");
+        select.className = "color-select";
+        availableColors(pieceType).forEach(function (color) {
+          const option = document.createElement("option");
+          option.value = color.hex;
+          option.textContent = color.doopixelNo + " - " + color.colorName;
+          option.selected = color.hex === selectedHex;
+          select.appendChild(option);
+        });
+        return select;
+      }
+
+      function addPartRow(selectedType, selectedHex, quantity) {
         const row = document.createElement("div");
         row.className = "part-row";
+        const typeSelect = createPieceTypeSelect(selectedType);
         const colorWrap = document.createElement("div");
         colorWrap.className = "part-color";
         const swatch = document.createElement("span");
         swatch.className = "swatch";
-        const select = createColorSelect();
-        if (selectedHex) select.value = selectedHex;
+        let select = createColorSelect(typeSelect.value, selectedHex);
         const quantityInput = document.createElement("input");
         quantityInput.className = "quantity";
         quantityInput.type = "number";
@@ -246,6 +257,14 @@ export async function onRequestGet() {
           swatch.style.background = select.value || "transparent";
           updatePartsSummary();
         }
+        typeSelect.addEventListener("change", function () {
+          const previousHex = select.value;
+          const nextSelect = createColorSelect(typeSelect.value, previousHex);
+          colorWrap.replaceChild(nextSelect, select);
+          select = nextSelect;
+          select.addEventListener("change", updateSwatch);
+          updateSwatch();
+        });
         select.addEventListener("change", updateSwatch);
         quantityInput.addEventListener("input", updatePartsSummary);
         remove.addEventListener("click", function () {
@@ -253,7 +272,7 @@ export async function onRequestGet() {
           updatePartsSummary();
         });
         colorWrap.append(swatch, select);
-        row.append(colorWrap, quantityInput, remove);
+        row.append(typeSelect, colorWrap, quantityInput, remove);
         partsElement.appendChild(row);
         updateSwatch();
       }
@@ -270,21 +289,24 @@ export async function onRequestGet() {
 
       function resetPartRows() {
         partsElement.innerHTML = "";
-        addPartRow();
+        addPartRow("98138");
       }
 
       function serializeParts() {
-        const skuField = pieceTypeSelect.value === "98138" ? "flatSku" : "studSku";
         const seen = new Set();
         return Array.from(partsElement.querySelectorAll(".part-row")).map(function (row) {
+          const pieceType = row.querySelector(".piece-type-select").value;
           const hex = row.querySelector(".color-select").value;
           const color = skuMap[hex];
+          const skuField = pieceType === "98138" ? "flatSku" : "studSku";
           const sku = color && color[skuField];
           const quantity = Number(row.querySelector(".quantity").value);
-          if (!sku || seen.has(sku)) throw new Error("Each required color can only be added once.");
+          if (!sku || seen.has(sku)) throw new Error("Each required piece type and color can only be added once.");
           if (!Number.isInteger(quantity) || quantity < 1) throw new Error("Every color needs a valid quantity.");
           seen.add(sku);
           return {
+            pieceType: pieceType,
+            pieceTypeName: PIECE_TYPES[pieceType],
             sku: sku,
             quantity: quantity,
             doopixelNo: color.doopixelNo,
@@ -333,13 +355,6 @@ export async function onRequestGet() {
         }
       });
 
-      pieceTypeSelect.addEventListener("change", function () {
-        if (partsElement.children.length && !window.confirm("Changing the piece type will clear the required pieces list. Continue?")) {
-          pieceTypeSelect.value = pieceTypeSelect.value === "98138" ? "4073" : "98138";
-          return;
-        }
-        resetPartRows();
-      });
       document.getElementById("add-color").addEventListener("click", function () { addPartRow(); });
 
       verifiedForm.addEventListener("submit", async function (event) {

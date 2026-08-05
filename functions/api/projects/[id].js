@@ -1,4 +1,5 @@
 import { sha256Hex } from "../../_lib/security.js";
+import { getPieceTypeDisplayName } from "../../_lib/piece-types.js";
 
 function jsonResponse(body, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -67,7 +68,7 @@ export async function onRequestGet({ request, env, params }) {
       orderedAt: project.ordered_at,
       title: project.title,
       pieceType: project.piece_type,
-      pieceTypeName: project.piece_type_name,
+      pieceTypeName: getPieceTypeDisplayName(project.piece_type),
       size: [project.width, project.height],
       parts: JSON.parse(project.parts_json || "[]"),
       previewImageKey: project.preview_image_key,

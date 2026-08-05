@@ -58,18 +58,18 @@
     if (String(selectedPixelPartNumber) === "98138") {
       return {
         skuField: "flatSku",
-        pieceTypeName: "1x1 Round Tile",
+        pieceTypeName: "Flat Pixel Pieces (1x1 Round Tile)",
       };
     }
 
     if (String(selectedPixelPartNumber) === "4073") {
       return {
         skuField: "studSku",
-        pieceTypeName: "1x1 Round Plate",
+        pieceTypeName: "Raised Pixel Pieces (1x1 Round Plate)",
       };
     }
 
-    throw new Error("Please choose 1x1 Round Tile or 1x1 Round Plate before adding to cart.");
+    throw new Error("Please choose Flat Pixel Pieces or Raised Pixel Pieces before adding to cart.");
   }
 
   function getSelectedFrame() {

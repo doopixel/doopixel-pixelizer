@@ -1,3 +1,5 @@
+import { getPieceTypeDisplayName } from "../../_lib/piece-types.js";
+
 function jsonResponse(body, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
@@ -54,7 +56,7 @@ export async function onRequestGet({ env, params }) {
         id: design.id,
         title: design.title,
         pieceType: design.piece_type,
-        pieceTypeName: design.piece_type_name,
+        pieceTypeName: getPieceTypeDisplayName(design.piece_type),
         size: [design.width, design.height],
         parts: JSON.parse(design.parts_json || "[]"),
         previewImageKey: design.preview_image_key,
