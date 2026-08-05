@@ -1,4 +1,5 @@
 import { createAccessToken, sha256Hex } from "../../_lib/security.js";
+import { getPieceTypeDisplayName } from "../../_lib/piece-types.js";
 
 function jsonResponse(body, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -205,7 +206,7 @@ export async function onRequestPost({ request, env }) {
     const id = makeDesignId();
     const title = String(payload.name || payload.title || "Custom Pixel Art").trim().slice(0, 120);
     const pieceType = String(payload.pieceType || "");
-    const pieceTypeName = String(payload.pieceTypeName || "");
+    const pieceTypeName = getPieceTypeDisplayName(pieceType);
     const { width, height } = parseSize(payload.size);
     const parts = validateItems(payload.items);
     if (!["98138", "4073"].includes(pieceType)) {
