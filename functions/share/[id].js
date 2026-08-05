@@ -422,7 +422,7 @@ export async function onRequestGet({ params, env, request }) {
           <h2>Required Pieces</h2>
           <table>
             <thead>
-              <tr><th>Color</th><th>SKU</th><th>Qty</th></tr>
+              <tr><th>Piece Type</th><th>Color</th><th>SKU</th><th>Qty</th></tr>
             </thead>
             <tbody id="parts-body"></tbody>
           </table>
@@ -564,6 +564,11 @@ export async function onRequestGet({ params, env, request }) {
         partsBody.innerHTML = "";
         parts.forEach((part) => {
           const row = document.createElement("tr");
+          const typeCell = document.createElement("td");
+          typeCell.textContent = part.pieceTypeName ||
+            (String(part.pieceType) === "4073"
+              ? "Raised Pixel Pieces (1x1 Round Plate)"
+              : "Flat Pixel Pieces (1x1 Round Tile)");
           const colorCell = document.createElement("td");
           const swatch = document.createElement("span");
           swatch.className = "swatch";
@@ -573,7 +578,7 @@ export async function onRequestGet({ params, env, request }) {
           skuCell.textContent = part.sku;
           const quantityCell = document.createElement("td");
           quantityCell.textContent = part.quantity;
-          row.append(colorCell, skuCell, quantityCell);
+          row.append(typeCell, colorCell, skuCell, quantityCell);
           partsBody.appendChild(row);
         });
       }
