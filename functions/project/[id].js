@@ -107,7 +107,7 @@ export async function onRequestGet({ params }) {
           <details>
             <summary id="parts-summary">Required Pieces</summary>
             <div class="table-scroll">
-              <table><thead><tr><th>Color</th><th>SKU</th><th>Qty</th></tr></thead><tbody id="parts-body"></tbody></table>
+              <table><thead><tr><th>Piece Type</th><th>Color</th><th>SKU</th><th>Qty</th></tr></thead><tbody id="parts-body"></tbody></table>
             </div>
           </details>
         </section>
@@ -147,6 +147,11 @@ export async function onRequestGet({ params }) {
         body.innerHTML = "";
         parts.forEach((part) => {
           const row = document.createElement("tr");
+          const type = document.createElement("td");
+          type.textContent = part.pieceTypeName ||
+            (String(part.pieceType) === "4073"
+              ? "Raised Pixel Pieces (1x1 Round Plate)"
+              : "Flat Pixel Pieces (1x1 Round Tile)");
           const color = document.createElement("td");
           const swatch = document.createElement("span");
           swatch.className = "swatch";
@@ -156,7 +161,7 @@ export async function onRequestGet({ params }) {
           sku.textContent = part.sku;
           const quantity = document.createElement("td");
           quantity.textContent = Number(part.quantity).toLocaleString();
-          row.append(color, sku, quantity);
+          row.append(type, color, sku, quantity);
           body.appendChild(row);
         });
       }
