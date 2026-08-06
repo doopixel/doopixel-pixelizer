@@ -2454,7 +2454,7 @@ async function generateInstructions() {
             await sleep(50);
             if ((i + 1) % (isHighQuality ? 20 : 50) === 0) {
                 addWaterMark(pdf, isHighQuality);
-                pdf.save(`Lego-Art-Remix-Instructions-Part-${numParts}.pdf`);
+                pdf.save(`DooPixel-Instructions-Part-${numParts}.pdf`);
                 numParts++;
                 pdf = new jsPDF({
                     orientation: titlePageCanvas.width < titlePageCanvas.height ? "p" : "l",
@@ -2510,7 +2510,7 @@ async function generateInstructions() {
         }
 
         addWaterMark(pdf, isHighQuality);
-        pdf.save(numParts > 1 ? `Lego-Art-Remix-Instructions-Part-${numParts}.pdf` : "Lego-Art-Remix-Instructions.pdf");
+        pdf.save(numParts > 1 ? `DooPixel-Instructions-Part-${numParts}.pdf` : "DooPixel-Instructions.pdf");
         document.getElementById("pdf-progress-container").hidden = true;
         document.getElementById("download-instructions-button").hidden = false;
         enableInteraction();
@@ -2623,7 +2623,7 @@ async function generateDepthInstructions() {
             if ((i + 1) % (isHighQuality ? 20 : 50) === 0) {
                 if (pdf != null) {
                     addWaterMark(pdf, isHighQuality);
-                    pdf.save(`Lego-Art-Remix-Instructions-Part-${numParts}.pdf`);
+                    pdf.save(`DooPixel-Instructions-Part-${numParts}.pdf`);
 
                     numParts++;
                 }
@@ -2654,7 +2654,7 @@ async function generateDepthInstructions() {
         }
 
         addWaterMark(pdf, isHighQuality);
-        pdf.save(numParts > 1 ? `Lego-Art-Remix-Instructions-Part-${numParts}.pdf` : "Lego-Art-Remix-Instructions.pdf");
+        pdf.save(numParts > 1 ? `DooPixel-Instructions-Part-${numParts}.pdf` : "DooPixel-Instructions.pdf");
         document.getElementById("depth-pdf-progress-container").hidden = true;
         document.getElementById("download-depth-instructions-button").hidden = false;
         enableInteraction();
