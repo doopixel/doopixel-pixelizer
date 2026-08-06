@@ -1055,7 +1055,7 @@ function generateInstructionTitlePage(
     ctx.fillStyle = "#000000";
     ctx.font = `${scalingFactor * 2}px Arial`;
     ctx.fillText(
-        typeof DOOPIXEL_INSTRUCTION_BRAND !== "undefined" ? DOOPIXEL_INSTRUCTION_BRAND : "Lego Art Remix",
+        typeof DOOPIXEL_INSTRUCTION_BRAND !== "undefined" ? DOOPIXEL_INSTRUCTION_BRAND : "DooPixel",
         pictureWidth * 0.75,
         pictureHeight * 0.28
     );
@@ -1518,7 +1518,7 @@ function generateDepthInstructionTitlePage(
 
     ctx.fillStyle = "#000000";
     ctx.font = `${scalingFactor * 2}px Arial`;
-    ctx.fillText("Lego Art Remix", pictureWidth * 0.75, pictureHeight * 0.28);
+    ctx.fillText("DooPixel", pictureWidth * 0.75, pictureHeight * 0.28);
     ctx.font = `${scalingFactor / 2}px Arial`;
     ctx.fillText(`Depth Instructions`, pictureWidth * 0.75, pictureHeight * 0.34);
     ctx.fillText(
