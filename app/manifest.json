@@ -1,23 +1,14 @@
 {
-  "name": "Lego Art Remix",
-  "description": "The Intelligent, Easy to Use Lego Mosaic Maker",
-  "theme_color": "#FCE4EC",
+  "name": "DooPixel Pixel Art Maker",
+  "short_name": "DooPixel",
+  "description": "Create custom pixel art from your own photo with DooPixel pieces.",
+  "theme_color": "#4961bd",
   "background_color": "#FCFCFC",
   "icons": [
     {
-      "src": "assets/png/icon-192x192.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "assets/png/icon-512x512.png",
-      "type": "image/png",
-      "sizes": "512x512"
-    },
-    {
-      "src": "assets/png/icon-960x960.png",
-      "type": "image/png",
-      "sizes": "960x960"
+      "src": "assets/png/doopixel-icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
     }
   ],
   "display": "browser",
