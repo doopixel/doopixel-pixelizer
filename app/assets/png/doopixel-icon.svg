@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="960" viewBox="0 0 960 960" role="img" aria-labelledby="title">
+  <title>DooPixel</title>
+  <rect width="960" height="960" rx="184" fill="#4961bd"/>
+  <g transform="translate(168 168)">
+    <rect width="156" height="156" rx="34" fill="#ffffff"/><circle cx="78" cy="78" r="38" fill="#d4141a"/>
+    <rect x="216" width="156" height="156" rx="34" fill="#ffffff"/><circle cx="294" cy="78" r="38" fill="#e899bc"/>
+    <rect x="432" width="156" height="156" rx="34" fill="#ffffff"/><circle cx="510" cy="78" r="38" fill="#f4ce21"/>
+    <rect y="216" width="156" height="156" rx="34" fill="#ffffff"/><circle cx="78" cy="294" r="38" fill="#289b3a"/>
+    <rect x="216" y="216" width="156" height="156" rx="34" fill="#ffffff"/><circle cx="294" cy="294" r="38" fill="#d4141a"/>
+    <rect x="432" y="216" width="156" height="156" rx="34" fill="#ffffff"/><circle cx="510" cy="294" r="38" fill="#e899bc"/>
+    <rect y="432" width="156" height="156" rx="34" fill="#ffffff"/><circle cx="78" cy="510" r="38" fill="#f4ce21"/>
+    <rect x="216" y="432" width="156" height="156" rx="34" fill="#ffffff"/><circle cx="294" cy="510" r="38" fill="#289b3a"/>
+    <rect x="432" y="432" width="156" height="156" rx="34" fill="#ffffff"/><circle cx="510" cy="510" r="38" fill="#d4141a"/>
+  </g>
+</svg> 
