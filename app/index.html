@@ -4,6 +4,14 @@
     <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <script>
+      (function () {
+        document.documentElement.classList.add("dp-wizard-booting");
+        window.setTimeout(function () {
+          document.documentElement.classList.remove("dp-wizard-booting");
+        }, 5000);
+      })();
+    </script>
 
     <!-- Bootstrap CSS -->
     <link
@@ -352,6 +360,111 @@
       }
     </style>
     <link rel="stylesheet" href="css/doopixel-wizard.css?v=20260801g" />
+    <style>
+      #dp-boot-screen {
+        display: none;
+      }
+
+      html.dp-wizard-booting .dp-site-nav-wrap {
+        border-top: 0;
+        border-bottom: 0;
+        background: #4961bd;
+      }
+
+      html.dp-wizard-booting .dp-site-link,
+      html.dp-wizard-booting .dp-site-cart-mobile,
+      html.dp-wizard-booting .dp-site-menu-button {
+        color: #ffffff !important;
+      }
+
+      html.dp-wizard-booting .dp-site-link.is-active {
+        background: #ffffff;
+        color: #35499d !important;
+      }
+
+      html.dp-wizard-booting #dp-legacy-app {
+        visibility: hidden;
+        height: 0 !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+      }
+
+      html.dp-wizard-booting #dp-boot-screen {
+        display: grid;
+        min-height: calc(100svh - 64px);
+        padding: 32px 20px;
+        place-items: center;
+        background: #f5f6f8;
+      }
+
+      .dp-boot-card {
+        display: grid;
+        justify-items: center;
+        gap: 18px;
+        color: #202124;
+      }
+
+      .dp-boot-mosaic {
+        display: grid;
+        grid-template-columns: repeat(5, 18px);
+        gap: 5px;
+      }
+
+      .dp-boot-mosaic span {
+        width: 18px;
+        height: 18px;
+        border: 1px solid rgba(32, 33, 36, 0.14);
+        border-radius: 4px;
+        background: #ffffff;
+        animation: dp-boot-piece 1.2s ease-in-out infinite;
+      }
+
+      .dp-boot-mosaic span:nth-child(3n) {
+        background: #f4ce21;
+        animation-delay: 0.1s;
+      }
+
+      .dp-boot-mosaic span:nth-child(4n) {
+        background: #e899bc;
+        animation-delay: 0.2s;
+      }
+
+      .dp-boot-mosaic span:nth-child(5n) {
+        background: #289b3a;
+        animation-delay: 0.3s;
+      }
+
+      .dp-boot-mosaic span:nth-child(7n) {
+        background: #d4141a;
+        animation-delay: 0.4s;
+      }
+
+      .dp-boot-card p {
+        margin: 0;
+        color: #666a73;
+        font-size: 14px;
+      }
+
+      @keyframes dp-boot-piece {
+        0%,
+        100% {
+          transform: translateY(0);
+          opacity: 0.65;
+        }
+        50% {
+          transform: translateY(-3px);
+          opacity: 1;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .dp-boot-mosaic span {
+          animation: none;
+        }
+      }
+    </style>
   </head>
 
   <body>
@@ -388,6 +501,18 @@
           <a class="dp-site-link" href="https://doopixel.com/cart" target="_blank" rel="noopener">Cart</a>
         </div>
       </nav>
+    </div>
+    <div id="dp-boot-screen" aria-live="polite" aria-label="Loading DooPixel Pixel Art Maker">
+      <div class="dp-boot-card">
+        <div class="dp-boot-mosaic" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <p>Preparing your workspace</p>
+      </div>
     </div>
     <div
       id="dp-legacy-app"

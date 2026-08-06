@@ -703,6 +703,7 @@
     goToPage(0);
     watchForProgrammaticImageLoad();
     document.body.classList.add("dp-wizard-ready");
+    document.documentElement.classList.remove("dp-wizard-booting");
   }
 
   onReady(initWizard);
