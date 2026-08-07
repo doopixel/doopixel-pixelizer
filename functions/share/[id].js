@@ -99,9 +99,8 @@ export async function onRequestGet({ params, env, request }) {
         position: sticky;
         top: 0;
         z-index: 1000;
-        border-top: 5px solid #f4ce21;
-        border-bottom: 1px solid #343434;
-        background: #181818;
+        border: 0;
+        background: #4961bd;
       }
 
       .dp-site-nav {
@@ -148,19 +147,19 @@ export async function onRequestGet({ params, env, request }) {
       }
 
       .dp-site-link:hover {
-        border-color: #555;
-        color: #f4ce21;
+        background: rgba(255, 255, 255, 0.14);
+        color: #fff;
       }
 
       .dp-site-link.is-active {
-        border-color: #f4ce21;
-        background: #f4ce21;
-        color: #181818;
+        border-color: #fff;
+        background: #fff;
+        color: #35499d;
       }
 
       .dp-site-cart {
-        border-color: #f4ce21;
-        color: #f4ce21;
+        border-color: rgba(255, 255, 255, 0.75);
+        color: #fff;
       }
 
       .dp-site-menu-button,
@@ -310,8 +309,8 @@ export async function onRequestGet({ params, env, request }) {
           align-items: stretch;
           margin-left: 0;
           padding: 10px 14px 14px;
-          border-bottom: 1px solid #343434;
-          background: #181818;
+          border-bottom: 0;
+          background: #4961bd;
         }
         .dp-site-links.is-open { display: grid; gap: 6px; }
         .dp-site-link {
@@ -326,9 +325,9 @@ export async function onRequestGet({ params, env, request }) {
           align-items: center;
           justify-content: center;
           min-height: 38px;
-          border: 1px solid #f4ce21;
+          border: 1px solid rgba(255, 255, 255, 0.75);
           background: transparent;
-          color: #f4ce21;
+          color: #fff;
           font-size: 13px;
           font-weight: 800;
         }
