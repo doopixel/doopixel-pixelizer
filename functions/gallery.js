@@ -19,6 +19,7 @@ export async function onRequestGet() {
         --pink: #e899bc;
         --green: #289b3a;
         --yellow: #f4ce21;
+        --blue: #4961bd;
       }
 
       * { box-sizing: border-box; }
@@ -34,9 +35,8 @@ export async function onRequestGet() {
         position: sticky;
         top: 0;
         z-index: 1000;
-        border-top: 5px solid var(--yellow);
-        border-bottom: 1px solid #343434;
-        background: var(--ink);
+        border: 0;
+        background: var(--blue);
       }
 
       .dp-site-nav {
@@ -83,19 +83,19 @@ export async function onRequestGet() {
       }
 
       .dp-site-link:hover {
-        border-color: #555;
-        color: var(--yellow);
+        background: rgba(255, 255, 255, 0.14);
+        color: #fff;
       }
 
       .dp-site-link.is-active {
-        border-color: var(--yellow);
-        background: var(--yellow);
-        color: var(--ink);
+        border-color: #fff;
+        background: #fff;
+        color: #35499d;
       }
 
       .dp-site-cart {
-        border-color: var(--yellow);
-        color: var(--yellow);
+        border-color: rgba(255, 255, 255, 0.75);
+        color: #fff;
       }
 
       .dp-site-menu-button,
@@ -113,10 +113,10 @@ export async function onRequestGet() {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        border: 1px solid var(--ink);
+        border: 1px solid var(--blue);
         border-radius: 4px;
         padding: 9px 15px;
-        background: var(--ink);
+        background: var(--blue);
         color: #fff;
         text-decoration: none;
         font-size: 14px;
@@ -346,8 +346,8 @@ export async function onRequestGet() {
           align-items: stretch;
           margin-left: 0;
           padding: 10px 14px 14px;
-          border-bottom: 1px solid #343434;
-          background: var(--ink);
+          border-bottom: 0;
+          background: var(--blue);
         }
         .dp-site-links.is-open { display: grid; gap: 6px; }
         .dp-site-link {
@@ -362,9 +362,9 @@ export async function onRequestGet() {
           align-items: center;
           justify-content: center;
           min-height: 38px;
-          border: 1px solid var(--yellow);
+          border: 1px solid rgba(255, 255, 255, 0.75);
           background: transparent;
-          color: var(--yellow);
+          color: #fff;
           font-size: 13px;
           font-weight: 800;
         }
