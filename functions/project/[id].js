@@ -114,9 +114,10 @@ export async function onRequestGet({ params }) {
 
         <section id="upload-section" class="section hidden">
           <h2>Share Your Finished Build</h2>
-          <p>After assembly, upload a photo of your completed build. It will appear in the Gallery only after review.</p>
+          <p>After assembly, upload up to 6 photos of your completed build. The first photo will be the Gallery cover. Large photos are optimized before upload.</p>
           <form id="upload-form" class="upload-form">
-            <input id="finished-image" name="finishedImage" type="file" accept="image/jpeg,image/png,image/webp" required />
+            <input id="finished-images" name="finishedImages" type="file" accept="image/jpeg,image/png,image/webp" multiple required />
+            <p id="selected-image-count">Choose 1 to 6 JPG, PNG, or WEBP photos.</p>
             <textarea id="caption" name="caption" maxlength="500" placeholder="Add a short note about your build"></textarea>
             <button id="submit-build" class="button" type="submit">Submit Finished Build for Review</button>
           </form>
@@ -131,6 +132,7 @@ export async function onRequestGet({ params }) {
     <script src="/js/algo.js"></script>
     <script src="/js/doopixel-instruction-data.js?v=20260802a"></script>
     <script src="/js/doopixel-project-instructions.js?v=20260802a"></script>
+    <script src="/js/doopixel-image-upload.js?v=20260808a"></script>
     <script>
       const PROJECT_ID = ${JSON.stringify(projectId)};
       const PROJECT_TOKEN = decodeURIComponent(window.location.hash.slice(1));
@@ -240,21 +242,39 @@ export async function onRequestGet({ params }) {
         }
       });
 
+      document.getElementById("finished-images").addEventListener("change", function () {
+        const count = this.files.length;
+        document.getElementById("selected-image-count").textContent = count
+          ? count + " photo" + (count === 1 ? " selected (cover)" : "s selected · first photo is the cover")
+          : "Choose 1 to 6 JPG, PNG, or WEBP photos.";
+      });
+
       document.getElementById("upload-form").addEventListener("submit", async function (event) {
         event.preventDefault();
         const button = document.getElementById("submit-build");
         const status = document.getElementById("upload-status");
         button.disabled = true;
-        status.textContent = "Uploading...";
+        status.textContent = "Preparing photos...";
         try {
+          const input = document.getElementById("finished-images");
+          const photos = await window.DooPixelImageUpload.compressFiles(input.files, function (current, total) {
+            status.textContent = "Optimizing photo " + current + " of " + total + "...";
+          });
+          const formData = new FormData();
+          photos.forEach(function (photo) {
+            formData.append("finishedImages", photo, photo.name);
+          });
+          formData.set("caption", document.getElementById("caption").value);
+          status.textContent = "Uploading " + photos.length + " photo" + (photos.length === 1 ? "..." : "s...");
           const response = await fetch("/api/projects/" + encodeURIComponent(PROJECT_ID) + "/submit", {
             method: "POST",
             headers: { authorization: "Bearer " + PROJECT_TOKEN },
-            body: new FormData(event.currentTarget),
+            body: formData,
           });
           const result = await response.json();
           if (!response.ok || !result.ok) throw new Error(result.error || "Could not submit this build.");
           event.currentTarget.reset();
+          document.getElementById("selected-image-count").textContent = "Choose 1 to 6 JPG, PNG, or WEBP photos.";
           status.textContent = "Submitted successfully. Your build is pending Gallery review.";
         } catch (error) {
           status.textContent = error.message || "Could not submit this build.";

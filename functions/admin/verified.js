@@ -118,9 +118,9 @@ export async function onRequestGet() {
               <select id="height" name="height"></select>
             </div>
             <div class="field">
-              <label for="artwork-image">Gallery image</label>
-              <input id="artwork-image" name="artworkImage" type="file" accept="image/jpeg,image/png,image/webp" required />
-              <p class="help">JPG, PNG, or WEBP. Maximum 8 MB.</p>
+              <label for="artwork-images">Gallery photos</label>
+              <input id="artwork-images" name="artworkImages" type="file" accept="image/jpeg,image/png,image/webp" multiple required />
+              <p id="artwork-image-help" class="help">Choose up to 6 photos. The first photo is the Gallery cover. Large photos are optimized before upload.</p>
             </div>
             <div class="field">
               <label for="instructions-pdf">Building instructions</label>
@@ -147,6 +147,7 @@ export async function onRequestGet() {
       <div id="message" class="notice hidden" aria-live="polite"></div>
     </div>
 
+    <script src="/js/doopixel-image-upload.js?v=20260808a"></script>
     <script>
       const SKU_MAP_URL = "/doopixel-pixelizer-sku-map.json";
       const loginForm = document.getElementById("login");
@@ -357,14 +358,30 @@ export async function onRequestGet() {
 
       document.getElementById("add-color").addEventListener("click", function () { addPartRow(); });
 
+      document.getElementById("artwork-images").addEventListener("change", function () {
+        const count = this.files.length;
+        document.getElementById("artwork-image-help").textContent = count
+          ? count + " photo" + (count === 1 ? " selected (cover)" : "s selected · first photo is the cover")
+          : "Choose up to 6 photos. The first photo is the Gallery cover. Large photos are optimized before upload.";
+      });
+
       verifiedForm.addEventListener("submit", async function (event) {
         event.preventDefault();
         publishButton.disabled = true;
         publishButton.textContent = "Uploading & Publishing...";
-        showMessage("Uploading the artwork and instructions. Keep this page open.");
+        showMessage("Preparing the artwork photos. Keep this page open.");
         try {
           const formData = new FormData(verifiedForm);
+          formData.delete("artworkImages");
+          const artworkInput = document.getElementById("artwork-images");
+          const photos = await window.DooPixelImageUpload.compressFiles(artworkInput.files, function (current, total) {
+            showMessage("Optimizing photo " + current + " of " + total + "...");
+          });
+          photos.forEach(function (photo) {
+            formData.append("artworkImages", photo, photo.name);
+          });
           formData.set("parts", JSON.stringify(serializeParts()));
+          showMessage("Uploading " + photos.length + " photo" + (photos.length === 1 ? "" : "s") + " and the instructions...");
           const response = await fetch("/api/admin/verified-designs", {
             method: "POST",
             headers: { authorization: "Bearer " + token },
@@ -376,6 +393,8 @@ export async function onRequestGet() {
           message.innerHTML = "Published as DooPixel Verified. " +
             '<a href="' + result.shareUrl + '" target="_blank" rel="noopener">Open design</a>';
           verifiedForm.reset();
+          document.getElementById("artwork-image-help").textContent =
+            "Choose up to 6 photos. The first photo is the Gallery cover. Large photos are optimized before upload.";
           document.getElementById("width").value = "48";
           document.getElementById("height").value = "48";
           updateLayout();

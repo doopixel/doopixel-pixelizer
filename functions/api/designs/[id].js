@@ -1,4 +1,5 @@
 import { getPieceTypeDisplayName } from "../../_lib/piece-types.js";
+import { listDesignImageKeys } from "../../_lib/design-images.js";
 
 function jsonResponse(body, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -50,6 +51,12 @@ export async function onRequestGet({ env, params }) {
       );
     }
 
+    const imageKeys = await listDesignImageKeys(
+      env.DESIGN_IMAGES,
+      design.id,
+      design.finished_image_key
+    );
+
     return jsonResponse({
       ok: true,
       design: {
@@ -61,6 +68,7 @@ export async function onRequestGet({ env, params }) {
         parts: JSON.parse(design.parts_json || "[]"),
         previewImageKey: design.preview_image_key,
         finishedImageKey: design.finished_image_key,
+        imageKeys,
         customerCaption: design.customer_caption,
         isVerified: Boolean(design.is_verified),
         instructionsAvailable: Boolean(design.is_verified && design.instruction_pdf_key),
