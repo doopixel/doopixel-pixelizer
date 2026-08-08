@@ -49,7 +49,11 @@ export async function onRequestGet() {
       .parts { display: grid; gap: 8px; }
       .part-row { display: grid; grid-template-columns: 190px minmax(0, 1fr) 120px 90px; gap: 8px; align-items: center; }
       .part-row select, .part-row input { width: 100%; min-width: 0; }
-      .part-color { display: flex; align-items: center; gap: 8px; min-width: 0; }
+      .part-color { display: grid; gap: 8px; min-width: 0; }
+      .catalog-color { display: flex; align-items: center; gap: 8px; min-width: 0; }
+      .catalog-color select { flex: 1; min-width: 0; }
+      .custom-color-fields { display: grid; grid-template-columns: 110px minmax(140px, 1fr) 110px; gap: 7px; }
+      .custom-color-fields input { width: 100%; min-width: 0; }
       .swatch { display: inline-block; flex: 0 0 18px; width: 18px; height: 18px; border: 1px solid #aaa; }
       .summary { margin: 12px 0 0; color: var(--muted); font-size: 14px; }
       .actions { display: flex; justify-content: flex-end; gap: 10px; }
@@ -67,6 +71,8 @@ export async function onRequestGet() {
         .fields { grid-template-columns: 1fr; }
         .field.full { grid-column: auto; }
         .part-row { grid-template-columns: minmax(0, 1fr) 78px 44px; }
+        .part-row > .piece-type-select { grid-column: 1 / -1; }
+        .custom-color-fields { grid-template-columns: 1fr; }
         .remove-label { display: none; }
         button.danger span[aria-hidden="true"] { display: inline; }
         .section { padding: 14px; }
@@ -135,7 +141,7 @@ export async function onRequestGet() {
             <h2>Required Pieces</h2>
             <button id="add-color" type="button">Add Color</button>
           </div>
-          <p class="help">Choose colors from the existing DooPixel catalog. SKU and color details are filled automatically.</p>
+          <p class="help">Choose a catalog color, or select Custom Color to enter a warehouse number, color name, and display color for this design only.</p>
           <div id="parts" class="parts"></div>
           <p id="parts-summary" class="summary">0 colors · 0 pieces</p>
         </section>
@@ -228,18 +234,46 @@ export async function onRequestGet() {
           option.selected = color.hex === selectedHex;
           select.appendChild(option);
         });
+        const customOption = document.createElement("option");
+        customOption.value = "__custom__";
+        customOption.textContent = "Custom Color";
+        customOption.selected = selectedHex === "__custom__";
+        select.appendChild(customOption);
         return select;
       }
 
-      function addPartRow(selectedType, selectedHex, quantity) {
+      function addPartRow(selectedType, selectedHex, quantity, selectedCustom) {
         const row = document.createElement("div");
         row.className = "part-row";
         const typeSelect = createPieceTypeSelect(selectedType);
         const colorWrap = document.createElement("div");
         colorWrap.className = "part-color";
+        const catalogColor = document.createElement("div");
+        catalogColor.className = "catalog-color";
         const swatch = document.createElement("span");
         swatch.className = "swatch";
         let select = createColorSelect(typeSelect.value, selectedHex);
+        const customFields = document.createElement("div");
+        customFields.className = "custom-color-fields hidden";
+        const customNumber = document.createElement("input");
+        customNumber.className = "custom-number";
+        customNumber.maxLength = 20;
+        customNumber.placeholder = "Warehouse No.";
+        customNumber.setAttribute("aria-label", "Custom warehouse color number");
+        customNumber.value = selectedCustom && selectedCustom.doopixelNo || "";
+        const customName = document.createElement("input");
+        customName.className = "custom-name";
+        customName.maxLength = 80;
+        customName.placeholder = "Color name";
+        customName.setAttribute("aria-label", "Custom color name");
+        customName.value = selectedCustom && selectedCustom.colorName || "";
+        const customHex = document.createElement("input");
+        customHex.className = "custom-hex";
+        customHex.maxLength = 7;
+        customHex.placeholder = "#RRGGBB";
+        customHex.setAttribute("aria-label", "Custom color HEX value");
+        customHex.value = selectedCustom && selectedCustom.hex || "#808080";
+        customFields.append(customNumber, customName, customHex);
         const quantityInput = document.createElement("input");
         quantityInput.className = "quantity";
         quantityInput.type = "number";
@@ -255,24 +289,28 @@ export async function onRequestGet() {
         remove.setAttribute("aria-label", "Remove color");
 
         function updateSwatch() {
-          swatch.style.background = select.value || "transparent";
+          const isCustom = select.value === "__custom__";
+          customFields.classList.toggle("hidden", !isCustom);
+          swatch.style.background = isCustom ? customHex.value : select.value || "transparent";
           updatePartsSummary();
         }
         typeSelect.addEventListener("change", function () {
           const previousHex = select.value;
           const nextSelect = createColorSelect(typeSelect.value, previousHex);
-          colorWrap.replaceChild(nextSelect, select);
+          catalogColor.replaceChild(nextSelect, select);
           select = nextSelect;
           select.addEventListener("change", updateSwatch);
           updateSwatch();
         });
         select.addEventListener("change", updateSwatch);
+        customHex.addEventListener("input", updateSwatch);
         quantityInput.addEventListener("input", updatePartsSummary);
         remove.addEventListener("click", function () {
           row.remove();
           updatePartsSummary();
         });
-        colorWrap.append(swatch, select);
+        catalogColor.append(swatch, select);
+        colorWrap.append(catalogColor, customFields);
         row.append(typeSelect, colorWrap, quantityInput, remove);
         partsElement.appendChild(row);
         updateSwatch();
@@ -297,13 +335,38 @@ export async function onRequestGet() {
         const seen = new Set();
         return Array.from(partsElement.querySelectorAll(".part-row")).map(function (row) {
           const pieceType = row.querySelector(".piece-type-select").value;
-          const hex = row.querySelector(".color-select").value;
-          const color = skuMap[hex];
+          const colorSelection = row.querySelector(".color-select").value;
+          const isCustom = colorSelection === "__custom__";
+          let hex = colorSelection;
+          let color = skuMap[hex];
           const skuField = pieceType === "98138" ? "flatSku" : "studSku";
-          const sku = color && color[skuField];
+          let sku = color && color[skuField];
           const quantity = Number(row.querySelector(".quantity").value);
-          if (!sku || seen.has(sku)) throw new Error("Each required piece type and color can only be added once.");
           if (!Number.isInteger(quantity) || quantity < 1) throw new Error("Every color needs a valid quantity.");
+          if (isCustom) {
+            const doopixelNo = row.querySelector(".custom-number").value.trim();
+            const colorName = row.querySelector(".custom-name").value.trim();
+            hex = row.querySelector(".custom-hex").value.trim().toLowerCase();
+            if (!hex.startsWith("#")) hex = "#" + hex;
+            if (!doopixelNo || !colorName || !/^#[0-9a-f]{6}$/.test(hex)) {
+              throw new Error("Every custom color needs a warehouse number, color name, and valid HEX value.");
+            }
+            const customId = (pieceType + "-" + doopixelNo).toUpperCase();
+            if (seen.has(customId)) throw new Error("Each custom piece type and warehouse color number can only be added once.");
+            seen.add(customId);
+            return {
+              pieceType: pieceType,
+              pieceTypeName: PIECE_TYPES[pieceType],
+              sku: "CUSTOM-" + customId.replace(/[^A-Z0-9-]+/g, "-"),
+              quantity: quantity,
+              doopixelNo: doopixelNo,
+              colorName: colorName,
+              hex: hex,
+              bricklinkColorId: "",
+              isCustom: true,
+            };
+          }
+          if (!sku || seen.has(sku)) throw new Error("Each required piece type and color can only be added once.");
           seen.add(sku);
           return {
             pieceType: pieceType,

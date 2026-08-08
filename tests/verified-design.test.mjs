@@ -135,6 +135,51 @@ test("publishes mixed tile and plate pieces with per-row type metadata", async (
   assert.deepEqual(JSON.parse(harness.dbCalls[0].values[6]).map((part) => part.pieceType), ["98138", "4073"]);
 });
 
+test("publishes custom colors without requiring a Shopify catalog SKU", async () => {
+  const harness = makeEnv();
+  const customPart = makePart({
+    pieceType: "4073",
+    pieceTypeName: "Raised Pixel Pieces (1x1 Round Plate)",
+    sku: "not-a-shopify-sku",
+    quantity: 24,
+    doopixelNo: "W-105",
+    colorName: "Custom Warm Gray",
+    hex: "#8a8178",
+    bricklinkColorId: "",
+    isCustom: true,
+  });
+  const response = await onRequestPost({
+    request: makeRequest([customPart]),
+    env: harness.env,
+  });
+  const result = await response.json();
+  const storedPart = JSON.parse(harness.dbCalls[0].values[6])[0];
+
+  assert.equal(response.status, 200);
+  assert.equal(result.ok, true);
+  assert.equal(storedPart.isCustom, true);
+  assert.equal(storedPart.sku, "CUSTOM-4073-W-105");
+  assert.equal(storedPart.doopixelNo, "W-105");
+  assert.equal(storedPart.colorName, "Custom Warm Gray");
+});
+
+test("rejects a custom color without complete warehouse display information", async () => {
+  const harness = makeEnv();
+  const response = await onRequestPost({
+    request: makeRequest([makePart({
+      sku: "CUSTOM-98138-1",
+      doopixelNo: "",
+      isCustom: true,
+    })]),
+    env: harness.env,
+  });
+  const result = await response.json();
+
+  assert.equal(response.status, 400);
+  assert.match(result.error, /DooPixel color information/);
+  assert.equal(harness.writes.length, 0);
+});
+
 test("publishes multiple gallery photos and keeps the first as the cover", async () => {
   const harness = makeEnv();
   const response = await onRequestPost({

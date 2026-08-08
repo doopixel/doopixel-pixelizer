@@ -594,7 +594,7 @@ export async function onRequestGet({ params, env, request }) {
           swatch.style.background = part.hex;
           colorCell.append(swatch, document.createTextNode(part.doopixelNo + " - " + part.colorName));
           const skuCell = document.createElement("td");
-          skuCell.textContent = part.sku;
+          skuCell.textContent = part.isCustom ? "Custom Color" : part.sku;
           const quantityCell = document.createElement("td");
           quantityCell.textContent = part.quantity;
           row.append(typeCell, colorCell, skuCell, quantityCell);

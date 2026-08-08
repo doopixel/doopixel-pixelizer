@@ -42,14 +42,22 @@ function validateParts(rawParts) {
   return parsed.map((entry) => {
     const pieceType = String(entry?.pieceType || "").trim();
     const pieceTypeInfo = PIECE_TYPES[pieceType];
-    const sku = String(entry?.sku || "").trim().toUpperCase();
+    const isCustom = entry?.isCustom === true;
+    let sku = String(entry?.sku || "").trim().toUpperCase().slice(0, 80);
     const quantity = Number(entry?.quantity);
     const doopixelNo = String(entry?.doopixelNo || "").trim().slice(0, 20);
     const colorName = String(entry?.colorName || "").trim().slice(0, 80);
     const hex = String(entry?.hex || "").trim().toLowerCase();
     const bricklinkColorId = String(entry?.bricklinkColorId || "").trim().slice(0, 20);
 
-    if (!pieceTypeInfo || !sku.startsWith(pieceTypeInfo.skuPrefix) || seenSkus.has(sku)) {
+    if (!pieceTypeInfo) {
+      throw new Error("Each required piece must have a valid piece type.");
+    }
+    if (isCustom) {
+      const customSuffix = `${pieceType}-${doopixelNo}`.toUpperCase().replace(/[^A-Z0-9-]+/g, "-");
+      sku = `CUSTOM-${customSuffix}`.slice(0, 80);
+    }
+    if ((!isCustom && !sku.startsWith(pieceTypeInfo.skuPrefix)) || seenSkus.has(sku)) {
       throw new Error("Each required piece must have a valid type, color, and unique SKU.");
     }
     if (!Number.isInteger(quantity) || quantity < 1 || quantity > 50000) {
@@ -68,6 +76,7 @@ function validateParts(rawParts) {
       colorName,
       hex,
       bricklinkColorId,
+      ...(isCustom ? { isCustom: true } : {}),
     };
   });
 }
