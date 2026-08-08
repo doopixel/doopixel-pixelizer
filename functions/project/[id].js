@@ -160,7 +160,7 @@ export async function onRequestGet({ params }) {
           swatch.style.background = part.hex;
           color.append(swatch, document.createTextNode(part.doopixelNo + " - " + part.colorName));
           const sku = document.createElement("td");
-          sku.textContent = part.sku;
+          sku.textContent = part.isCustom ? "Custom Color" : part.sku;
           const quantity = document.createElement("td");
           quantity.textContent = Number(part.quantity).toLocaleString();
           row.append(type, color, sku, quantity);
