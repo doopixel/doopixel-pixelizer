@@ -21,7 +21,7 @@ function makePart(overrides = {}) {
   };
 }
 
-function makeRequest(parts) {
+function makeRequest(parts, imageCount = 1) {
   const form = new FormData();
   form.set("title", "Verified Test Design");
   form.set("caption", "A ready-to-build DooPixel design.");
@@ -29,7 +29,13 @@ function makeRequest(parts) {
   form.set("width", "48");
   form.set("height", "64");
   form.set("parts", JSON.stringify(parts));
-  form.set("artworkImage", new File([new Uint8Array([1, 2, 3])], "build.png", { type: "image/png" }));
+  if (imageCount === 1) {
+    form.set("artworkImage", new File([new Uint8Array([1, 2, 3])], "build.png", { type: "image/png" }));
+  } else {
+    for (let index = 0; index < imageCount; index += 1) {
+      form.append("artworkImages", new File([new Uint8Array([index])], "build-" + index + ".png", { type: "image/png" }));
+    }
+  }
   form.set("instructionsPdf", new File(["%PDF-1.7\n%%EOF"], "instructions.pdf", { type: "application/pdf" }));
   return new Request("https://pixelizer.doopixel.com/api/admin/verified-designs", {
     method: "POST",
@@ -127,6 +133,36 @@ test("publishes mixed tile and plate pieces with per-row type metadata", async (
   assert.equal(harness.dbCalls[0].values[2], "mixed");
   assert.equal(harness.dbCalls[0].values[3], "Mixed Pieces (Flat + Raised)");
   assert.deepEqual(JSON.parse(harness.dbCalls[0].values[6]).map((part) => part.pieceType), ["98138", "4073"]);
+});
+
+test("publishes multiple gallery photos and keeps the first as the cover", async () => {
+  const harness = makeEnv();
+  const response = await onRequestPost({
+    request: makeRequest([makePart()], 3),
+    env: harness.env,
+  });
+  const result = await response.json();
+
+  assert.equal(response.status, 200);
+  assert.equal(result.imageCount, 3);
+  assert.equal(harness.writes.length, 4);
+  assert.match(harness.writes[0].key, new RegExp("^finished/verified/" + result.id + "\\.png$"));
+  assert.match(harness.writes[1].key, new RegExp("^finished/verified/" + result.id + "-2\\.png$"));
+  assert.match(harness.writes[2].key, new RegExp("^finished/verified/" + result.id + "-3\\.png$"));
+  assert.equal(harness.dbCalls[0].values[7], harness.writes[0].key);
+});
+
+test("rejects more than six gallery photos before writing files", async () => {
+  const harness = makeEnv();
+  const response = await onRequestPost({
+    request: makeRequest([makePart()], 7),
+    env: harness.env,
+  });
+  const result = await response.json();
+
+  assert.equal(response.status, 400);
+  assert.match(result.error, /no more than 6 images/i);
+  assert.equal(harness.writes.length, 0);
 });
 
 test("creates an order project for a verified PDF design without copying pixel data", async () => {

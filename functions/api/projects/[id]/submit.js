@@ -1,4 +1,5 @@
 import { sha256Hex } from "../../../_lib/security.js";
+import { getImageExtension, getImageFiles } from "../../../_lib/design-images.js";
 
 function jsonResponse(body, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -7,14 +8,8 @@ function jsonResponse(body, status = 200) {
   });
 }
 
-function getExtension(file) {
-  if (file.type === "image/jpeg") return "jpg";
-  if (file.type === "image/png") return "png";
-  if (file.type === "image/webp") return "webp";
-  throw new Error("Only JPG, PNG, and WEBP images are supported.");
-}
-
 export async function onRequestPost({ request, env, params }) {
+  const uploadedKeys = [];
   try {
     if (!env.DB || !env.DESIGN_IMAGES) throw new Error("Missing project storage configuration.");
 
@@ -39,24 +34,30 @@ export async function onRequestPost({ request, env, params }) {
 
     const form = await request.formData();
     const caption = String(form.get("caption") || "").trim().slice(0, 500);
-    const file = form.get("finishedImage");
-    if (!(file instanceof File)) throw new Error("Missing finished image.");
-    if (file.size > 8 * 1024 * 1024) throw new Error("Image is too large. Please upload an image under 8 MB.");
+    const files = getImageFiles(form, "finishedImages", "finishedImage");
 
     const now = new Date().toISOString();
-    const key = `finished/${project.design_id}/${project.id}-${Date.now()}.${getExtension(file)}`;
-    await env.DESIGN_IMAGES.put(key, await file.arrayBuffer(), {
-      httpMetadata: { contentType: file.type },
-    });
+    const keyBase = `finished/${project.design_id}/${project.id}-${Date.now()}`;
+    for (let index = 0; index < files.length; index += 1) {
+      const file = files[index];
+      const key = `${keyBase}-${index + 1}.${getImageExtension(file)}`;
+      await env.DESIGN_IMAGES.put(key, await file.arrayBuffer(), {
+        httpMetadata: { contentType: file.type },
+      });
+      uploadedKeys.push(key);
+    }
     await env.DB.prepare(
       `UPDATE designs
        SET finished_image_key = ?, customer_caption = ?, status = 'pending',
            is_pinned = 0, pinned_at = NULL, updated_at = ?
        WHERE id = ?`
-    ).bind(key, caption, now, project.design_id).run();
+    ).bind(uploadedKeys[0], caption, now, project.design_id).run();
 
-    return jsonResponse({ ok: true, status: "pending" });
+    return jsonResponse({ ok: true, status: "pending", imageCount: uploadedKeys.length });
   } catch (error) {
+    if (env.DESIGN_IMAGES) {
+      await Promise.all(uploadedKeys.map((key) => env.DESIGN_IMAGES.delete(key).catch(() => {})));
+    }
     return jsonResponse({ ok: false, error: error.message || String(error) }, 400);
   }
 }

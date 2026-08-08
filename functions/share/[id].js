@@ -217,6 +217,23 @@ export async function onRequestGet({ params, env, request }) {
         background: var(--soft);
       }
       .preview.pixelated { image-rendering: pixelated; }
+      .preview-gallery { display: grid; gap: 10px; }
+      .preview-thumbnails {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+        gap: 8px;
+      }
+      .preview-thumb {
+        width: 100%;
+        min-height: 0;
+        aspect-ratio: 1;
+        padding: 2px;
+        border: 1px solid var(--line);
+        background: #fff;
+        overflow: hidden;
+      }
+      .preview-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
+      .preview-thumb.is-active { border: 2px solid #4961bd; padding: 1px; }
       .panel { border: 1px solid var(--line); padding: 16px; }
       .meta {
         display: grid;
@@ -400,7 +417,10 @@ export async function onRequestGet({ params, env, request }) {
 
       <main id="content" class="grid hidden">
         <section>
-          <img id="preview" class="preview hidden" alt="Pixel art build" />
+          <div id="preview-gallery" class="preview-gallery hidden">
+            <img id="preview" class="preview" alt="Pixel art build" />
+            <div id="preview-thumbnails" class="preview-thumbnails" aria-label="Design photos"></div>
+          </div>
           <div id="no-preview" class="notice hidden">Preview image is not available yet.</div>
 
           <section id="engagement" class="hidden">
@@ -594,15 +614,44 @@ export async function onRequestGet({ params, env, request }) {
         document.getElementById("meta-total").textContent =
           design.parts.reduce((sum, part) => sum + Number(part.quantity), 0).toLocaleString();
 
-        const imageKey =
-          design.status === "approved" && design.finishedImageKey
-            ? design.finishedImageKey
-            : design.previewImageKey;
-        if (imageKey) {
+        const imageKeys = design.imageKeys && design.imageKeys.length
+          ? design.imageKeys
+          : design.status === "approved" && design.finishedImageKey
+            ? [design.finishedImageKey]
+            : design.previewImageKey
+              ? [design.previewImageKey]
+              : [];
+        if (imageKeys.length) {
           const preview = document.getElementById("preview");
-          preview.src = "/api/images?key=" + encodeURIComponent(imageKey);
-          preview.classList.toggle("pixelated", imageKey === design.previewImageKey);
-          preview.classList.remove("hidden");
+          const gallery = document.getElementById("preview-gallery");
+          const thumbnails = document.getElementById("preview-thumbnails");
+          thumbnails.innerHTML = "";
+
+          function selectImage(imageKey, button) {
+            preview.src = "/api/images?key=" + encodeURIComponent(imageKey);
+            preview.classList.toggle("pixelated", imageKey === design.previewImageKey);
+            Array.from(thumbnails.children).forEach(function (thumbnail) {
+              thumbnail.classList.toggle("is-active", thumbnail === button);
+              thumbnail.setAttribute("aria-pressed", thumbnail === button ? "true" : "false");
+            });
+          }
+
+          imageKeys.forEach(function (imageKey, index) {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "preview-thumb";
+            button.setAttribute("aria-label", "View photo " + (index + 1));
+            button.setAttribute("aria-pressed", "false");
+            const image = document.createElement("img");
+            image.src = "/api/images?key=" + encodeURIComponent(imageKey);
+            image.alt = "";
+            button.appendChild(image);
+            button.addEventListener("click", function () { selectImage(imageKey, button); });
+            thumbnails.appendChild(button);
+            if (index === 0) selectImage(imageKey, button);
+          });
+          thumbnails.classList.toggle("hidden", imageKeys.length === 1);
+          gallery.classList.remove("hidden");
         } else {
           document.getElementById("no-preview").classList.remove("hidden");
         }

@@ -1,4 +1,5 @@
 import { PIECE_TYPES } from "../../_lib/piece-types.js";
+import { getImageExtension, getImageFiles } from "../../_lib/design-images.js";
 
 function jsonResponse(body, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -18,13 +19,6 @@ function isAuthorized(request, env) {
 
 function makeDesignId() {
   return `DP-${crypto.randomUUID().replace(/-/g, "").slice(0, 8).toUpperCase()}`;
-}
-
-function getImageExtension(file) {
-  if (file.type === "image/jpeg") return "jpg";
-  if (file.type === "image/png") return "png";
-  if (file.type === "image/webp") return "webp";
-  throw new Error("Artwork image must be JPG, PNG, or WEBP.");
 }
 
 async function hasPdfSignature(file) {
@@ -79,7 +73,7 @@ function validateParts(rawParts) {
 }
 
 export async function onRequestPost({ request, env }) {
-  let imageKey = null;
+  const imageKeys = [];
   let pdfKey = null;
   try {
     if (!env.DB || !env.DESIGN_IMAGES) {
@@ -97,7 +91,7 @@ export async function onRequestPost({ request, env }) {
     const caption = String(form.get("caption") || "").trim().slice(0, 500);
     const width = Number(form.get("width"));
     const height = Number(form.get("height"));
-    const artworkImage = form.get("artworkImage");
+    const artworkImages = getImageFiles(form, "artworkImages", "artworkImage");
     const instructionsPdf = form.get("instructionsPdf");
 
     if (!title) throw new Error("Enter a public title.");
@@ -114,12 +108,6 @@ export async function onRequestPost({ request, env }) {
     ) {
       throw new Error("Artwork width and height must be 16 to 128 pixels in 16-pixel steps.");
     }
-    if (!(artworkImage instanceof File) || artworkImage.size === 0) {
-      throw new Error("Choose an artwork image.");
-    }
-    if (artworkImage.size > 8 * 1024 * 1024) {
-      throw new Error("Artwork image must be smaller than 8 MB.");
-    }
     if (!(instructionsPdf instanceof File) || instructionsPdf.size === 0) {
       throw new Error("Choose a PDF instruction file.");
     }
@@ -134,14 +122,18 @@ export async function onRequestPost({ request, env }) {
     const pieceTypes = [...new Set(parts.map((part) => part.pieceType))];
     const pieceType = pieceTypes.length === 1 ? pieceTypes[0] : "mixed";
     const pieceTypeName = pieceTypes.length === 1 ? PIECE_TYPES[pieceTypes[0]].customerName : "Mixed Pieces (Flat + Raised)";
-    const imageExtension = getImageExtension(artworkImage);
     const id = makeDesignId();
-    imageKey = `finished/verified/${id}.${imageExtension}`;
     pdfKey = `instructions/verified/${id}.pdf`;
 
-    await env.DESIGN_IMAGES.put(imageKey, await artworkImage.arrayBuffer(), {
-      httpMetadata: { contentType: artworkImage.type },
-    });
+    for (let index = 0; index < artworkImages.length; index += 1) {
+      const artworkImage = artworkImages[index];
+      const suffix = index === 0 ? "" : `-${index + 1}`;
+      const imageKey = `finished/verified/${id}${suffix}.${getImageExtension(artworkImage)}`;
+      await env.DESIGN_IMAGES.put(imageKey, await artworkImage.arrayBuffer(), {
+        httpMetadata: { contentType: artworkImage.type },
+      });
+      imageKeys.push(imageKey);
+    }
     await env.DESIGN_IMAGES.put(pdfKey, await instructionsPdf.arrayBuffer(), {
       httpMetadata: { contentType: "application/pdf" },
       customMetadata: { originalName: instructionsPdf.name.slice(0, 180) },
@@ -164,7 +156,7 @@ export async function onRequestPost({ request, env }) {
         width,
         height,
         JSON.stringify(parts),
-        imageKey,
+        imageKeys[0],
         caption,
         pdfKey,
         now,
@@ -179,10 +171,11 @@ export async function onRequestPost({ request, env }) {
       shareUrl: `/share/${id}`,
       totalPieces: parts.reduce((sum, part) => sum + part.quantity, 0),
       colorLines: parts.length,
+      imageCount: imageKeys.length,
     });
   } catch (error) {
     if (env.DESIGN_IMAGES) {
-      if (imageKey) await env.DESIGN_IMAGES.delete(imageKey).catch(() => {});
+      await Promise.all(imageKeys.map((imageKey) => env.DESIGN_IMAGES.delete(imageKey).catch(() => {})));
       if (pdfKey) await env.DESIGN_IMAGES.delete(pdfKey).catch(() => {});
     }
     return jsonResponse({ ok: false, error: error.message || String(error) }, 400);
