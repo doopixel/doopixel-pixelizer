@@ -1,4 +1,4 @@
-import { listDesignImageKeys } from "../../../_lib/design-images.js";
+import { listDesignImageKeys } from "../../../../_lib/design-images.js";
 
 function jsonResponse(body, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -16,7 +16,7 @@ function isAuthorized(request, env) {
   return configuredToken && authorization === `Bearer ${configuredToken}`;
 }
 
-export async function onRequestDelete({ request, env, params }) {
+export async function onRequestPost({ request, env, params }) {
   try {
     if (!env.DB || !env.DESIGN_IMAGES) {
       throw new Error("Missing design storage configuration.");

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { sortPartsByColorNumber } from "../functions/_lib/piece-types.js";
-import { onRequestDelete } from "../functions/api/admin/designs/[id].js";
+import { onRequestPost as deleteDesign } from "../functions/api/admin/designs/[id]/delete.js";
 import { onRequestPost as updateFiles } from "../functions/api/admin/designs/[id]/files.js";
 
 const ADMIN_TOKEN = "test-admin-token";
@@ -141,8 +141,8 @@ test("blocks permanent deletion when a verified design has linked projects", asy
     },
   };
 
-  const response = await onRequestDelete({
-    request: authorizedRequest(`https://pixelizer.doopixel.com/api/admin/designs/${DESIGN_ID}`, { method: "DELETE" }),
+  const response = await deleteDesign({
+    request: authorizedRequest(`https://pixelizer.doopixel.com/api/admin/designs/${DESIGN_ID}/delete`, { method: "POST" }),
     env,
     params: { id: DESIGN_ID },
   });
@@ -190,8 +190,8 @@ test("deletes an unlinked verified design and its stored files", async () => {
     },
   };
 
-  const response = await onRequestDelete({
-    request: authorizedRequest(`https://pixelizer.doopixel.com/api/admin/designs/${DESIGN_ID}`, { method: "DELETE" }),
+  const response = await deleteDesign({
+    request: authorizedRequest(`https://pixelizer.doopixel.com/api/admin/designs/${DESIGN_ID}/delete`, { method: "POST" }),
     env,
     params: { id: DESIGN_ID },
   });

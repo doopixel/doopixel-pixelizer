@@ -373,8 +373,8 @@ export async function onRequestGet() {
         if (!window.confirm(warning)) return;
         button.disabled = true;
         try {
-          await api("/api/admin/designs/" + encodeURIComponent(design.id), {
-            method: "DELETE",
+          await api("/api/admin/designs/" + encodeURIComponent(design.id) + "/delete", {
+            method: "POST",
           });
           showMessage("Deleted " + design.title + ".");
           await loadDesigns();
