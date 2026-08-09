@@ -1,4 +1,4 @@
-import { PIECE_TYPES } from "../../_lib/piece-types.js";
+import { PIECE_TYPES, sortPartsByColorNumber } from "../../_lib/piece-types.js";
 import { getImageExtension, getImageFiles } from "../../_lib/design-images.js";
 
 function jsonResponse(body, status = 200) {
@@ -39,7 +39,7 @@ function validateParts(rawParts) {
   }
 
   const seenSkus = new Set();
-  return parsed.map((entry) => {
+  return sortPartsByColorNumber(parsed.map((entry) => {
     const pieceType = String(entry?.pieceType || "").trim();
     const pieceTypeInfo = PIECE_TYPES[pieceType];
     const isCustom = entry?.isCustom === true;
@@ -78,7 +78,7 @@ function validateParts(rawParts) {
       bricklinkColorId,
       ...(isCustom ? { isCustom: true } : {}),
     };
-  });
+  }));
 }
 
 export async function onRequestPost({ request, env }) {

@@ -1,4 +1,4 @@
-import { getPieceTypeDisplayName } from "../../_lib/piece-types.js";
+import { getPieceTypeDisplayName, sortPartsByColorNumber } from "../../_lib/piece-types.js";
 import { listDesignImageKeys } from "../../_lib/design-images.js";
 
 function jsonResponse(body, status = 200) {
@@ -65,7 +65,7 @@ export async function onRequestGet({ env, params }) {
         pieceType: design.piece_type,
         pieceTypeName: getPieceTypeDisplayName(design.piece_type),
         size: [design.width, design.height],
-        parts: JSON.parse(design.parts_json || "[]"),
+        parts: sortPartsByColorNumber(JSON.parse(design.parts_json || "[]")),
         previewImageKey: design.preview_image_key,
         finishedImageKey: design.finished_image_key,
         imageKeys,

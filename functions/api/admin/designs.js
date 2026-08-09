@@ -52,6 +52,7 @@ export async function onRequestGet({ request, env }) {
       `SELECT
         id,
         title,
+        piece_type,
         piece_type_name,
         width,
         height,

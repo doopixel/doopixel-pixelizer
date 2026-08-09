@@ -59,6 +59,7 @@ export async function onRequestGet() {
       button.primary { background: #111; border-color: #111; color: #fff; }
       button.approve { background: var(--green); border-color: var(--green); color: #fff; }
       button.reject { color: var(--red); border-color: var(--red); }
+      button.danger { background: var(--red); border-color: var(--red); color: #fff; }
       button.pin { color: var(--gold); border-color: var(--gold); }
       button:disabled { cursor: wait; opacity: .55; }
       .toolbar {
@@ -149,6 +150,8 @@ export async function onRequestGet() {
       .field label { font-weight: 700; font-size: 14px; }
       .field input { width: 100%; }
       .field input[type="checkbox"] { width: auto; min-width: 0; min-height: 0; margin-right: 7px; }
+      .field input[type="file"] { width: 100%; min-width: 0; }
+      .field-help { margin: 0; color: var(--muted); font-size: 13px; }
       .dialog-actions { justify-content: flex-end; margin-top: 18px; }
       @media (max-width: 850px) {
         header { display: block; }
@@ -252,6 +255,29 @@ export async function onRequestGet() {
       </form>
     </dialog>
 
+    <dialog id="files-dialog">
+      <form id="files-form" class="dialog-body">
+        <h2>Manage Verified Design Files</h2>
+        <input id="files-id" type="hidden" />
+        <p id="files-design-name" class="muted"></p>
+        <div class="field">
+          <label for="replacement-images">Replace Gallery photos</label>
+          <input id="replacement-images" type="file" accept="image/jpeg,image/png,image/webp" multiple />
+          <p id="replacement-image-help" class="field-help">Optional. Choose 1 to 6 photos. Selecting photos replaces the complete current photo set; the first new photo becomes the cover.</p>
+        </div>
+        <div class="field">
+          <label for="replacement-pdf">Replace building instructions</label>
+          <input id="replacement-pdf" type="file" accept="application/pdf,.pdf" />
+          <p class="field-help">Optional. Upload a PDF only when the instructions need to be updated. Maximum 25 MB.</p>
+        </div>
+        <div class="dialog-actions">
+          <button id="cancel-files" type="button">Cancel</button>
+          <button class="primary" type="submit">Update Files</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="/js/doopixel-image-upload.js?v=20260808a"></script>
     <script>
       const loginForm = document.getElementById("login");
       const tokenInput = document.getElementById("token");
@@ -264,6 +290,7 @@ export async function onRequestGet() {
       const previousButton = document.getElementById("previous");
       const nextButton = document.getElementById("next");
       const editDialog = document.getElementById("edit-dialog");
+      const filesDialog = document.getElementById("files-dialog");
       let token = sessionStorage.getItem("doopixelGalleryAdminToken") || "";
       let currentPage = 1;
       let totalPages = 1;
@@ -277,7 +304,7 @@ export async function onRequestGet() {
       async function api(url, options = {}) {
         const headers = new Headers(options.headers || {});
         headers.set("authorization", "Bearer " + token);
-        if (options.body) {
+        if (options.body && !(options.body instanceof FormData)) {
           headers.set("content-type", "application/json");
         }
         const response = await fetch(url, { ...options, headers });
@@ -330,6 +357,31 @@ export async function onRequestGet() {
         document.getElementById("edit-displayed-likes").value = design.displayedLikeCount || 0;
         document.getElementById("edit-comments-enabled").checked = design.commentsEnabled;
         editDialog.showModal();
+      }
+
+      function openFileManager(design) {
+        document.getElementById("files-id").value = design.id;
+        document.getElementById("files-design-name").textContent = design.title + " · " + design.id;
+        document.getElementById("files-form").reset();
+        document.getElementById("files-id").value = design.id;
+        filesDialog.showModal();
+      }
+
+      async function deleteDesign(design, button) {
+        const warning =
+          "Permanently delete “" + design.title + "”? This removes its Gallery entry, photos, PDF, likes, and comments. This cannot be undone.";
+        if (!window.confirm(warning)) return;
+        button.disabled = true;
+        try {
+          await api("/api/admin/designs/" + encodeURIComponent(design.id), {
+            method: "DELETE",
+          });
+          showMessage("Deleted " + design.title + ".");
+          await loadDesigns();
+        } catch (error) {
+          showMessage(error.message);
+          button.disabled = false;
+        }
       }
 
       function createCard(design) {
@@ -398,6 +450,13 @@ export async function onRequestGet() {
         view.textContent = "View";
         actions.appendChild(view);
         actions.appendChild(actionButton("Edit", "", () => openEditor(design)));
+
+        if (design.isVerified) {
+          actions.appendChild(actionButton("Manage Files", "", () => openFileManager(design)));
+          actions.appendChild(
+            actionButton("Delete", "danger", (button) => deleteDesign(design, button))
+          );
+        }
 
         if (design.status === "pending") {
           actions.appendChild(
@@ -549,6 +608,7 @@ export async function onRequestGet() {
       });
 
       document.getElementById("cancel-edit").addEventListener("click", () => editDialog.close());
+      document.getElementById("cancel-files").addEventListener("click", () => filesDialog.close());
 
       document.getElementById("edit-form").addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -573,6 +633,56 @@ export async function onRequestGet() {
             }),
           });
           editDialog.close();
+          await loadDesigns();
+        } catch (error) {
+          showMessage(error.message);
+        } finally {
+          submitButton.disabled = false;
+        }
+      });
+
+      document.getElementById("replacement-images").addEventListener("change", (event) => {
+        const count = event.target.files.length;
+        document.getElementById("replacement-image-help").textContent = count
+          ? count + " new photo" + (count === 1 ? "" : "s") + " selected. These will replace the current photo set."
+          : "Optional. Choose 1 to 6 photos. Selecting photos replaces the complete current photo set; the first new photo becomes the cover.";
+      });
+
+      document.getElementById("files-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const submitButton = event.submitter;
+        const id = document.getElementById("files-id").value;
+        const imageInput = document.getElementById("replacement-images");
+        const pdfInput = document.getElementById("replacement-pdf");
+        if (!imageInput.files.length && !pdfInput.files.length) {
+          showMessage("Choose new Gallery photos, a PDF, or both.");
+          return;
+        }
+
+        submitButton.disabled = true;
+        showMessage("Preparing the replacement files. Keep this page open.");
+        try {
+          const formData = new FormData();
+          if (imageInput.files.length) {
+            const photos = await window.DooPixelImageUpload.compressFiles(
+              imageInput.files,
+              function (current, total) {
+                showMessage("Optimizing photo " + current + " of " + total + "...");
+              }
+            );
+            photos.forEach((photo) => formData.append("artworkImages", photo, photo.name));
+          }
+          if (pdfInput.files.length) {
+            formData.append("instructionsPdf", pdfInput.files[0], pdfInput.files[0].name);
+          }
+
+          showMessage("Uploading replacement files...");
+          await api("/api/admin/designs/" + encodeURIComponent(id) + "/files", {
+            method: "POST",
+            body: formData,
+          });
+          filesDialog.close();
+          showMessage("Files updated successfully.");
           await loadDesigns();
         } catch (error) {
           showMessage(error.message);
