@@ -117,7 +117,20 @@ export async function onRequestPost({ request, env, params }) {
       ...oldImageKeys,
       ...(hasPdf && design.instruction_pdf_key ? [design.instruction_pdf_key] : []),
     ].filter((key) => key && !uploadedKeys.includes(key));
-    await Promise.all(obsoleteKeys.map((key) => env.DESIGN_IMAGES.delete(key).catch(() => {})));
+    const deletableKeys = [];
+    for (const key of obsoleteKeys) {
+      const reference = key.startsWith("instructions/")
+        ? await env.DB.prepare(
+            "SELECT COUNT(*) AS total FROM designs WHERE id != ? AND instruction_pdf_key = ?"
+          ).bind(id, key).first()
+        : await env.DB.prepare(
+            `SELECT COUNT(*) AS total
+            FROM designs
+            WHERE id != ? AND (preview_image_key = ? OR finished_image_key = ?)`
+          ).bind(id, key, key).first();
+      if (Number(reference?.total || 0) === 0) deletableKeys.push(key);
+    }
+    await Promise.all(deletableKeys.map((key) => env.DESIGN_IMAGES.delete(key).catch(() => {})));
 
     return jsonResponse({
       ok: true,

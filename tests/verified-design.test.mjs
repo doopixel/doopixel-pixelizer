@@ -3,7 +3,9 @@ import test from "node:test";
 
 import { onRequestPost } from "../functions/api/admin/verified-designs.js";
 import { onRequestPost as createGalleryProject } from "../functions/api/designs/[id]/projects.js";
+import { onRequestGet as getPublicInstructions } from "../functions/api/designs/[id]/instructions.js";
 import { onRequestGet as getProject } from "../functions/api/projects/[id].js";
+import { onRequestGet as getProjectInstructions } from "../functions/api/projects/[id]/instructions.js";
 
 const ADMIN_TOKEN = "test-admin-token";
 
@@ -319,4 +321,68 @@ test("returns an authenticated PDF instruction route for an ordered project", as
   assert.equal(result.instructionsAvailable, true);
   assert.equal(result.instructionType, "pdf");
   assert.equal(result.instructionsUrl, "/api/projects/PRJ-TEST1234/instructions");
+});
+
+test("never serves Verified PDF instructions from a public design URL", async () => {
+  const response = await getPublicInstructions({
+    env: {
+      DB: {
+        prepare() {
+          throw new Error("The public route must not query the design database.");
+        },
+      },
+      DESIGN_IMAGES: {
+        async get() {
+          throw new Error("The public route must not read the PDF.");
+        },
+      },
+    },
+    params: { id: "DP-SOURCE1" },
+  });
+
+  assert.equal(response.status, 404);
+  assert.equal(await response.text(), "Instructions not found.");
+});
+
+test("does not serve private instructions before the project is ordered", async () => {
+  let pdfRead = false;
+  const env = {
+    DESIGN_IMAGES: {
+      async get() {
+        pdfRead = true;
+        return { body: "pdf" };
+      },
+    },
+    DB: {
+      prepare(sql) {
+        return {
+          bind() {
+            return {
+              async first() {
+                if (sql.includes("project_access_tokens")) return { id: "access" };
+                return {
+                  id: "PRJ-TEST1234",
+                  status: "pending_order",
+                  title: "Verified Test Design",
+                  instruction_pdf_key: "instructions/verified/DP-SOURCE1.pdf",
+                };
+              },
+            };
+          },
+        };
+      },
+    },
+  };
+
+  const response = await getProjectInstructions({
+    request: new Request(
+      "https://pixelizer.doopixel.com/api/projects/PRJ-TEST1234/instructions",
+      { headers: { authorization: "Bearer project-token" } }
+    ),
+    env,
+    params: { id: "PRJ-TEST1234" },
+  });
+
+  assert.equal(response.status, 404);
+  assert.equal(pdfRead, false);
 });

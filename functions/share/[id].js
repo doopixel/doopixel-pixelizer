@@ -262,6 +262,13 @@ export async function onRequestGet({ params, env, request }) {
       }
       button.secondary, .button.secondary { background: #fff; color: var(--accent); }
       .button.full { width: 100%; margin-bottom: 10px; }
+      .instructions-note {
+        margin: 0 0 12px;
+        border-left: 3px solid #f4ce21;
+        padding-left: 10px;
+        color: var(--muted);
+        font-size: 13px;
+      }
       button.active { background: #fff; color: var(--accent); }
       button:disabled { opacity: .55; cursor: wait; }
       .social-actions { display: flex; gap: 10px; margin: 14px 0; }
@@ -473,9 +480,7 @@ export async function onRequestGet({ params, env, request }) {
             <option value="black" selected>Black Frame</option>
             <option value="white">White Frame</option>
           </select>
-          <a id="download-verified-instructions" class="button secondary full hidden" href="#" download>
-            Download Building Instructions
-          </a>
+          <p class="instructions-note">Building instructions are available from your private project link after checkout. The link is included in your order email.</p>
           <button id="add-to-cart">Add Custom Kit to Cart</button>
         </aside>
       </main>
@@ -657,11 +662,6 @@ export async function onRequestGet({ params, env, request }) {
         }
 
         renderParts(design.parts);
-        const instructionsLink = document.getElementById("download-verified-instructions");
-        if (design.isVerified && design.instructionsAvailable && design.instructionsUrl) {
-          instructionsLink.href = design.instructionsUrl;
-          instructionsLink.classList.remove("hidden");
-        }
         document.getElementById("loading").classList.add("hidden");
         document.getElementById("content").classList.remove("hidden");
 

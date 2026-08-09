@@ -68,6 +68,7 @@ test("replaces verified photos and PDF before deleting obsolete files", async ()
             dbCalls.push({ sql, values });
             return {
               async first() {
+                if (sql.includes("COUNT(*)")) return { total: 0 };
                 return {
                   id: DESIGN_ID,
                   is_verified: 1,
@@ -106,6 +107,59 @@ test("replaces verified photos and PDF before deleting obsolete files", async ()
     `finished/verified/${DESIGN_ID}.png`,
     `instructions/verified/${DESIGN_ID}.pdf`,
   ].sort());
+});
+
+test("keeps an older PDF when an existing private project still references it", async () => {
+  const writes = [];
+  const deleted = [];
+  const form = new FormData();
+  form.set("instructionsPdf", new File(["%PDF-1.7\n%%EOF"], "updated.pdf", { type: "application/pdf" }));
+  const oldPdfKey = `instructions/verified/${DESIGN_ID}.pdf`;
+  const env = {
+    ADMIN_TOKEN,
+    DESIGN_IMAGES: {
+      async put(key) {
+        writes.push(key);
+      },
+      async delete(key) {
+        deleted.push(key);
+      },
+    },
+    DB: {
+      prepare(sql) {
+        return {
+          bind() {
+            return {
+              async first() {
+                if (sql.includes("COUNT(*)")) return { total: 1 };
+                return {
+                  id: DESIGN_ID,
+                  is_verified: 1,
+                  finished_image_key: `finished/verified/${DESIGN_ID}.png`,
+                  instruction_pdf_key: oldPdfKey,
+                };
+              },
+              async run() {},
+            };
+          },
+        };
+      },
+    },
+  };
+
+  const response = await updateFiles({
+    request: authorizedRequest(`https://pixelizer.doopixel.com/api/admin/designs/${DESIGN_ID}/files`, {
+      method: "POST",
+      body: form,
+    }),
+    env,
+    params: { id: DESIGN_ID },
+  });
+
+  assert.equal(response.status, 200);
+  assert.equal(writes.length, 1);
+  assert.match(writes[0], new RegExp(`^instructions/verified/${DESIGN_ID}-\\d+\\.pdf$`));
+  assert.deepEqual(deleted, []);
 });
 
 test("blocks permanent deletion when a verified design has linked projects", async () => {
