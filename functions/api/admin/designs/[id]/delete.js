@@ -43,8 +43,12 @@ export async function onRequestPost({ request, env, params }) {
     }
 
     const projectCount = await env.DB.prepare(
-      "SELECT COUNT(*) AS total FROM projects WHERE design_id = ?"
-    ).bind(id).first();
+      `SELECT COUNT(*) AS total
+      FROM projects p
+      JOIN designs d ON d.id = p.design_id
+      WHERE p.design_id = ?
+        OR (d.id != ? AND d.instruction_pdf_key = ?)`
+    ).bind(id, id, design.instruction_pdf_key).first();
     if (Number(projectCount?.total || 0) > 0) {
       return jsonResponse(
         {
