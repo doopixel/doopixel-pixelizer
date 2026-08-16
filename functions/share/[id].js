@@ -518,7 +518,7 @@ export async function onRequestGet({ params, env, request }) {
       }
     </style>
     <link rel="stylesheet" href="/css/doopixel-site-header.css?v=20260816d" />
-    <link rel="stylesheet" href="/css/doopixel-site-footer.css?v=20260816a" />
+    <link rel="stylesheet" href="/css/doopixel-site-footer.css?v=20260816b" />
   </head>
   <body>
     <div class="dp-site-nav-wrap">
@@ -648,7 +648,7 @@ export async function onRequestGet({ params, env, request }) {
     </div>
 
     <div data-doopixel-footer></div>
-    <script src="/js/doopixel-site-footer.js?v=20260816a"></script>
+    <script src="/js/doopixel-site-footer.js?v=20260816b"></script>
     <script src="/js/doopixel-site-header.js?v=20260816b"></script>
     <script>
       const DESIGN_ID = ${JSON.stringify(rawId)};

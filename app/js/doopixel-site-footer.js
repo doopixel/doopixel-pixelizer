@@ -8,9 +8,8 @@
     <footer class="dp-site-footer">
       <div class="dp-site-footer__inner">
         <div class="dp-site-footer__brand">
-          <a class="dp-site-footer__wordmark" href="https://doopixel.com/" aria-label="DooPixel home">
-            <span class="dp-site-footer__pixels" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
-            <span>DooPixel</span>
+          <a class="dp-site-footer__logo" href="https://doopixel.com/" aria-label="DooPixel home">
+            <img src="https://cdn.shopify.com/s/files/1/0738/7562/0006/files/20260408-001830.png?v=1775578807" alt="DooPixel" width="397" height="102" />
           </a>
           <p class="dp-site-footer__summary">Turn your photos into buildable pixel art, then get the exact pieces and instructions you need.</p>
         </div>

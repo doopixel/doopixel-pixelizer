@@ -22,6 +22,7 @@ test("footer uses valid storefront destinations in the same window", () => {
   const source = fs.readFileSync("app/js/doopixel-site-footer.js", "utf8");
   assert.match(source, /https:\/\/pixelizer\.doopixel\.com\/gallery/);
   assert.match(source, /https:\/\/doopixel\.com\/pages\/contact/);
+  assert.match(source, /20260408-001830\.png/);
   assert.doesNotMatch(source, /target=["']_blank["']/);
   assert.doesNotMatch(source, /href=["']#["']/);
 });
