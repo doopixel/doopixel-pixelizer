@@ -142,27 +142,6 @@ export async function onRequestGet() {
         padding: 34px 38px;
       }
 
-      .eyebrow {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        margin: 0 0 12px;
-        color: #3f4f96;
-        font-size: 13px;
-        font-weight: 800;
-      }
-
-      .eyebrow-check {
-        display: inline-grid;
-        place-items: center;
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: var(--yellow);
-        color: var(--ink);
-        font-size: 12px;
-      }
-
       h1 {
         margin: 0;
         font-size: 38px;
@@ -350,7 +329,7 @@ export async function onRequestGet() {
       }
 
       .badge--verified {
-        border-color: #d5b400;
+        border: 0;
         background: var(--yellow);
         color: var(--ink);
         text-transform: uppercase;
@@ -425,19 +404,51 @@ export async function onRequestGet() {
         color: var(--muted);
       }
 
-      .more {
+      .pagination {
         display: flex;
+        align-items: center;
         justify-content: center;
-        margin-top: 30px;
+        gap: 6px;
+        margin-top: 32px;
       }
 
-      .more .button { min-width: 190px; }
+      .page-button {
+        display: inline-grid;
+        place-items: center;
+        min-width: 40px;
+        min-height: 40px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--paper);
+        color: var(--ink);
+        padding: 7px 10px;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .page-button:hover { border-color: #aab4dc; background: #f5f6f8; }
+      .page-button.active {
+        border-color: var(--blue);
+        background: var(--blue);
+        color: #fff;
+      }
+      .page-button:disabled { opacity: 0.42; cursor: default; }
+      .page-ellipsis { min-width: 24px; color: var(--muted); text-align: center; }
       .hidden { display: none; }
 
       @media (max-width: 1020px) and (min-width: 681px) {
         .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
         .intro { gap: 28px; padding: 30px; }
         .intro-details { padding-left: 24px; }
+      }
+
+      @media (min-width: 681px) {
+        .intro-detail {
+          font-size: 15px;
+          text-transform: capitalize;
+        }
       }
 
       @media (max-width: 680px) {
@@ -494,7 +505,6 @@ export async function onRequestGet() {
           margin-top: 18px;
           padding: 22px 20px;
         }
-        .eyebrow { margin-bottom: 9px; }
         h1 { font-size: 28px; }
         .intro-copy {
           margin-top: 10px;
@@ -554,6 +564,9 @@ export async function onRequestGet() {
           padding: 7px 6px;
           font-size: 12px;
         }
+        .pagination { gap: 4px; margin-top: 24px; }
+        .page-button { min-width: 36px; min-height: 36px; padding: 6px 8px; }
+        .page-button--direction { min-width: 56px; }
       }
 
       @media (max-width: 390px) {
@@ -600,7 +613,6 @@ export async function onRequestGet() {
       <main>
         <section class="intro">
           <div>
-            <p class="eyebrow"><span class="eyebrow-check">&#10003;</span>DooPixel Verified Gallery</p>
             <h1>Pixel art, ready to build.</h1>
             <p class="intro-copy">
               Explore verified designs from DooPixel and our builder community. Choose a design, add the exact kit, and receive instructions after checkout.
@@ -636,9 +648,7 @@ export async function onRequestGet() {
           <div id="loading" class="notice">Loading pixel art designs...</div>
           <div id="empty" class="notice hidden">No approved builds have been shared yet.</div>
           <div id="grid" class="grid hidden"></div>
-          <div id="more" class="more hidden">
-            <button id="load-more" class="button" type="button">Load More Builds</button>
-          </div>
+          <nav id="pagination" class="pagination hidden" aria-label="Gallery pages"></nav>
         </section>
       </main>
     </div>
@@ -647,8 +657,7 @@ export async function onRequestGet() {
       const loading = document.getElementById("loading");
       const empty = document.getElementById("empty");
       const grid = document.getElementById("grid");
-      const more = document.getElementById("more");
-      const loadMoreButton = document.getElementById("load-more");
+      const pagination = document.getElementById("pagination");
       const sortButtons = Array.from(document.querySelectorAll("[data-sort]"));
       const searchForm = document.getElementById("gallery-search-form");
       const searchInput = document.getElementById("gallery-search-input");
@@ -769,9 +778,75 @@ export async function onRequestGet() {
         });
       }
 
-      async function loadGallery(page) {
-        loadMoreButton.disabled = true;
-        loadMoreButton.textContent = "Loading...";
+      function paginationItems(current, total) {
+        if (total <= 7) return Array.from({ length: total }, (_, index) => index + 1);
+        const items = [1];
+        const start = Math.max(2, current - 1);
+        const end = Math.min(total - 1, current + 1);
+        if (start > 2) items.push("ellipsis-start");
+        for (let page = start; page <= end; page += 1) items.push(page);
+        if (end < total - 1) items.push("ellipsis-end");
+        items.push(total);
+        return items;
+      }
+
+      function pageButton(label, page, options = {}) {
+        const button = document.createElement("button");
+        button.className = "page-button" + (options.direction ? " page-button--direction" : "");
+        button.type = "button";
+        button.textContent = label;
+        button.disabled = Boolean(options.disabled);
+        if (options.active) {
+          button.classList.add("active");
+          button.setAttribute("aria-current", "page");
+        }
+        button.setAttribute("aria-label", options.label || "Page " + page);
+        if (!button.disabled && !options.active) button.addEventListener("click", () => loadGallery(page, true));
+        return button;
+      }
+
+      function renderPagination(totalItems) {
+        const totalPages = Math.ceil(Number(totalItems) / pageSize);
+        pagination.innerHTML = "";
+        if (totalPages <= 1) {
+          pagination.classList.add("hidden");
+          return;
+        }
+
+        pagination.appendChild(
+          pageButton("Previous", currentPage - 1, {
+            direction: true,
+            disabled: currentPage === 1,
+            label: "Previous page",
+          })
+        );
+        paginationItems(currentPage, totalPages).forEach((item) => {
+          if (typeof item === "string") {
+            const ellipsis = document.createElement("span");
+            ellipsis.className = "page-ellipsis";
+            ellipsis.textContent = "\u2026";
+            ellipsis.setAttribute("aria-hidden", "true");
+            pagination.appendChild(ellipsis);
+            return;
+          }
+          pagination.appendChild(pageButton(String(item), item, { active: item === currentPage }));
+        });
+        pagination.appendChild(
+          pageButton("Next", currentPage + 1, {
+            direction: true,
+            disabled: currentPage === totalPages,
+            label: "Next page",
+          })
+        );
+        pagination.classList.remove("hidden");
+      }
+
+      async function loadGallery(page, scrollToResults = false) {
+        pagination.classList.add("hidden");
+        empty.classList.add("hidden");
+        grid.classList.add("hidden");
+        loading.textContent = "Loading pixel art designs...";
+        loading.classList.remove("hidden");
         try {
           const response = await fetch(
             "/api/gallery?page=" +
@@ -790,6 +865,7 @@ export async function onRequestGet() {
 
           loading.classList.add("hidden");
           if (page === 1 && !result.designs.length) {
+            grid.innerHTML = "";
             empty.classList.remove("hidden");
             empty.textContent = currentSearch
               ? 'No pixel art designs found for "' + currentSearch + '".'
@@ -797,18 +873,19 @@ export async function onRequestGet() {
             return;
           }
 
+          grid.innerHTML = "";
           result.designs.forEach((design) => {
             grid.appendChild(createCard(design));
           });
           currentPage = page;
           grid.classList.remove("hidden");
-          more.classList.toggle("hidden", !result.hasMore);
+          renderPagination(result.total);
+          if (scrollToResults) {
+            document.querySelector(".gallery-tools").scrollIntoView({ behavior: "smooth", block: "start" });
+          }
         } catch (error) {
           loading.textContent = error.message;
           loading.classList.remove("hidden");
-        } finally {
-          loadMoreButton.disabled = false;
-          loadMoreButton.textContent = "Load More Builds";
         }
       }
 
@@ -821,7 +898,7 @@ export async function onRequestGet() {
         grid.innerHTML = "";
         grid.classList.add("hidden");
         empty.classList.add("hidden");
-        more.classList.add("hidden");
+        pagination.classList.add("hidden");
         loading.textContent = "Loading pixel art designs...";
         loading.classList.remove("hidden");
         updateSortButtons();
@@ -845,7 +922,6 @@ export async function onRequestGet() {
         if (!searchInput.value && currentSearch) resetGallery({ search: "" });
       });
 
-      loadMoreButton.addEventListener("click", () => loadGallery(currentPage + 1));
       setupSiteNavigation();
       updateSortButtons();
       loadGallery(1);
