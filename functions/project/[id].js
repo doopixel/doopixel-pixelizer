@@ -71,6 +71,7 @@ export async function onRequestGet({ params }) {
       }
     </style>
     <link rel="stylesheet" href="/css/doopixel-site-header.css?v=20260816d" />
+    <link rel="stylesheet" href="/css/doopixel-site-footer.css?v=20260816a" />
   </head>
   <body>
     <div class="dp-site-nav-wrap">
@@ -139,6 +140,8 @@ export async function onRequestGet({ params }) {
       </div>
     </main>
 
+    <div data-doopixel-footer></div>
+    <script src="/js/doopixel-site-footer.js?v=20260816a"></script>
     <script src="/js/doopixel-site-header.js?v=20260816b"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" crossorigin="anonymous"></script>
     <script>window.DOOPIXEL_INSTRUCTION_BRAND = "DooPixel";</script>
