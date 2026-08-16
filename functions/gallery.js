@@ -285,6 +285,14 @@ export async function onRequestGet() {
         border: 1px solid var(--line);
         border-radius: 8px;
         background: var(--paper);
+        cursor: pointer;
+      }
+
+      .card:hover { border-color: #aeb8ae; }
+      .card:focus-visible {
+        border-color: var(--green);
+        outline: 2px solid rgba(40, 161, 57, 0.2);
+        outline-offset: 2px;
       }
 
       .image-wrap {
@@ -669,6 +677,19 @@ export async function onRequestGet() {
       function createCard(design) {
         const card = document.createElement("article");
         card.className = "card";
+        const detailUrl = "/share/" + encodeURIComponent(design.id);
+        card.tabIndex = 0;
+        card.setAttribute("role", "link");
+        card.setAttribute("aria-label", "View " + design.title);
+        card.addEventListener("click", (event) => {
+          if (event.target.closest("a, button, input, select, textarea")) return;
+          window.location.href = detailUrl;
+        });
+        card.addEventListener("keydown", (event) => {
+          if (event.target !== card || (event.key !== "Enter" && event.key !== " ")) return;
+          event.preventDefault();
+          window.location.href = detailUrl;
+        });
 
         const imageWrap = document.createElement("div");
         imageWrap.className = "image-wrap";
@@ -738,7 +759,7 @@ export async function onRequestGet() {
 
         const link = document.createElement("a");
         link.className = "button";
-        link.href = "/share/" + encodeURIComponent(design.id);
+        link.href = detailUrl;
         link.textContent = "View & Add Kit";
         body.appendChild(link);
 

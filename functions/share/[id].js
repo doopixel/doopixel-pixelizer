@@ -268,13 +268,14 @@ export async function onRequestGet({ params, env, request }) {
         background: var(--paper);
         padding: 22px;
       }
-      .section-eyebrow {
-        margin: 0 0 5px;
-        color: var(--green-dark);
-        font-size: 12px;
-        font-weight: 800;
-        text-transform: uppercase;
+      .panel-heading {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 16px;
       }
+      .panel-heading h2 { margin: 0; }
       .meta {
         display: grid;
         grid-template-columns: minmax(110px, auto) minmax(0, 1fr);
@@ -348,9 +349,11 @@ export async function onRequestGet({ params, env, request }) {
       #add-to-cart { width: 100%; }
       .instructions-note {
         margin: 0 0 12px;
-        border-left: 3px solid #f4ce21;
-        padding-left: 10px;
-        color: var(--muted);
+        border: 1px solid #cfe8d4;
+        border-radius: 6px;
+        background: #eef8f0;
+        padding: 10px 12px;
+        color: #3f5f46;
         font-size: 13px;
       }
       button.active { border-color: var(--green); background: #eef8f0; color: var(--green-dark); }
@@ -554,7 +557,6 @@ export async function onRequestGet({ params, env, request }) {
       <header class="design-header">
         <div class="design-title-row">
           <h1 id="design-title">DooPixel Design</h1>
-          <span id="verified-badge" class="verified-badge hidden"><span aria-hidden="true">&#10003;</span> Verified</span>
         </div>
       </header>
 
@@ -587,15 +589,17 @@ export async function onRequestGet({ params, env, request }) {
 
           <div class="product-column">
             <aside class="panel">
-              <p class="section-eyebrow">Build This Design</p>
-              <h2>Product Information</h2>
+              <div class="panel-heading">
+                <h2>Product Information</h2>
+                <span id="verified-badge" class="verified-badge hidden"><span aria-hidden="true">&#10003;</span> Verified</span>
+              </div>
               <dl class="meta">
                 <dt>Price</dt><dd id="meta-price" class="meta-price">Loading...</dd>
                 <dt>Size</dt><dd id="meta-size"></dd>
                 <dt>Piece Type</dt><dd id="meta-piece"></dd>
+                <dt>Design ID</dt><dd id="meta-id"></dd>
                 <dt>Total Pieces</dt><dd id="meta-total"></dd>
                 <dt>Colors</dt><dd id="meta-colors"></dd>
-                <dt>Design ID</dt><dd id="meta-id"></dd>
               </dl>
 
               <label for="share-frame-color" style="display:block;font-weight:700;margin-bottom:6px;">Frame Color</label>
@@ -603,7 +607,7 @@ export async function onRequestGet({ params, env, request }) {
                 <option value="black" selected>Black Frame</option>
                 <option value="white">White Frame</option>
               </select>
-              <p class="instructions-note">Building instructions are available from your private project link after checkout. The link is included in your order email.</p>
+              <p class="instructions-note">After you place your order, a download link for the building instructions will be included in your order email.</p>
               <button id="add-to-cart">Add Custom Kit to Cart</button>
             </aside>
 
@@ -773,19 +777,29 @@ export async function onRequestGet({ params, env, request }) {
         const baseplateDetail = document.createElement("span");
         baseplateDetail.className = "meta-detail";
         baseplateDetail.textContent =
-          baseplateInfo.baseplateLayout + " layout · " +
-          baseplateInfo.totalBaseplates + " total 16 x 16 baseplates";
-        sizeElement.appendChild(baseplateDetail);
+          baseplateInfo.baseplateLayout + " layout · 16 x 16 baseplates";
+        const physicalSizeDetail = document.createElement("span");
+        physicalSizeDetail.className = "meta-detail";
+        const physicalWidth = Number((Number(design.size[0]) * 0.8).toFixed(1));
+        const physicalHeight = Number((Number(design.size[1]) * 0.8).toFixed(1));
+        physicalSizeDetail.textContent =
+          "Approx. " + physicalWidth + " x " + physicalHeight + " cm";
+        sizeElement.append(baseplateDetail, physicalSizeDetail);
         document.getElementById("meta-piece").textContent = design.pieceTypeName;
+        const totalPieces = design.parts.reduce(
+          (sum, part) => sum + Number(part.quantity),
+          0
+        );
         document.getElementById("meta-total").textContent =
-          design.parts.reduce((sum, part) => sum + Number(part.quantity), 0).toLocaleString();
+          totalPieces.toLocaleString() + " pixel pieces";
         const uniqueColorCount = new Set(
           design.parts.map((part) =>
             String(part.doopixelNo || part.hex || part.colorName || "").toLowerCase()
           )
         ).size;
         document.getElementById("meta-colors").textContent =
-          uniqueColorCount.toLocaleString();
+          uniqueColorCount.toLocaleString() +
+          (uniqueColorCount === 1 ? " color" : " colors");
 
         const description = String(design.customerCaption || "").trim();
         if (description) {
