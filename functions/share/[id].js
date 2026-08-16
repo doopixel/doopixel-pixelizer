@@ -81,18 +81,25 @@ export async function onRequestGet({ params, env, request }) {
     <style>
       :root {
         color-scheme: light;
-        --text: #191919;
-        --muted: #666;
-        --line: #ddd;
-        --soft: #f6f6f6;
-        --accent: #111;
+        --text: #202124;
+        --muted: #666a73;
+        --line: #dfe1e7;
+        --soft: #f5f6f8;
+        --paper: #fff;
+        --blue: #4961bd;
+        --green: #28a139;
+        --green-dark: #228b31;
+        --yellow: #f4ce21;
+        --red: #d4141a;
+        --accent: #28a139;
       }
       * { box-sizing: border-box; }
       body {
         margin: 0;
         font-family: Arial, Helvetica, sans-serif;
         color: var(--text);
-        background: #fff;
+        background: #f8f9fa;
+        letter-spacing: 0;
       }
 
       .dp-site-nav-wrap {
@@ -167,54 +174,71 @@ export async function onRequestGet({ params, env, request }) {
         display: none;
       }
 
-      .wrap { max-width: 1080px; margin: 0 auto; padding: 28px 18px 48px; }
+      .wrap {
+        width: min(100% - 36px, 1180px);
+        margin: 0 auto;
+        padding: 26px 0 64px;
+      }
       .breadcrumb {
         display: flex;
         flex-wrap: wrap;
         gap: 7px;
-        margin-bottom: 16px;
+        margin-bottom: 18px;
         color: var(--muted);
         font-size: 13px;
       }
       .breadcrumb a {
-        color: #181818;
+        color: var(--green-dark);
         font-weight: 700;
+        text-decoration: none;
       }
+      .breadcrumb a:hover { text-decoration: underline; }
       .design-header {
         display: flex;
         justify-content: space-between;
         gap: 16px;
-        align-items: flex-start;
-        border-bottom: 1px solid var(--line);
-        padding-bottom: 18px;
-        margin-bottom: 24px;
+        align-items: center;
+        margin-bottom: 20px;
       }
-      h1 { font-size: 28px; line-height: 1.2; margin: 0 0 8px; }
-      h2 { font-size: 21px; margin: 24px 0 12px; }
+      .design-title-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+      }
+      h1 { font-size: 32px; line-height: 1.2; margin: 0; }
+      h2 { font-size: 21px; line-height: 1.25; margin: 0 0 16px; }
       p { line-height: 1.5; }
       .muted { color: var(--muted); margin: 0; }
       .verified-badge {
         display: inline-flex;
-        margin-top: 10px;
-        border: 1px solid #181818;
-        background: #f4ce21;
+        align-items: center;
+        gap: 5px;
+        border: 0;
+        border-radius: 8px;
+        background: var(--yellow);
         padding: 5px 8px;
-        font-size: 12px;
+        color: var(--text);
+        font-size: 11px;
         font-weight: 800;
+        text-transform: uppercase;
       }
-      .grid {
+      .product-layout {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
-        gap: 28px;
+        grid-template-columns: minmax(0, 1fr) minmax(360px, 430px);
+        gap: 24px;
         align-items: start;
       }
+      .media-column, .product-column { min-width: 0; }
+      .product-column { display: grid; gap: 16px; }
       .preview {
         display: block;
         width: 100%;
         max-height: 720px;
         object-fit: contain;
         border: 1px solid var(--line);
-        background: var(--soft);
+        border-radius: 8px;
+        background: #f3f3f0;
       }
       .preview.pixelated { image-rendering: pixelated; }
       .preview-gallery { display: grid; gap: 10px; }
@@ -229,21 +253,74 @@ export async function onRequestGet({ params, env, request }) {
         aspect-ratio: 1;
         padding: 2px;
         border: 1px solid var(--line);
+        border-radius: 6px;
         background: #fff;
         overflow: hidden;
       }
       .preview-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
-      .preview-thumb.is-active { border: 2px solid #4961bd; padding: 1px; }
-      .panel { border: 1px solid var(--line); padding: 16px; }
+      .preview-thumb.is-active { border: 2px solid var(--blue); padding: 1px; }
+      .panel,
+      .description-panel,
+      .pieces-section,
+      .comments-section {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--paper);
+        padding: 22px;
+      }
+      .section-eyebrow {
+        margin: 0 0 5px;
+        color: var(--green-dark);
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
       .meta {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px 14px;
-        margin: 0 0 16px;
+        grid-template-columns: minmax(110px, auto) minmax(0, 1fr);
+        gap: 0;
+        margin: 0 0 20px;
         font-size: 14px;
       }
-      .meta dt { color: var(--muted); }
-      .meta dd { margin: 0; font-weight: 600; }
+      .meta dt,
+      .meta dd {
+        margin: 0;
+        border-bottom: 1px solid var(--line);
+        padding: 10px 0;
+      }
+      .meta dt { color: var(--muted); padding-right: 14px; }
+      .meta dd { font-weight: 700; overflow-wrap: anywhere; }
+      .meta dt:first-of-type,
+      .meta dd:first-of-type { padding-top: 0; }
+      .meta dt:last-of-type,
+      .meta dd:last-of-type { border-bottom: 0; padding-bottom: 0; }
+      .meta-price { color: var(--green-dark); font-size: 20px; }
+      .meta-detail {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 1.4;
+      }
+      .description-panel h2 { margin-bottom: 10px; }
+      .design-description {
+        margin: 0;
+        color: #4f535b;
+        font-size: 14px;
+        line-height: 1.65;
+        overflow-wrap: anywhere;
+        white-space: pre-line;
+      }
+      .pieces-section { margin-top: 24px; }
+      .pieces-heading {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 16px;
+      }
+      .pieces-heading p { margin: 0 0 16px; color: var(--muted); font-size: 13px; }
+      .comments-section { margin-top: 24px; }
       button, .button {
         appearance: none;
         border: 1px solid var(--accent);
@@ -258,10 +335,17 @@ export async function onRequestGet({ params, env, request }) {
         align-items: center;
         justify-content: center;
         min-height: 44px;
-        border-radius: 0;
+        border-radius: 6px;
       }
-      button.secondary, .button.secondary { background: #fff; color: var(--accent); }
+      button:hover, .button:hover { border-color: var(--green-dark); background: var(--green-dark); }
+      button.secondary, .button.secondary {
+        border-color: var(--line);
+        background: #fff;
+        color: var(--text);
+      }
+      button.secondary:hover, .button.secondary:hover { background: var(--soft); }
       .button.full { width: 100%; margin-bottom: 10px; }
+      #add-to-cart { width: 100%; }
       .instructions-note {
         margin: 0 0 12px;
         border-left: 3px solid #f4ce21;
@@ -269,9 +353,9 @@ export async function onRequestGet({ params, env, request }) {
         color: var(--muted);
         font-size: 13px;
       }
-      button.active { background: #fff; color: var(--accent); }
+      button.active { border-color: var(--green); background: #eef8f0; color: var(--green-dark); }
       button:disabled { opacity: .55; cursor: wait; }
-      .social-actions { display: flex; gap: 10px; margin: 14px 0; }
+      .social-actions { display: flex; gap: 10px; margin: 12px 0 0; }
       .social-actions button { flex: 1; }
       .share-options {
         display: grid;
@@ -282,7 +366,7 @@ export async function onRequestGet({ params, env, request }) {
         background: var(--soft);
       }
       .share-options button { min-height: 40px; padding: 8px; font-size: 13px; background: #fff; color: #111; }
-      table { width: 100%; border-collapse: collapse; margin-top: 18px; font-size: 14px; }
+      table { width: 100%; border-collapse: collapse; margin-top: 0; font-size: 14px; }
       th, td {
         border-bottom: 1px solid var(--line);
         padding: 9px 6px;
@@ -294,6 +378,7 @@ export async function onRequestGet({ params, env, request }) {
         width: 18px;
         height: 18px;
         border: 1px solid #999;
+        border-radius: 50%;
         display: inline-block;
         vertical-align: middle;
         margin-right: 8px;
@@ -304,19 +389,31 @@ export async function onRequestGet({ params, env, request }) {
         border: 1px solid var(--line);
         padding: 10px;
         font: inherit;
-        border-radius: 0;
+        border-radius: 6px;
         background: #fff;
       }
       textarea { min-height: 90px; resize: vertical; }
       .comments-list { display: grid; gap: 10px; }
-      .comment { border-top: 1px solid var(--line); padding-top: 12px; }
+      .comment { border-top: 1px solid var(--line); padding-top: 14px; }
       .comment:first-child { border-top: 0; }
       .comment-head { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; }
       .comment-name { font-weight: 700; }
       .comment-date { color: var(--muted); font-size: 12px; }
       .comment-body { margin: 7px 0 0; white-space: pre-wrap; }
-      .notice { margin-top: 14px; padding: 12px; background: var(--soft); border: 1px solid var(--line); }
+      .notice {
+        margin-top: 14px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--soft);
+        padding: 12px;
+      }
       .hidden { display: none; }
+      @media (max-width: 860px) {
+        .wrap { width: min(100% - 20px, 1180px); padding-top: 18px; }
+        .product-layout { grid-template-columns: minmax(0, 1fr); }
+        .product-column { gap: 14px; }
+        .pieces-section, .comments-section { margin-top: 18px; }
+      }
       @media (max-width: 760px) {
         .dp-site-nav {
           width: min(100% - 28px, 1220px);
@@ -365,8 +462,55 @@ export async function onRequestGet({ params, env, request }) {
           padding: 0;
           cursor: pointer;
         }
-        .design-header, .grid { display: block; }
-        .panel { margin-top: 18px; }
+        .breadcrumb { margin-bottom: 14px; }
+        .design-header { margin-bottom: 16px; }
+        .design-title-row { gap: 8px; }
+        h1 { font-size: 26px; }
+        .panel,
+        .description-panel,
+        .pieces-section,
+        .comments-section { padding: 17px; }
+        .meta { grid-template-columns: 96px minmax(0, 1fr); }
+        .meta dt, .meta dd { padding: 9px 0; }
+        .pieces-heading { display: block; }
+        .pieces-heading p { margin-top: -8px; }
+        table, tbody { display: block; }
+        thead {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          clip: rect(0 0 0 0);
+          white-space: nowrap;
+        }
+        tbody { border-top: 1px solid var(--line); }
+        tbody tr {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          gap: 7px 12px;
+          border-bottom: 1px solid var(--line);
+          padding: 12px 0;
+        }
+        tbody tr:last-child { border-bottom: 0; padding-bottom: 0; }
+        td { display: block; border: 0; padding: 0; }
+        td:first-child {
+          grid-column: 1 / -1;
+          color: var(--muted);
+          font-size: 12px;
+        }
+        td:last-child {
+          align-self: center;
+          min-width: 50px;
+          color: var(--text);
+          font-weight: 800;
+          text-align: right;
+        }
+        td:last-child::before {
+          color: var(--muted);
+          content: "Qty ";
+          font-size: 11px;
+          font-weight: 400;
+        }
         .share-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       }
     </style>
@@ -408,17 +552,17 @@ export async function onRequestGet({ params, env, request }) {
         <span id="breadcrumb-title">DooPixel Design</span>
       </div>
       <header class="design-header">
-        <div>
+        <div class="design-title-row">
           <h1 id="design-title">DooPixel Design</h1>
-          <p class="muted" id="design-subtitle">${id}</p>
-          <span id="verified-badge" class="verified-badge hidden">DooPixel Verified</span>
+          <span id="verified-badge" class="verified-badge hidden"><span aria-hidden="true">&#10003;</span> Verified</span>
         </div>
       </header>
 
       <main id="loading"><p>Loading design...</p></main>
 
-      <main id="content" class="grid hidden">
-        <section>
+      <main id="content" class="hidden">
+        <div class="product-layout">
+          <section class="media-column">
           <div id="preview-gallery" class="preview-gallery hidden">
             <img id="preview" class="preview" alt="Pixel art build" />
             <div id="preview-thumbnails" class="preview-thumbnails" aria-label="Design photos"></div>
@@ -439,45 +583,62 @@ export async function onRequestGet({ params, env, request }) {
               <button type="button" data-share="copy">Copy Link</button>
             </div>
           </section>
+          </section>
 
-          <h2>Required Pieces</h2>
+          <div class="product-column">
+            <aside class="panel">
+              <p class="section-eyebrow">Build This Design</p>
+              <h2>Product Information</h2>
+              <dl class="meta">
+                <dt>Price</dt><dd id="meta-price" class="meta-price">Loading...</dd>
+                <dt>Size</dt><dd id="meta-size"></dd>
+                <dt>Piece Type</dt><dd id="meta-piece"></dd>
+                <dt>Total Pieces</dt><dd id="meta-total"></dd>
+                <dt>Colors</dt><dd id="meta-colors"></dd>
+                <dt>Design ID</dt><dd id="meta-id"></dd>
+              </dl>
+
+              <label for="share-frame-color" style="display:block;font-weight:700;margin-bottom:6px;">Frame Color</label>
+              <select id="share-frame-color" style="margin-bottom:10px;">
+                <option value="black" selected>Black Frame</option>
+                <option value="white">White Frame</option>
+              </select>
+              <p class="instructions-note">Building instructions are available from your private project link after checkout. The link is included in your order email.</p>
+              <button id="add-to-cart">Add Custom Kit to Cart</button>
+            </aside>
+
+            <section id="description-panel" class="description-panel hidden">
+              <h2>About This Design</h2>
+              <p id="design-description" class="design-description"></p>
+            </section>
+          </div>
+        </div>
+
+        <section class="pieces-section">
+          <div class="pieces-heading">
+            <h2>Required Pieces</h2>
+            <p>Every color and quantity included in this kit.</p>
+          </div>
           <table>
             <thead>
-              <tr><th>Piece Type</th><th>Color</th><th>SKU</th><th>Qty</th></tr>
+              <tr><th>Piece Type</th><th>Color</th><th>Qty</th></tr>
             </thead>
             <tbody id="parts-body"></tbody>
           </table>
-
-          <section id="comments-section" class="hidden">
-            <h2>Comments (<span id="comment-count">0</span>)</h2>
-            <div id="comments-list" class="comments-list"></div>
-            <div id="no-comments" class="notice">No comments yet. Be the first to comment.</div>
-            <form id="comment-form">
-              <input id="comment-name" maxlength="40" autocomplete="name" placeholder="Your display name" required />
-              <textarea id="comment-body" maxlength="500" placeholder="Write a comment" required></textarea>
-              ${turnstileWidget}
-              <button id="comment-submit" type="submit">Submit Comment for Review</button>
-            </form>
-            <div id="comment-message" class="notice hidden"></div>
-          </section>
         </section>
 
-        <aside class="panel">
-          <dl class="meta">
-            <dt>Design ID</dt><dd id="meta-id"></dd>
-            <dt>Size</dt><dd id="meta-size"></dd>
-            <dt>Piece</dt><dd id="meta-piece"></dd>
-            <dt>Total Pieces</dt><dd id="meta-total"></dd>
-          </dl>
-
-          <label for="share-frame-color" style="display:block;font-weight:700;margin-bottom:6px;">Frame Color</label>
-          <select id="share-frame-color" style="margin-bottom:10px;">
-            <option value="black" selected>Black Frame</option>
-            <option value="white">White Frame</option>
-          </select>
-          <p class="instructions-note">Building instructions are available from your private project link after checkout. The link is included in your order email.</p>
-          <button id="add-to-cart">Add Custom Kit to Cart</button>
-        </aside>
+        <section id="comments-section" class="comments-section hidden">
+          <h2>Comments (<span id="comment-count">0</span>)</h2>
+          <div id="comments-list" class="comments-list"></div>
+          <div id="no-comments" class="notice">No comments yet. Be the first to comment.</div>
+          <form id="comment-form">
+            <input id="comment-name" maxlength="40" autocomplete="name" placeholder="Your display name" required />
+            <textarea id="comment-body" maxlength="500" placeholder="Write a comment" required></textarea>
+            ${turnstileWidget}
+            <button id="comment-submit" type="submit">Submit Comment for Review</button>
+          </form>
+          <div id="comment-message" class="notice hidden"></div>
+        </section>
       </main>
     </div>
 
@@ -574,26 +735,64 @@ export async function onRequestGet({ params, env, request }) {
           swatch.className = "swatch";
           swatch.style.background = part.hex;
           colorCell.append(swatch, document.createTextNode(part.doopixelNo + " - " + part.colorName));
-          const skuCell = document.createElement("td");
-          skuCell.textContent = part.isCustom ? "Custom Color" : part.sku;
           const quantityCell = document.createElement("td");
           quantityCell.textContent = part.quantity;
-          row.append(typeCell, colorCell, skuCell, quantityCell);
+          row.append(typeCell, colorCell, quantityCell);
           partsBody.appendChild(row);
         });
+      }
+
+      async function loadKitPrice(size) {
+        const priceElement = document.getElementById("meta-price");
+        try {
+          const query = new URLSearchParams({ width: size[0], height: size[1] });
+          const response = await fetch("/api/kit-price?" + query.toString());
+          const result = await response.json();
+          if (!response.ok || !result.ok) {
+            throw new Error(result.error || "Could not load price.");
+          }
+          priceElement.textContent = new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: result.currency || "USD",
+          }).format(Number(result.priceCents) / 100);
+        } catch (_error) {
+          priceElement.textContent = "See price at checkout";
+          priceElement.classList.remove("meta-price");
+        }
       }
 
       function renderDesign(design) {
         currentDesign = design;
         document.getElementById("design-title").textContent = design.title;
         document.getElementById("breadcrumb-title").textContent = design.title;
-        document.getElementById("design-subtitle").textContent = design.id;
         document.getElementById("verified-badge").classList.toggle("hidden", !design.isVerified);
         document.getElementById("meta-id").textContent = design.id;
-        document.getElementById("meta-size").textContent = design.size[0] + " x " + design.size[1];
+        const baseplateInfo = getBaseplateInfo(design.size);
+        const sizeElement = document.getElementById("meta-size");
+        sizeElement.textContent = design.size[0] + " x " + design.size[1] + " pixels";
+        const baseplateDetail = document.createElement("span");
+        baseplateDetail.className = "meta-detail";
+        baseplateDetail.textContent =
+          baseplateInfo.baseplateLayout + " layout · " +
+          baseplateInfo.totalBaseplates + " total 16 x 16 baseplates";
+        sizeElement.appendChild(baseplateDetail);
         document.getElementById("meta-piece").textContent = design.pieceTypeName;
         document.getElementById("meta-total").textContent =
           design.parts.reduce((sum, part) => sum + Number(part.quantity), 0).toLocaleString();
+        const uniqueColorCount = new Set(
+          design.parts.map((part) =>
+            String(part.doopixelNo || part.hex || part.colorName || "").toLowerCase()
+          )
+        ).size;
+        document.getElementById("meta-colors").textContent =
+          uniqueColorCount.toLocaleString();
+
+        const description = String(design.customerCaption || "").trim();
+        if (description) {
+          document.getElementById("design-description").textContent = description;
+          document.getElementById("description-panel").classList.remove("hidden");
+        }
+        loadKitPrice(design.size);
 
         const imageKeys = design.imageKeys && design.imageKeys.length
           ? design.imageKeys
