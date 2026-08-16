@@ -18,7 +18,7 @@ test("returns the matching Shopify kit price for an artwork size", async () => {
   });
 });
 
-test("calculates price from the total number of 16 x 16 baseplates", async () => {
+test("uses the saved Shopify kit price table", async () => {
   const response = await onRequestGet({
     request: new Request("https://pixelizer.doopixel.com/api/kit-price?width=80&height=16"),
   });
@@ -26,7 +26,7 @@ test("calculates price from the total number of 16 x 16 baseplates", async () =>
 
   assert.equal(response.status, 200);
   assert.equal(result.sku, "DP-KIT-1X5");
-  assert.equal(result.priceCents, 3810);
+  assert.equal(result.priceCents, 3820);
 });
 
 test("rejects invalid artwork dimensions", async () => {
