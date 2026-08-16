@@ -7,24 +7,39 @@ function escapeHtml(value) {
     .replace(/'/g, "&#039;");
 }
 
+function serializeJsonLd(value) {
+  return JSON.stringify(value).replace(/</g, "\\u003c");
+}
+
+function summarizeDescription(value, maxLength = 160) {
+  const normalized = String(value || "").replace(/\s+/g, " ").trim();
+  if (normalized.length <= maxLength) return normalized;
+  return `${normalized.slice(0, maxLength - 3).trimEnd()}...`;
+}
+
+const PUBLIC_ORIGIN = "https://pixelizer.doopixel.com";
+
 export async function onRequestGet({ params, env, request }) {
   const rawId = String(params.id || "").trim().toUpperCase();
   const id = escapeHtml(rawId);
-  const url = new URL(request.url);
-  const canonicalUrl = `${url.origin}/share/${encodeURIComponent(rawId)}`;
+  const canonicalUrl = `${PUBLIC_ORIGIN}/share/${encodeURIComponent(rawId)}`;
   let socialTitle = `DooPixel Shared Design ${rawId}`;
   let socialDescription = "Explore this community pixel art build and its required pieces.";
   let socialImageUrl = "";
+  let isPublicDesign = false;
+  let socialDesign = null;
 
   if (env.DB && /^DP-[A-Z0-9]{6,32}$/.test(rawId)) {
-    const socialDesign = await env.DB.prepare(
+    socialDesign = await env.DB.prepare(
       `SELECT
+        id,
         title,
         customer_caption,
         preview_image_key,
         finished_image_key,
         is_verified,
-        status
+        status,
+        updated_at
       FROM designs
       WHERE id = ?`
     )
@@ -32,15 +47,16 @@ export async function onRequestGet({ params, env, request }) {
       .first();
 
     if (socialDesign?.status === "approved") {
+      isPublicDesign = true;
       socialTitle = socialDesign.is_verified
         ? `${socialDesign.title} | DooPixel Verified`
         : `${socialDesign.title} | DooPixel Community`;
       socialDescription =
-        String(socialDesign.customer_caption || "").trim() ||
+        summarizeDescription(socialDesign.customer_caption) ||
         "A finished pixel art build shared by the DooPixel community.";
       const imageKey = socialDesign.finished_image_key || socialDesign.preview_image_key;
       if (imageKey) {
-        socialImageUrl = `${url.origin}/api/images?key=${encodeURIComponent(imageKey)}`;
+        socialImageUrl = `${PUBLIC_ORIGIN}/api/images?key=${encodeURIComponent(imageKey)}`;
       }
     }
   }
@@ -59,6 +75,47 @@ export async function onRequestGet({ params, env, request }) {
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content="${escapeHtml(socialImageUrl)}" />`
     : '<meta name="twitter:card" content="summary" />';
+  const robotsMeta = isPublicDesign ? "" : '<meta name="robots" content="noindex,nofollow" />';
+  const structuredData = isPublicDesign
+    ? `<script type="application/ld+json">${serializeJsonLd({
+        "@context": "https://schema.org",
+        "@type": "CreativeWork",
+        name: socialTitle.replace(/ \| DooPixel (Verified|Community)$/, ""),
+        description: socialDescription,
+        identifier: rawId,
+        url: canonicalUrl,
+        ...(socialImageUrl ? { image: socialImageUrl } : {}),
+        dateModified: socialDesign.updated_at || undefined,
+        publisher: {
+          "@type": "Organization",
+          name: "DooPixel",
+          url: "https://doopixel.com/",
+        },
+        isPartOf: {
+          "@type": "CollectionPage",
+          name: "DooPixel Gallery & Shop",
+          url: `${PUBLIC_ORIGIN}/gallery`,
+        },
+      })}</script>
+    <script type="application/ld+json">${serializeJsonLd({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Gallery & Shop",
+          item: `${PUBLIC_ORIGIN}/gallery`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: socialTitle.replace(/ \| DooPixel (Verified|Community)$/, ""),
+          item: canonicalUrl,
+        },
+      ],
+    })}</script>`
+    : "";
 
   return new Response(
     `<!doctype html>
@@ -66,6 +123,7 @@ export async function onRequestGet({ params, env, request }) {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    ${robotsMeta}
     <title>${escapeHtml(socialTitle)}</title>
     <meta name="description" content="${escapeHtml(socialDescription)}" />
     <link rel="canonical" href="${escapeHtml(canonicalUrl)}" />
@@ -77,6 +135,7 @@ export async function onRequestGet({ params, env, request }) {
     <meta name="twitter:title" content="${escapeHtml(socialTitle)}" />
     <meta name="twitter:description" content="${escapeHtml(socialDescription)}" />
     ${socialImageMeta}
+    ${structuredData}
     ${turnstileHead}
     <style>
       :root {
@@ -1099,6 +1158,7 @@ export async function onRequestGet({ params, env, request }) {
       headers: {
         "content-type": "text/html; charset=utf-8",
         "cache-control": "no-store",
+        ...(!isPublicDesign ? { "x-robots-tag": "noindex, nofollow" } : {}),
       },
     }
   );

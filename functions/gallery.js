@@ -5,8 +5,29 @@ export async function onRequestGet() {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>DooPixel Gallery &amp; Shop</title>
-    <meta name="description" content="Explore pixel art builds shared by the DooPixel community." />
+    <title>Pixel Art Gallery &amp; Buildable Kits | DooPixel</title>
+    <meta name="description" content="Explore verified and community pixel art designs, view every required piece, and add a complete buildable kit to your cart." />
+    <link rel="canonical" href="https://pixelizer.doopixel.com/gallery" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Pixel Art Gallery &amp; Buildable Kits | DooPixel" />
+    <meta property="og:description" content="Explore pixel art designs, see the required pieces, and add a complete buildable kit to your cart." />
+    <meta property="og:url" content="https://pixelizer.doopixel.com/gallery" />
+    <meta property="og:site_name" content="DooPixel" />
+    <meta name="twitter:card" content="summary" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "DooPixel Pixel Art Gallery & Shop",
+        "url": "https://pixelizer.doopixel.com/gallery",
+        "description": "Explore verified and community pixel art designs with complete piece lists and buildable kits.",
+        "isPartOf": {
+          "@type": "WebSite",
+          "name": "DooPixel",
+          "url": "https://doopixel.com/"
+        }
+      }
+    </script>
     <style>
       :root {
         color-scheme: light;

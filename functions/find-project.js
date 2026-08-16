@@ -5,6 +5,7 @@ export async function onRequestGet() {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
     <title>Find My Pixel Art Project | DooPixel</title>
     <style>
       :root { --text:#1d1d1d; --muted:#666; --line:#d8d8d8; --yellow:#f4ce21; --blue:#405bb8; --red:#d4141a; }
@@ -112,6 +113,12 @@ export async function onRequestGet() {
     </script>
   </body>
 </html>`,
-    { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" } }
+    {
+      headers: {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "no-store",
+        "x-robots-tag": "noindex, nofollow",
+      },
+    }
   );
 }

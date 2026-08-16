@@ -6,9 +6,13 @@ import { onRequestGet as getProject } from "../functions/project/[id].js";
 import { onRequestGet as getShare } from "../functions/share/[id].js";
 
 function assertInlineScriptsParse(html) {
-  const scripts = Array.from(html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi));
+  const scripts = Array.from(html.matchAll(/<script(?![^>]*\bsrc=)([^>]*)>([\s\S]*?)<\/script>/gi));
   scripts.forEach((match) => {
-    new Function(match[1]);
+    if (/type=["']application\/ld\+json["']/i.test(match[1])) {
+      JSON.parse(match[2]);
+      return;
+    }
+    new Function(match[2]);
   });
 }
 
