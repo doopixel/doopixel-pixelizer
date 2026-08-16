@@ -466,18 +466,12 @@
         }
       }
     </style>
+    <link rel="stylesheet" href="/css/doopixel-site-header.css?v=20260816d" />
   </head>
 
   <body>
     <div class="dp-site-nav-wrap">
       <nav class="dp-site-nav" aria-label="DooPixel main navigation">
-        <a class="dp-site-logo" href="https://doopixel.com/" aria-label="DooPixel shop">
-          <img
-            src="https://cdn.shopify.com/s/files/1/0738/7562/0006/files/20260408-001830.png?v=1775578807"
-            alt="DooPixel"
-          />
-        </a>
-        <a class="dp-site-cart-mobile" href="https://doopixel.com/cart">Cart</a>
         <button
           class="dp-site-menu-button"
           type="button"
@@ -485,20 +479,22 @@
           aria-controls="dp-site-links"
           aria-label="Open navigation menu"
         >
-          &#9776;
+          <img class="dp-site-icon" src="/assets/icons/lucide-menu.svg" alt="" />
         </button>
+        <a class="dp-site-logo" href="https://doopixel.com/" aria-label="DooPixel shop">
+          <img
+            src="https://cdn.shopify.com/s/files/1/0738/7562/0006/files/20260408-001830.png?v=1775578807"
+            alt="DooPixel"
+          />
+        </a>
         <div class="dp-site-links" id="dp-site-links">
-          <a class="dp-site-link" href="https://doopixel.com/">Shop</a>
-          <a class="dp-site-link is-active" href="https://pixelizer.doopixel.com/">Pixel Art Maker</a>
-          <a
-            class="dp-site-link"
-            href="https://pixelizer.doopixel.com/gallery"
-          >
-            Community Gallery
-          </a>
+          <a class="dp-site-link is-active" href="https://pixelizer.doopixel.com/" aria-current="page">Upload Images</a>
+          <a class="dp-site-link" href="https://pixelizer.doopixel.com/gallery">Gallery &amp; Shop</a>
           <a class="dp-site-link" href="https://pixelizer.doopixel.com/find-project">Find My Project</a>
-          <a class="dp-site-link" href="https://doopixel.com/cart">Cart</a>
         </div>
+        <a class="dp-site-cart-icon" href="https://doopixel.com/cart" aria-label="Shopping cart">
+          <img class="dp-site-icon" src="/assets/icons/lucide-shopping-cart.svg" alt="" />
+        </a>
       </nav>
     </div>
     <div id="dp-boot-screen" aria-live="polite" aria-label="Loading DooPixel Pixel Art Maker">
@@ -2737,21 +2733,7 @@
     <script src="js/doopixel-instruction-data.js?v=20260802a"></script>
     <script src="js/doopixel-pixelizer-add-to-cart.js?v=20260802a"></script>
     <script src="js/doopixel-wizard-ui.js?v=20260801g"></script>
-    <script>
-      (function setupSiteNavigation() {
-        const button = document.querySelector(".dp-site-menu-button");
-        const links = document.getElementById("dp-site-links");
-        if (!button || !links) {
-          return;
-        }
-
-        button.addEventListener("click", function () {
-          const isOpen = links.classList.toggle("is-open");
-          button.setAttribute("aria-expanded", String(isOpen));
-          button.setAttribute("aria-label", isOpen ? "Close navigation menu" : "Open navigation menu");
-        });
-      })();
-    </script>
+    <script src="/js/doopixel-site-header.js?v=20260816b"></script>
     <script src="js/metrics.js"></script>
 
     <footer>

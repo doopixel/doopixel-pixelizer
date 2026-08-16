@@ -31,9 +31,27 @@ export async function onRequestGet() {
       .result strong { display:block; margin-bottom:4px; }
       .result span { color:var(--blue); font-size:13px; }
     </style>
+    <link rel="stylesheet" href="/css/doopixel-site-header.css?v=20260816d" />
   </head>
   <body>
-    <nav class="nav"><div class="nav-inner"><a href="https://doopixel.com/"><img src="https://cdn.shopify.com/s/files/1/0738/7562/0006/files/20260408-001830.png?v=1775578807" alt="DooPixel" /></a><a href="/">Pixel Art Maker</a></div></nav>
+    <div class="dp-site-nav-wrap">
+      <nav class="dp-site-nav" aria-label="DooPixel main navigation">
+        <button class="dp-site-menu-button" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="dp-site-links">
+          <img class="dp-site-icon" src="/assets/icons/lucide-menu.svg" alt="" />
+        </button>
+        <a class="dp-site-logo" href="https://doopixel.com/" aria-label="DooPixel shop">
+          <img src="https://cdn.shopify.com/s/files/1/0738/7562/0006/files/20260408-001830.png?v=1775578807" alt="DooPixel" />
+        </a>
+        <div class="dp-site-links" id="dp-site-links">
+          <a class="dp-site-link" href="https://pixelizer.doopixel.com/">Upload Images</a>
+          <a class="dp-site-link" href="https://pixelizer.doopixel.com/gallery">Gallery &amp; Shop</a>
+          <a class="dp-site-link is-active" href="https://pixelizer.doopixel.com/find-project" aria-current="page">Find My Project</a>
+        </div>
+        <a class="dp-site-cart-icon" href="https://doopixel.com/cart" aria-label="Shopping cart">
+          <img class="dp-site-icon" src="/assets/icons/lucide-shopping-cart.svg" alt="" />
+        </a>
+      </nav>
+    </div>
     <main>
       <p class="eyebrow">Order Support</p>
       <h1>Find My Pixel Art Project</h1>
@@ -46,6 +64,7 @@ export async function onRequestGet() {
       <div id="message" aria-live="polite"></div>
       <div id="results"></div>
     </main>
+    <script src="/js/doopixel-site-header.js?v=20260816b"></script>
     <script>
       document.getElementById("lookup-form").addEventListener("submit", async function (event) {
         event.preventDefault();
