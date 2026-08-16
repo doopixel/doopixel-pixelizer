@@ -30,7 +30,8 @@ export async function onRequestGet({ request, env }) {
     const sort = url.searchParams.get("sort") === "popular" ? "popular" : "newest";
     const search = (url.searchParams.get("q") || "").trim().slice(0, 80);
     const searchPattern = `%${search.replace(/([%_\\])/g, "\\$1")}%`;
-    const limit = 24;
+    const requestedLimit = Number.parseInt(url.searchParams.get("limit") || "12", 10);
+    const limit = requestedLimit === 10 ? 10 : 12;
     const offset = (page - 1) * limit;
     const orderBy =
       sort === "popular"
@@ -111,6 +112,7 @@ export async function onRequestGet({ request, env }) {
     return jsonResponse({
       ok: true,
       page,
+      limit,
       sort,
       search,
       total: Number(totalRow?.total || 0),

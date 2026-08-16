@@ -27,7 +27,7 @@ test("gallery API searches all approved designs with parameterized keywords", as
   };
 
   const response = await onRequestGet({
-    request: new Request("https://pixelizer.doopixel.com/api/gallery?q=Mickey%25&sort=popular"),
+    request: new Request("https://pixelizer.doopixel.com/api/gallery?q=Mickey%25&sort=popular&limit=10"),
     env,
   });
   const payload = await response.json();
@@ -35,9 +35,10 @@ test("gallery API searches all approved designs with parameterized keywords", as
   assert.equal(response.status, 200);
   assert.equal(payload.ok, true);
   assert.equal(payload.search, "Mickey%");
+  assert.equal(payload.limit, 10);
   assert.match(statements[0].sql, /LOWER\(title\) LIKE LOWER\(\?\)/);
   assert.match(statements[0].sql, /LOWER\(COALESCE\(customer_caption, ''\)\)/);
   assert.match(statements[0].sql, /LOWER\(id\) LIKE LOWER\(\?\)/);
-  assert.deepEqual(statements[0].bindings, ["Mickey%", "%Mickey\\%%", "%Mickey\\%%", "%Mickey\\%%", 25, 0]);
+  assert.deepEqual(statements[0].bindings, ["Mickey%", "%Mickey\\%%", "%Mickey\\%%", "%Mickey\\%%", 11, 0]);
   assert.deepEqual(statements[1].bindings, ["Mickey%", "%Mickey\\%%", "%Mickey\\%%", "%Mickey\\%%"]);
 });

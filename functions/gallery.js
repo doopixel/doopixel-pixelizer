@@ -114,7 +114,7 @@ export async function onRequestGet() {
         align-items: center;
         justify-content: center;
         border: 1px solid var(--blue);
-        border-radius: 4px;
+        border-radius: 6px;
         padding: 9px 15px;
         background: var(--blue);
         color: #fff;
@@ -131,65 +131,104 @@ export async function onRequestGet() {
       }
 
       .intro {
-        padding: 36px 0 30px;
-        border-bottom: 1px solid var(--line);
+        display: grid;
+        grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+        gap: 42px;
+        align-items: center;
+        margin-top: 32px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--paper);
+        padding: 34px 38px;
       }
 
       .eyebrow {
-        margin: 0 0 10px;
-        color: var(--red);
-        font-size: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        margin: 0 0 12px;
+        color: #3f4f96;
+        font-size: 13px;
         font-weight: 800;
       }
 
+      .eyebrow-check {
+        display: inline-grid;
+        place-items: center;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: var(--yellow);
+        color: var(--ink);
+        font-size: 12px;
+      }
+
       h1 {
-        max-width: 760px;
         margin: 0;
-        font-size: 36px;
+        font-size: 38px;
         line-height: 1.12;
         letter-spacing: 0;
       }
 
       .intro-copy {
-        max-width: 720px;
         margin: 12px 0 0;
         color: var(--muted);
-        font-size: 16px;
+        font-size: 15px;
         line-height: 1.55;
       }
 
-      .gallery-section { padding: 28px 0 64px; }
-
-      .gallery-toolbar {
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: 20px;
-        margin-bottom: 20px;
-      }
-
-      .gallery-toolbar h2 {
-        margin: 0 0 5px;
-        font-size: 23px;
-      }
-
-      .result-count {
+      .intro-details {
         margin: 0;
+        border-left: 1px solid var(--line);
+        padding-left: 32px;
+      }
+
+      .intro-detail {
+        position: relative;
+        margin: 0;
+        padding: 10px 0 10px 22px;
         color: var(--muted);
-        font-size: 14px;
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .intro-detail + .intro-detail { border-top: 1px solid var(--line); }
+
+      .intro-detail::before {
+        position: absolute;
+        top: 15px;
+        left: 0;
+        width: 7px;
+        height: 7px;
+        border-radius: 2px;
+        background: var(--blue);
+        content: "";
+      }
+
+      .intro-detail strong { color: var(--ink); }
+
+      .gallery-section { padding: 24px 0 64px; }
+
+      .gallery-tools {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px;
+        margin-bottom: 22px;
       }
 
       .sort-control {
         display: inline-grid;
         grid-template-columns: 1fr 1fr;
-        min-width: 220px;
+        width: 300px;
         border: 1px solid var(--line);
-        border-radius: 4px;
+        border-radius: 8px;
         overflow: hidden;
+        background: var(--paper);
       }
 
       .sort-button {
-        min-height: 38px;
+        min-height: 40px;
         border: 0;
         border-right: 1px solid var(--line);
         background: var(--paper);
@@ -203,44 +242,60 @@ export async function onRequestGet() {
 
       .sort-button:last-child { border-right: 0; }
       .sort-button.active {
-        background: var(--yellow);
+        background: #eef1f8;
         color: var(--ink);
       }
+
+      .sort-button:hover { background: #f5f6f8; }
 
       .gallery-search {
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
-        gap: 8px;
-        width: min(100%, 620px);
-        margin: 0 0 24px auto;
+        width: min(100%, 560px);
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--paper);
       }
 
       .gallery-search input {
         width: 100%;
         min-height: 42px;
-        border: 1px solid var(--line);
-        border-radius: 4px;
+        border: 0;
         background: var(--paper);
         color: var(--ink);
-        padding: 9px 12px;
+        padding: 10px 13px;
         font: inherit;
         font-size: 14px;
       }
 
       .gallery-search input:focus {
-        border-color: var(--blue);
-        outline: 2px solid rgba(73, 97, 189, 0.16);
-        outline-offset: 1px;
+        outline: 0;
       }
 
       .gallery-search .button {
-        min-width: 92px;
+        min-width: 84px;
+        min-height: 42px;
+        border: 0;
+        border-left: 1px solid var(--line);
+        border-radius: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-weight: 700;
+      }
+
+      .gallery-search .button:hover { background: #f5f6f8; }
+
+      .gallery-search:focus-within {
+        border-color: #aab4dc;
+        outline: 2px solid rgba(73, 97, 189, 0.12);
+        outline-offset: 1px;
       }
 
       .grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-        gap: 18px;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
       }
 
       .card {
@@ -249,7 +304,7 @@ export async function onRequestGet() {
         min-width: 0;
         overflow: hidden;
         border: 1px solid var(--line);
-        border-radius: 6px;
+        border-radius: 8px;
         background: var(--paper);
       }
 
@@ -282,13 +337,35 @@ export async function onRequestGet() {
       }
 
       .badge {
-        border: 1px solid rgba(24, 24, 24, 0.14);
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        border: 1px solid rgba(24, 24, 24, 0.16);
         border-radius: 8px;
         background: rgba(255, 255, 255, 0.94);
         color: #3e3d39;
         padding: 4px 7px;
         font-size: 11px;
         font-weight: 700;
+      }
+
+      .badge--verified {
+        border-color: #d5b400;
+        background: var(--yellow);
+        color: var(--ink);
+        text-transform: uppercase;
+      }
+
+      .badge-check {
+        display: inline-grid;
+        place-items: center;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: var(--ink);
+        color: #fff;
+        font-size: 9px;
+        line-height: 1;
       }
 
       .card-body {
@@ -305,16 +382,8 @@ export async function onRequestGet() {
         line-height: 1.25;
       }
 
-      .caption {
-        min-height: 40px;
-        margin: 7px 0 13px;
-        color: #45443f;
-        font-size: 14px;
-        line-height: 1.45;
-      }
-
       .specs {
-        margin: 0;
+        margin: 8px 0 0;
         color: var(--muted);
         font-size: 13px;
         line-height: 1.5;
@@ -324,7 +393,7 @@ export async function onRequestGet() {
         display: flex;
         flex-wrap: wrap;
         gap: 10px 18px;
-        margin: 12px 0 14px;
+        margin: 11px 0 13px;
         padding-top: 11px;
         border-top: 1px solid var(--line);
         font-size: 13px;
@@ -350,8 +419,7 @@ export async function onRequestGet() {
         width: min(100%, 760px);
         margin: 0 auto;
         border: 1px solid var(--line);
-        border-left: 4px solid var(--yellow);
-        border-radius: 4px;
+        border-radius: 8px;
         background: var(--paper);
         padding: 18px;
         color: var(--muted);
@@ -365,6 +433,12 @@ export async function onRequestGet() {
 
       .more .button { min-width: 190px; }
       .hidden { display: none; }
+
+      @media (max-width: 1020px) and (min-width: 681px) {
+        .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .intro { gap: 28px; padding: 30px; }
+        .intro-details { padding-left: 24px; }
+      }
 
       @media (max-width: 680px) {
         .shell { width: min(100% - 20px, 1220px); }
@@ -415,21 +489,31 @@ export async function onRequestGet() {
           padding: 0;
           cursor: pointer;
         }
-        .intro { padding: 24px 0 22px; }
-        .eyebrow { margin-bottom: 8px; }
+        .intro {
+          display: block;
+          margin-top: 18px;
+          padding: 22px 20px;
+        }
+        .eyebrow { margin-bottom: 9px; }
         h1 { font-size: 28px; }
         .intro-copy {
           margin-top: 10px;
           font-size: 14px;
           line-height: 1.5;
         }
-        .gallery-section { padding: 20px 0 42px; }
-        .gallery-toolbar { display: block; }
-        .gallery-toolbar h2 { font-size: 20px; }
-        .sort-control { width: 100%; margin-top: 13px; }
+        .intro-details {
+          margin-top: 18px;
+          border-top: 1px solid var(--line);
+          border-left: 0;
+          padding: 8px 0 0;
+        }
+        .intro-detail { padding-top: 8px; padding-bottom: 8px; }
+        .intro-detail::before { top: 13px; }
+        .gallery-section { padding: 16px 0 42px; }
+        .gallery-tools { align-items: stretch; gap: 9px; margin-bottom: 16px; }
+        .sort-control { width: 100%; }
         .gallery-search {
           width: 100%;
-          margin: 0 0 18px;
         }
         .grid {
           grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -443,15 +527,16 @@ export async function onRequestGet() {
           max-width: calc(100% - 12px);
         }
         .badge {
-          padding: 4px 6px;
+          gap: 3px;
+          padding: 3px 5px;
           font-size: 9px;
         }
+        .badge-check { width: 12px; height: 12px; font-size: 8px; }
         .card-body { padding: 10px; }
         .card-title {
           font-size: 14px;
           line-height: 1.3;
         }
-        .caption { display: none; }
         .specs {
           margin-top: 7px;
           font-size: 11px;
@@ -514,37 +599,39 @@ export async function onRequestGet() {
     <div class="shell">
       <main>
         <section class="intro">
-          <p class="eyebrow">DooPixel Gallery</p>
-          <h1>Choose a pixel art design to build.</h1>
-          <p class="intro-copy">
-            View every required piece, add the full kit to cart, and receive building instructions after checkout.
-          </p>
+          <div>
+            <p class="eyebrow"><span class="eyebrow-check">&#10003;</span>DooPixel Verified Gallery</p>
+            <h1>Pixel art, ready to build.</h1>
+            <p class="intro-copy">
+              Explore verified designs from DooPixel and our builder community. Choose a design, add the exact kit, and receive instructions after checkout.
+            </p>
+          </div>
+          <div class="intro-details" aria-label="What every gallery design includes">
+            <p class="intro-detail"><strong>Verified designs:</strong> Reviewed before they appear in the gallery.</p>
+            <p class="intro-detail"><strong>Exact piece lists:</strong> See the size, piece count, and colors before ordering.</p>
+            <p class="intro-detail"><strong>Ready to build:</strong> Add the complete kit and receive instructions after purchase.</p>
+          </div>
         </section>
 
         <section class="gallery-section">
-          <div class="gallery-toolbar">
-            <div>
-              <h2>Ready-to-Build Designs</h2>
-              <p id="result-count" class="result-count">Loading builds...</p>
-            </div>
+          <div class="gallery-tools">
             <div class="sort-control" role="group" aria-label="Sort gallery">
               <button class="sort-button active" type="button" data-sort="newest">Newest</button>
               <button class="sort-button" type="button" data-sort="popular">Most Liked</button>
             </div>
+            <form id="gallery-search-form" class="gallery-search" role="search">
+              <label class="hidden" for="gallery-search-input">Search pixel art designs</label>
+              <input
+                id="gallery-search-input"
+                name="q"
+                type="search"
+                maxlength="80"
+                placeholder="Search by title or keyword"
+                autocomplete="off"
+              />
+              <button class="button" type="submit">Search</button>
+            </form>
           </div>
-
-          <form id="gallery-search-form" class="gallery-search" role="search">
-            <label class="hidden" for="gallery-search-input">Search pixel art designs</label>
-            <input
-              id="gallery-search-input"
-              name="q"
-              type="search"
-              maxlength="80"
-              placeholder="Search pixel art designs"
-              autocomplete="off"
-            />
-            <button class="button" type="submit">Search</button>
-          </form>
 
           <div id="loading" class="notice">Loading pixel art designs...</div>
           <div id="empty" class="notice hidden">No approved builds have been shared yet.</div>
@@ -562,14 +649,13 @@ export async function onRequestGet() {
       const grid = document.getElementById("grid");
       const more = document.getElementById("more");
       const loadMoreButton = document.getElementById("load-more");
-      const resultCount = document.getElementById("result-count");
       const sortButtons = Array.from(document.querySelectorAll("[data-sort]"));
       const searchForm = document.getElementById("gallery-search-form");
       const searchInput = document.getElementById("gallery-search-input");
       let currentPage = 1;
       let currentSort = "newest";
       let currentSearch = "";
-      let loadedCount = 0;
+      const pageSize = window.matchMedia("(max-width: 680px)").matches ? 10 : 12;
 
       function setupSiteNavigation() {
         const button = document.querySelector(".dp-site-menu-button");
@@ -612,8 +698,11 @@ export async function onRequestGet() {
           badgeStack.className = "badge-stack";
           if (design.isVerified) {
             const verifiedBadge = document.createElement("span");
-            verifiedBadge.className = "badge";
-            verifiedBadge.textContent = "Verified";
+            verifiedBadge.className = "badge badge--verified";
+            const verifiedCheck = document.createElement("span");
+            verifiedCheck.className = "badge-check";
+            verifiedCheck.textContent = "\u2713";
+            verifiedBadge.append(verifiedCheck, document.createTextNode("Verified"));
             badgeStack.appendChild(verifiedBadge);
           }
           if (design.isPinned) {
@@ -633,11 +722,6 @@ export async function onRequestGet() {
         title.className = "card-title";
         title.textContent = design.title;
         body.appendChild(title);
-
-        const caption = document.createElement("p");
-        caption.className = "caption";
-        caption.textContent = design.customerCaption || "Shared by a DooPixel builder.";
-        body.appendChild(caption);
 
         const specs = document.createElement("p");
         specs.className = "specs";
@@ -695,7 +779,9 @@ export async function onRequestGet() {
               "&sort=" +
               encodeURIComponent(currentSort) +
               "&q=" +
-              encodeURIComponent(currentSearch)
+              encodeURIComponent(currentSearch) +
+              "&limit=" +
+              pageSize
           );
           const result = await response.json();
           if (!response.ok || !result.ok) {
@@ -708,22 +794,13 @@ export async function onRequestGet() {
             empty.textContent = currentSearch
               ? 'No pixel art designs found for "' + currentSearch + '".'
               : "No approved builds have been shared yet.";
-            resultCount.textContent = currentSearch ? "No matching builds" : "No published builds yet";
             return;
           }
 
           result.designs.forEach((design) => {
             grid.appendChild(createCard(design));
           });
-          loadedCount += result.designs.length;
           currentPage = page;
-          resultCount.textContent =
-            "Showing " +
-            loadedCount.toLocaleString() +
-            " of " +
-            Number(result.total).toLocaleString() +
-            " published " +
-            plural(result.total, "build", "builds");
           grid.classList.remove("hidden");
           more.classList.toggle("hidden", !result.hasMore);
         } catch (error) {
@@ -741,14 +818,12 @@ export async function onRequestGet() {
           currentSearch = options.search.trim().slice(0, 80);
         }
         currentPage = 1;
-        loadedCount = 0;
         grid.innerHTML = "";
         grid.classList.add("hidden");
         empty.classList.add("hidden");
         more.classList.add("hidden");
         loading.textContent = "Loading pixel art designs...";
         loading.classList.remove("hidden");
-        resultCount.textContent = "Loading builds...";
         updateSortButtons();
         loadGallery(1);
       }
