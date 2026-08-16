@@ -207,6 +207,36 @@ export async function onRequestGet() {
         color: var(--ink);
       }
 
+      .gallery-search {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 8px;
+        width: min(100%, 620px);
+        margin: 0 0 24px auto;
+      }
+
+      .gallery-search input {
+        width: 100%;
+        min-height: 42px;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        background: var(--paper);
+        color: var(--ink);
+        padding: 9px 12px;
+        font: inherit;
+        font-size: 14px;
+      }
+
+      .gallery-search input:focus {
+        border-color: var(--blue);
+        outline: 2px solid rgba(73, 97, 189, 0.16);
+        outline-offset: 1px;
+      }
+
+      .gallery-search .button {
+        min-width: 92px;
+      }
+
       .grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
@@ -243,22 +273,22 @@ export async function onRequestGet() {
       .badge-stack {
         position: absolute;
         top: 10px;
-        left: 10px;
+        right: 10px;
         display: flex;
         flex-wrap: wrap;
+        justify-content: flex-end;
         gap: 6px;
         max-width: calc(100% - 20px);
       }
 
       .badge {
-        border: 1px solid #d3b109;
-        border-radius: 3px;
-        background: var(--yellow);
-        color: var(--ink);
-        padding: 5px 8px;
+        border: 1px solid rgba(24, 24, 24, 0.14);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.94);
+        color: #3e3d39;
+        padding: 4px 7px;
         font-size: 11px;
-        font-weight: 800;
-        text-transform: uppercase;
+        font-weight: 700;
       }
 
       .card-body {
@@ -307,6 +337,13 @@ export async function onRequestGet() {
       .card .button {
         width: 100%;
         margin-top: auto;
+        border-color: #28a139;
+        background: #28a139;
+      }
+
+      .card .button:hover {
+        border-color: #228b31;
+        background: #228b31;
       }
 
       .notice {
@@ -390,6 +427,10 @@ export async function onRequestGet() {
         .gallery-toolbar { display: block; }
         .gallery-toolbar h2 { font-size: 20px; }
         .sort-control { width: 100%; margin-top: 13px; }
+        .gallery-search {
+          width: 100%;
+          margin: 0 0 18px;
+        }
         .grid {
           grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: 10px;
@@ -397,7 +438,7 @@ export async function onRequestGet() {
         .card { width: 100%; }
         .badge-stack {
           top: 6px;
-          left: 6px;
+          right: 6px;
           gap: 4px;
           max-width: calc(100% - 12px);
         }
@@ -492,6 +533,19 @@ export async function onRequestGet() {
             </div>
           </div>
 
+          <form id="gallery-search-form" class="gallery-search" role="search">
+            <label class="hidden" for="gallery-search-input">Search pixel art designs</label>
+            <input
+              id="gallery-search-input"
+              name="q"
+              type="search"
+              maxlength="80"
+              placeholder="Search pixel art designs"
+              autocomplete="off"
+            />
+            <button class="button" type="submit">Search</button>
+          </form>
+
           <div id="loading" class="notice">Loading pixel art designs...</div>
           <div id="empty" class="notice hidden">No approved builds have been shared yet.</div>
           <div id="grid" class="grid hidden"></div>
@@ -510,8 +564,11 @@ export async function onRequestGet() {
       const loadMoreButton = document.getElementById("load-more");
       const resultCount = document.getElementById("result-count");
       const sortButtons = Array.from(document.querySelectorAll("[data-sort]"));
+      const searchForm = document.getElementById("gallery-search-form");
+      const searchInput = document.getElementById("gallery-search-input");
       let currentPage = 1;
       let currentSort = "newest";
+      let currentSearch = "";
       let loadedCount = 0;
 
       function setupSiteNavigation() {
@@ -556,7 +613,7 @@ export async function onRequestGet() {
           if (design.isVerified) {
             const verifiedBadge = document.createElement("span");
             verifiedBadge.className = "badge";
-            verifiedBadge.textContent = "DooPixel Verified";
+            verifiedBadge.textContent = "Verified";
             badgeStack.appendChild(verifiedBadge);
           }
           if (design.isPinned) {
@@ -633,7 +690,12 @@ export async function onRequestGet() {
         loadMoreButton.textContent = "Loading...";
         try {
           const response = await fetch(
-            "/api/gallery?page=" + page + "&sort=" + encodeURIComponent(currentSort)
+            "/api/gallery?page=" +
+              page +
+              "&sort=" +
+              encodeURIComponent(currentSort) +
+              "&q=" +
+              encodeURIComponent(currentSearch)
           );
           const result = await response.json();
           if (!response.ok || !result.ok) {
@@ -643,7 +705,10 @@ export async function onRequestGet() {
           loading.classList.add("hidden");
           if (page === 1 && !result.designs.length) {
             empty.classList.remove("hidden");
-            resultCount.textContent = "No published builds yet";
+            empty.textContent = currentSearch
+              ? 'No pixel art designs found for "' + currentSearch + '".'
+              : "No approved builds have been shared yet.";
+            resultCount.textContent = currentSearch ? "No matching builds" : "No published builds yet";
             return;
           }
 
@@ -670,8 +735,11 @@ export async function onRequestGet() {
         }
       }
 
-      function resetGallery(sort) {
-        currentSort = sort;
+      function resetGallery(options = {}) {
+        if (options.sort) currentSort = options.sort;
+        if (Object.prototype.hasOwnProperty.call(options, "search")) {
+          currentSearch = options.search.trim().slice(0, 80);
+        }
         currentPage = 1;
         loadedCount = 0;
         grid.innerHTML = "";
@@ -688,9 +756,18 @@ export async function onRequestGet() {
       sortButtons.forEach((button) => {
         button.addEventListener("click", () => {
           if (button.dataset.sort !== currentSort) {
-            resetGallery(button.dataset.sort);
+            resetGallery({ sort: button.dataset.sort });
           }
         });
+      });
+
+      searchForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        resetGallery({ search: searchInput.value });
+      });
+
+      searchInput.addEventListener("search", () => {
+        if (!searchInput.value && currentSearch) resetGallery({ search: "" });
       });
 
       loadMoreButton.addEventListener("click", () => loadGallery(currentPage + 1));
