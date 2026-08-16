@@ -1,0 +1,47 @@
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import test from "node:test";
+
+import { onRequestGet as getFindProject } from "../functions/find-project.js";
+import { onRequestGet as getGallery } from "../functions/gallery.js";
+import { onRequestGet as getProject } from "../functions/project/[id].js";
+import { onRequestGet as getShare } from "../functions/share/[id].js";
+
+const EXPECTED_LABELS = ["Upload Images", "Gallery &amp; Shop", "Find My Project"];
+
+function assertSharedHeader(html, pageName) {
+  let previousIndex = -1;
+  EXPECTED_LABELS.forEach((label) => {
+    const index = html.indexOf(`>${label}</a>`);
+    assert.ok(index > previousIndex, `${pageName} should contain ${label} in the expected order`);
+    previousIndex = index;
+  });
+  assert.doesNotMatch(html, />Shop<\/a>/, `${pageName} should not contain the old Shop link`);
+  assert.doesNotMatch(html, />Pixel Art Maker<\/a>/, `${pageName} should not contain the old tool label`);
+  assert.doesNotMatch(html, /Community Gallery/, `${pageName} should not contain the old gallery label`);
+  assert.match(html, /class="dp-site-menu-button"[^>]*>[\s\S]*?lucide-menu\.svg/);
+  assert.match(html, /class="dp-site-cart-icon"[^>]*aria-label="Shopping cart"[^>]*>[\s\S]*?lucide-shopping-cart\.svg/);
+  assert.match(html, /doopixel-site-header\.css/);
+  assert.match(html, /doopixel-site-header\.js/);
+}
+
+test("public pages use the shared DooPixel header", async () => {
+  const pages = [
+    ["Pixel Art Maker", await readFile(new URL("../app/index.html", import.meta.url), "utf8")],
+    ["Gallery", await (await getGallery()).text()],
+    ["Find My Project", await (await getFindProject()).text()],
+    ["Private Project", await (await getProject({ params: { id: "PRJ-TEST1234" } })).text()],
+    [
+      "Shared Design",
+      await (
+        await getShare({
+          params: { id: "DP-TEST1234" },
+          env: {},
+          request: new Request("https://pixelizer.doopixel.com/share/DP-TEST1234"),
+        })
+      ).text(),
+    ],
+  ];
+
+  pages.forEach(([pageName, html]) => assertSharedHeader(html, pageName));
+});

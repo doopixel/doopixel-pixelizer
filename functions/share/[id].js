@@ -370,39 +370,34 @@ export async function onRequestGet({ params, env, request }) {
         .share-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       }
     </style>
+    <link rel="stylesheet" href="/css/doopixel-site-header.css?v=20260816d" />
   </head>
   <body>
     <div class="dp-site-nav-wrap">
       <nav class="dp-site-nav" aria-label="DooPixel main navigation">
+        <button
+          class="dp-site-menu-button"
+          type="button"
+          aria-label="Open navigation menu"
+          aria-expanded="false"
+          aria-controls="dp-site-links"
+        >
+          <img class="dp-site-icon" src="/assets/icons/lucide-menu.svg" alt="" />
+        </button>
         <a class="dp-site-logo" href="https://doopixel.com/" aria-label="DooPixel shop">
           <img
             src="https://cdn.shopify.com/s/files/1/0738/7562/0006/files/20260408-001830.png?v=1775578807"
             alt="DooPixel"
           />
         </a>
-        <div class="dp-site-links" id="dp-site-menu">
-          <a class="dp-site-link" href="https://doopixel.com/">Shop</a>
-          <a class="dp-site-link" href="https://pixelizer.doopixel.com/">Pixel Art Maker</a>
-          <a
-            class="dp-site-link is-active"
-            href="https://pixelizer.doopixel.com/gallery"
-            aria-current="page"
-          >
-            Community Gallery
-          </a>
+        <div class="dp-site-links" id="dp-site-links">
+          <a class="dp-site-link" href="https://pixelizer.doopixel.com/">Upload Images</a>
+          <a class="dp-site-link is-active" href="https://pixelizer.doopixel.com/gallery" aria-current="page">Gallery &amp; Shop</a>
           <a class="dp-site-link" href="https://pixelizer.doopixel.com/find-project">Find My Project</a>
-          <a class="dp-site-link dp-site-cart" href="https://doopixel.com/cart">Cart</a>
         </div>
-        <a class="dp-site-mobile-cart" href="https://doopixel.com/cart">Cart</a>
-        <button
-          class="dp-site-menu-button"
-          type="button"
-          aria-label="Open navigation menu"
-          aria-expanded="false"
-          aria-controls="dp-site-menu"
-        >
-          &#9776;
-        </button>
+        <a class="dp-site-cart-icon" href="https://doopixel.com/cart" aria-label="Shopping cart">
+          <img class="dp-site-icon" src="/assets/icons/lucide-shopping-cart.svg" alt="" />
+        </a>
       </nav>
     </div>
 
@@ -486,6 +481,7 @@ export async function onRequestGet({ params, env, request }) {
       </main>
     </div>
 
+    <script src="/js/doopixel-site-header.js?v=20260816b"></script>
     <script>
       const DESIGN_ID = ${JSON.stringify(rawId)};
       const CANONICAL_URL = ${JSON.stringify(canonicalUrl)};
@@ -493,26 +489,6 @@ export async function onRequestGet({ params, env, request }) {
       const SHOPIFY_ADD_KIT_URL = "https://doopixel.com/pages/add-pixel-kit";
       let currentDesign = null;
       let currentEngagement = null;
-
-      function setupSiteNavigation() {
-        const button = document.querySelector(".dp-site-menu-button");
-        const menu = document.getElementById("dp-site-menu");
-        if (!button || !menu) return;
-
-        function setOpen(isOpen) {
-          menu.classList.toggle("is-open", isOpen);
-          button.setAttribute("aria-expanded", String(isOpen));
-          button.setAttribute("aria-label", isOpen ? "Close navigation menu" : "Open navigation menu");
-        }
-
-        button.addEventListener("click", () => setOpen(!menu.classList.contains("is-open")));
-        menu.addEventListener("click", (event) => {
-          if (event.target.closest("a")) setOpen(false);
-        });
-        document.addEventListener("keydown", (event) => {
-          if (event.key === "Escape") setOpen(false);
-        });
-      }
 
       function encodePayload(payload) {
         const json = JSON.stringify(payload);
@@ -896,7 +872,6 @@ export async function onRequestGet({ params, env, request }) {
         }
       });
 
-      setupSiteNavigation();
       loadDesign().catch((error) => {
         const loading = document.getElementById("loading");
         loading.textContent = error.message;

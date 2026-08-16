@@ -5,7 +5,7 @@ export async function onRequestGet() {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>DooPixel Community Gallery</title>
+    <title>DooPixel Gallery &amp; Shop</title>
     <meta name="description" content="Explore pixel art builds shared by the DooPixel community." />
     <style>
       :root {
@@ -573,39 +573,34 @@ export async function onRequestGet() {
         h1 { font-size: 26px; }
       }
     </style>
+    <link rel="stylesheet" href="/css/doopixel-site-header.css?v=20260816d" />
   </head>
   <body>
     <div class="dp-site-nav-wrap">
       <nav class="dp-site-nav" aria-label="DooPixel main navigation">
+        <button
+          class="dp-site-menu-button"
+          type="button"
+          aria-label="Open navigation menu"
+          aria-expanded="false"
+          aria-controls="dp-site-links"
+        >
+          <img class="dp-site-icon" src="/assets/icons/lucide-menu.svg" alt="" />
+        </button>
         <a class="dp-site-logo" href="https://doopixel.com/" aria-label="DooPixel shop">
           <img
             src="https://cdn.shopify.com/s/files/1/0738/7562/0006/files/20260408-001830.png?v=1775578807"
             alt="DooPixel"
           />
         </a>
-        <div class="dp-site-links" id="dp-site-menu">
-          <a class="dp-site-link" href="https://doopixel.com/">Shop</a>
-          <a class="dp-site-link" href="https://pixelizer.doopixel.com/">Pixel Art Maker</a>
-          <a
-            class="dp-site-link is-active"
-            href="https://pixelizer.doopixel.com/gallery"
-            aria-current="page"
-          >
-            Community Gallery
-          </a>
+        <div class="dp-site-links" id="dp-site-links">
+          <a class="dp-site-link" href="https://pixelizer.doopixel.com/">Upload Images</a>
+          <a class="dp-site-link is-active" href="https://pixelizer.doopixel.com/gallery" aria-current="page">Gallery &amp; Shop</a>
           <a class="dp-site-link" href="https://pixelizer.doopixel.com/find-project">Find My Project</a>
-          <a class="dp-site-link dp-site-cart" href="https://doopixel.com/cart">Cart</a>
         </div>
-        <a class="dp-site-mobile-cart" href="https://doopixel.com/cart">Cart</a>
-        <button
-          class="dp-site-menu-button"
-          type="button"
-          aria-label="Open navigation menu"
-          aria-expanded="false"
-          aria-controls="dp-site-menu"
-        >
-          &#9776;
-        </button>
+        <a class="dp-site-cart-icon" href="https://doopixel.com/cart" aria-label="Shopping cart">
+          <img class="dp-site-icon" src="/assets/icons/lucide-shopping-cart.svg" alt="" />
+        </a>
       </nav>
     </div>
 
@@ -653,6 +648,7 @@ export async function onRequestGet() {
       </main>
     </div>
 
+    <script src="/js/doopixel-site-header.js?v=20260816b"></script>
     <script>
       const loading = document.getElementById("loading");
       const empty = document.getElementById("empty");
@@ -665,26 +661,6 @@ export async function onRequestGet() {
       let currentSort = "newest";
       let currentSearch = "";
       const pageSize = window.matchMedia("(max-width: 680px)").matches ? 10 : 12;
-
-      function setupSiteNavigation() {
-        const button = document.querySelector(".dp-site-menu-button");
-        const menu = document.getElementById("dp-site-menu");
-        if (!button || !menu) return;
-
-        function setOpen(isOpen) {
-          menu.classList.toggle("is-open", isOpen);
-          button.setAttribute("aria-expanded", String(isOpen));
-          button.setAttribute("aria-label", isOpen ? "Close navigation menu" : "Open navigation menu");
-        }
-
-        button.addEventListener("click", () => setOpen(!menu.classList.contains("is-open")));
-        menu.addEventListener("click", (event) => {
-          if (event.target.closest("a")) setOpen(false);
-        });
-        document.addEventListener("keydown", (event) => {
-          if (event.key === "Escape") setOpen(false);
-        });
-      }
 
       function plural(value, singular, pluralValue) {
         return value === 1 ? singular : pluralValue;
@@ -922,7 +898,6 @@ export async function onRequestGet() {
         if (!searchInput.value && currentSearch) resetGallery({ search: "" });
       });
 
-      setupSiteNavigation();
       updateSortButtons();
       loadGallery(1);
     </script>
