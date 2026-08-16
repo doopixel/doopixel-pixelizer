@@ -28,6 +28,8 @@ export async function onRequestGet({ request, env }) {
     const url = new URL(request.url);
     const page = Math.max(1, Number.parseInt(url.searchParams.get("page") || "1", 10) || 1);
     const sort = url.searchParams.get("sort") === "popular" ? "popular" : "newest";
+    const search = (url.searchParams.get("q") || "").trim().slice(0, 80);
+    const searchPattern = `%${search.replace(/([%_\\])/g, "\\$1")}%`;
     const limit = 24;
     const offset = (page - 1) * limit;
     const orderBy =
@@ -57,18 +59,32 @@ export async function onRequestGet({ request, env }) {
       FROM designs
       WHERE status = 'approved'
         AND finished_image_key IS NOT NULL
+        AND (
+          ? = ''
+          OR LOWER(title) LIKE LOWER(?) ESCAPE '\\'
+          OR LOWER(COALESCE(customer_caption, '')) LIKE LOWER(?) ESCAPE '\\'
+          OR LOWER(id) LIKE LOWER(?) ESCAPE '\\'
+        )
       ORDER BY ${orderBy}
       LIMIT ? OFFSET ?`
     )
-      .bind(limit + 1, offset)
+      .bind(search, searchPattern, searchPattern, searchPattern, limit + 1, offset)
       .all();
 
     const totalRow = await env.DB.prepare(
       `SELECT COUNT(*) AS total
       FROM designs
       WHERE status = 'approved'
-        AND finished_image_key IS NOT NULL`
-    ).first();
+        AND finished_image_key IS NOT NULL
+        AND (
+          ? = ''
+          OR LOWER(title) LIKE LOWER(?) ESCAPE '\\'
+          OR LOWER(COALESCE(customer_caption, '')) LIKE LOWER(?) ESCAPE '\\'
+          OR LOWER(id) LIKE LOWER(?) ESCAPE '\\'
+        )`
+    )
+      .bind(search, searchPattern, searchPattern, searchPattern)
+      .first();
 
     const rows = result.results || [];
     const hasMore = rows.length > limit;
@@ -96,6 +112,7 @@ export async function onRequestGet({ request, env }) {
       ok: true,
       page,
       sort,
+      search,
       total: Number(totalRow?.total || 0),
       hasMore,
       designs,
