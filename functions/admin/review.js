@@ -178,6 +178,7 @@ export async function onRequestGet() {
             <a href="/admin/verified">Add Verified Design</a>
             <a href="/admin/review">Artwork Review</a>
             <a href="/admin/comments">Comment Review</a>
+            <a href="/admin/parts-imports">Parts Picking</a>
             <a href="/gallery" target="_blank" rel="noopener">Open Gallery</a>
           </nav>
         </div>

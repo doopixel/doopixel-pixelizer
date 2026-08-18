@@ -1,0 +1,62 @@
+import assert from "node:assert/strict";
+import fs from "node:fs/promises";
+import test from "node:test";
+
+import { getCatalogRows } from "../functions/_lib/bricklink-parts.js";
+import { parseBrickLinkXml } from "../functions/_lib/bricklink-xml.js";
+
+test("server catalog stays aligned with the public SKU map", async () => {
+  const skuMap = JSON.parse(await fs.readFile(new URL("../app/doopixel-pixelizer-sku-map.json", import.meta.url), "utf8"));
+  const expected = [];
+  Object.values(skuMap).forEach((color) => {
+    if (color.flatSku) expected.push(["98138", Number(color.bricklinkColorId), color.flatSku, String(Number(color.doopixelNo))]);
+    if (color.studSku) expected.push(["4073", Number(color.bricklinkColorId), color.studSku, `A${Number(color.doopixelNo)}`]);
+  });
+  const actual = getCatalogRows().map((row) => [row.pieceType, row.bricklinkColorId, row.sku, row.warehouseCode]);
+  assert.deepEqual(actual.sort(), expected.sort());
+});
+
+test("parses Wanted List quantities, aggregates duplicates, ignores other parts, and prices combined pieces", () => {
+  const result = parseBrickLinkXml(`<?xml version="1.0" encoding="UTF-8"?>
+  <INVENTORY>
+    <ITEM><ITEMTYPE>P</ITEMTYPE><ITEMID>98138</ITEMID><COLOR>59</COLOR><MINQTY>80</MINQTY><QTYFILLED>10</QTYFILLED></ITEM>
+    <ITEM><ITEMTYPE>P</ITEMTYPE><ITEMID>98138</ITEMID><COLOR>59</COLOR><MINQTY>50</MINQTY></ITEM>
+    <ITEM><ITEMTYPE>P</ITEMTYPE><ITEMID>4073</ITEMID><COLOR>59</COLOR><MINQTY>1</MINQTY></ITEM>
+    <ITEM><ITEMTYPE>P</ITEMTYPE><ITEMID>3001</ITEMID><COLOR>5</COLOR><MINQTY>12</MINQTY></ITEM>
+  </INVENTORY>`);
+  assert.equal(result.totalPieces, 121);
+  assert.equal(result.flatPieces, 120);
+  assert.equal(result.raisedPieces, 1);
+  assert.equal(result.chargeBlocks, 2);
+  assert.equal(result.priceCents, 400);
+  assert.equal(result.ignoredLines, 1);
+  assert.equal(result.ignoredPieces, 12);
+  assert.deepEqual(result.lines.map((line) => [line.warehouseCode, line.sku, line.quantity]), [
+    ["18", "DP-FLAT-018", 120],
+    ["A18", "DP-STUD-A18", 1],
+  ]);
+});
+
+test("reports stocked-part colors that DooPixel does not carry", () => {
+  const result = parseBrickLinkXml(`<INVENTORY>
+    <ITEM><ITEMTYPE>P</ITEMTYPE><ITEMID>98138</ITEMID><COLOR>59</COLOR><QTY>100</QTY></ITEM>
+    <ITEM><ITEMTYPE>P</ITEMTYPE><ITEMID>4073</ITEMID><COLOR>220</COLOR><QTY>5</QTY></ITEM>
+  </INVENTORY>`);
+  assert.equal(result.totalPieces, 100);
+  assert.deepEqual(result.unsupportedLines, [{ pieceType: "4073", bricklinkColorId: 220, quantity: 5 }]);
+});
+
+test("rejects dangerous or unrelated XML", () => {
+  assert.throws(() => parseBrickLinkXml('<!DOCTYPE x [<!ENTITY y "z">]><INVENTORY><ITEM></ITEM></INVENTORY>'), /DOCTYPE/);
+  assert.throws(() => parseBrickLinkXml("<root></root>"), /INVENTORY/);
+});
+
+test("customer import page and Shopify bridge contain valid inline JavaScript", async () => {
+  const files = [
+    await fs.readFile(new URL("../app/parts-import/index.html", import.meta.url), "utf8"),
+    await fs.readFile(new URL("../shopify/custom-pixel-pieces-import-custom-liquid.liquid", import.meta.url), "utf8"),
+  ];
+  files.forEach((source) => {
+    Array.from(source.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)).forEach((match) => new Function(match[1]));
+  });
+});
