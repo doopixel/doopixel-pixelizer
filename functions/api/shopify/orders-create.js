@@ -119,11 +119,8 @@ export async function onRequestPost({ request, env }) {
     const accessToken = findProperty(properties, ["_DooPixel Project Token", "DooPixel Project Token"]);
     const projectId = findProperty(properties, ["_DooPixel Project ID", "DooPixel Project ID"]).toUpperCase();
 
-    const partsImportId = findProperty(properties, [
-      "_DooPixel Parts Import ID",
-      "DooPixel Import ID",
-    ]).toUpperCase();
-    const partsImportToken = findProperty(properties, ["_DooPixel Parts Import Token"]);
+    const partsImportId = findProperty(properties, ["_Import ID"]).toUpperCase();
+    const partsImportToken = findProperty(properties, ["_Import Token"]);
     const purchasedPacks = Number(lineItem.quantity);
     if (/^IMP-[A-Z0-9]{12}$/.test(partsImportId) && partsImportToken && Number.isInteger(purchasedPacks) && purchasedPacks > 0) {
       partsImportUpdates.push(

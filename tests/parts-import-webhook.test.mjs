@@ -36,8 +36,8 @@ async function signedRequest(quantity) {
     line_items: [{
       quantity,
       properties: [
-        { name: "_DooPixel Parts Import ID", value: "IMP-ABCDEF123456" },
-        { name: "_DooPixel Parts Import Token", value: "private-token" },
+        { name: "_Import ID", value: "IMP-ABCDEF123456" },
+        { name: "_Import Token", value: "private-token" },
       ],
     }],
   });
