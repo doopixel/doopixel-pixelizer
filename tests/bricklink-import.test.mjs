@@ -71,3 +71,12 @@ test("customer flow goes directly to Shopify cart and shows only useful match co
   assert.doesNotMatch(page, /unsupported part row/);
   assert.match(page, /XML files up to 3 MB/);
 });
+
+test("customer and cart tables show synchronized mobile scroll progress above and below", async () => {
+  const page = await fs.readFile(new URL("../app/parts-import/index.html", import.meta.url), "utf8");
+  const cart = await fs.readFile(new URL("../shopify/cart-matching-parts-details-custom-liquid.liquid", import.meta.url), "utf8");
+  assert.match(page, /table-scroll-progress table-scroll-progress--top[\s\S]*table-wrap[\s\S]*table-scroll-progress/);
+  assert.match(cart, /dp-parts-dialog__scroll-progress dp-parts-dialog__scroll-progress--top[\s\S]*dp-parts-dialog__table-wrap[\s\S]*dp-parts-dialog__scroll-progress/);
+  assert.match(page, /Turn A BrickLink List Into A Ready-To-Pick DooPixel Order/);
+  assert.match(cart, /Matching Parts Details/);
+});
