@@ -84,6 +84,8 @@
         th,td { padding:11px 10px; }
         .table-wrap table { min-width:590px; }
         .table-scroll-progress { display:block; }
+        .table-scroll-progress--top { margin:20px 2px 10px; }
+        .table-scroll-progress--top + .table-wrap { margin-top:0; }
       }
     </style>
   </head>
@@ -105,19 +107,19 @@
     <main class="shell">
       <section class="hero">
         <p class="eyebrow">DooPixel Matching Parts</p>
-        <h1>Turn a BrickLink list into a ready-to-pick DooPixel order.</h1>
+        <h1>Turn A BrickLink List Into A Ready-To-Pick DooPixel Order.</h1>
         <p class="lead">Upload your Wanted List XML. We match 98138 and 4073 colors to our warehouse numbers, calculate the exact quantity, and prepare your cart.</p>
         <div class="steps" aria-label="How it works">
           <span class="step"><span class="step-number">1</span> Upload XML</span>
           <span class="step"><span class="step-number">2</span> Review matches</span>
-          <span class="step"><span class="step-number">3</span> Add to cart</span>
+          <span class="step"><span class="step-number">3</span> Add To Cart</span>
         </div>
       </section>
 
       <section class="panel" aria-labelledby="upload-heading">
         <div class="panel-heading">
           <div>
-            <h2 id="upload-heading">Upload your BrickLink XML</h2>
+            <h2 id="upload-heading">Upload Your BrickLink XML</h2>
             <p class="support">Only the two pixel-piece types below are checked. Other part types are skipped silently.</p>
           </div>
           <div class="part-pills" aria-label="Supported parts">
@@ -143,7 +145,7 @@
 
       <section id="summary" class="panel results hidden" aria-live="polite">
         <div class="results-head">
-          <div><p class="eyebrow" style="color:var(--blue)">Match Results</p><h2>Your DooPixel parts</h2></div>
+          <div><p class="eyebrow" style="color:var(--blue)">Match Results</p><h2>Your DooPixel Parts</h2></div>
           <span id="import-id" class="import-id"></span>
         </div>
         <div class="stats">
@@ -153,18 +155,19 @@
           <div class="stat"><span class="stat-label">Est. weight</span><strong id="weight"></strong></div>
         </div>
         <p id="match-note" class="match-note"></p>
+        <div class="table-scroll-progress table-scroll-progress--top" aria-hidden="true"><span></span></div>
         <div class="table-wrap">
           <table><thead><tr><th>Doo Number</th><th>Color</th><th>Qty</th><th>Part Type</th></tr></thead><tbody id="lines"></tbody></table>
         </div>
         <div class="table-scroll-progress" aria-hidden="true"><span></span></div>
         <div id="unmatched" class="unmatched hidden">
-          <h3>Unmatched 98138 / 4073 colors</h3>
+          <h3>Unmatched 98138 / 4073 Colors</h3>
           <p class="support">These colors are not currently in the DooPixel catalog, so they are not included or charged.</p>
           <div class="table-wrap"><table><thead><tr><th>Part Type</th><th>BrickLink Color ID</th><th>Qty</th></tr></thead><tbody id="unmatched-lines"></tbody></table></div>
         </div>
         <div class="checkout">
           <div><span class="stat-label" style="color:#bfc3cc">Order total</span><div id="price" class="checkout-price"></div><p id="pricing-copy" class="checkout-copy"></p></div>
-          <button id="checkout" class="primary-button" type="button">Add Matching Parts to Cart</button>
+          <button id="checkout" class="primary-button" type="button">Add Matching Parts To Cart</button>
         </div>
         <p class="legal"><strong>Independent product notice:</strong> DooPixel pieces are third-party compatible pixel pieces and are not LEGO® products. LEGO® is a trademark of the LEGO Group, which does not sponsor, authorize, or endorse this product or website.</p>
       </section>
@@ -188,18 +191,22 @@
         let result = null;
 
         function updateTableProgress(wrap) {
-          const track = wrap.nextElementSibling;
-          if (!track || !track.classList.contains("table-scroll-progress")) return;
-          const thumb = track.firstElementChild;
+          const tracks = [wrap.previousElementSibling, wrap.nextElementSibling].filter(function (track) {
+            return track && track.classList.contains("table-scroll-progress");
+          });
+          if (!tracks.length) return;
           const scrollable = wrap.scrollWidth > wrap.clientWidth + 1;
-          track.style.visibility = scrollable ? "visible" : "hidden";
-          if (!scrollable) return;
-          const ratio = Math.min(1, wrap.clientWidth / wrap.scrollWidth);
-          const thumbWidth = Math.max(28, track.clientWidth * ratio);
-          const travel = Math.max(0, track.clientWidth - thumbWidth);
-          const progress = wrap.scrollLeft / Math.max(1, wrap.scrollWidth - wrap.clientWidth);
-          thumb.style.width = thumbWidth + "px";
-          thumb.style.transform = "translateX(" + (travel * progress) + "px)";
+          tracks.forEach(function (track) {
+            const thumb = track.firstElementChild;
+            track.style.visibility = scrollable ? "visible" : "hidden";
+            if (!scrollable) return;
+            const ratio = Math.min(1, wrap.clientWidth / wrap.scrollWidth);
+            const thumbWidth = Math.max(28, track.clientWidth * ratio);
+            const travel = Math.max(0, track.clientWidth - thumbWidth);
+            const progress = wrap.scrollLeft / Math.max(1, wrap.scrollWidth - wrap.clientWidth);
+            thumb.style.width = thumbWidth + "px";
+            thumb.style.transform = "translateX(" + (travel * progress) + "px)";
+          });
         }
         function refreshTableProgress() { document.querySelectorAll(".table-wrap").forEach(updateTableProgress); }
 

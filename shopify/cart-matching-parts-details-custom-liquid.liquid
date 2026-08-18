@@ -44,16 +44,17 @@
       .dp-parts-dialog__body { padding: 0 12px 18px; }
       .dp-parts-dialog th, .dp-parts-dialog td { padding: 10px 7px; }
       .dp-parts-dialog__scroll-progress { display: block; }
+      .dp-parts-dialog__scroll-progress--top { margin: 10px 2px; }
     }
   </style>
 
-  <div class="dp-cart-parts" aria-label="Matching Parts details">
+  <div class="dp-cart-parts" aria-label="Matching Parts Details">
     {% for item in cart.items %}
       {% if item.variant_id == 57037331595430 %}
         {% assign dp_modal_id = 'dp-parts-dialog-' | append: forloop.index %}
         <div class="dp-cart-parts__item" data-dp-cart-line="{{ forloop.index }}">
           <div>
-            <p class="dp-cart-parts__title">Matching Parts details</p>
+            <p class="dp-cart-parts__title">Matching Parts Details</p>
             <p class="dp-cart-parts__meta">{{ item.quantity }} × 100-piece packs</p>
           </div>
           <button class="dp-cart-parts__button" type="button" data-dp-dialog-open="{{ dp_modal_id }}">View Parts</button>
@@ -68,6 +69,7 @@
             <button class="dp-parts-dialog__close" type="button" data-dp-dialog-close aria-label="Close">×</button>
           </div>
           <div class="dp-parts-dialog__body">
+            <div class="dp-parts-dialog__scroll-progress dp-parts-dialog__scroll-progress--top" aria-hidden="true"><span></span></div>
             <div class="dp-parts-dialog__table-wrap" data-dp-scroll-table>
               <table>
                 <thead><tr><th>Doo Number</th><th>Color</th><th>Qty</th><th>Part Type</th></tr></thead>
@@ -116,18 +118,22 @@
         });
       }
       function updateScrollProgress(wrap) {
-        var track = wrap.nextElementSibling;
-        if (!track || !track.classList.contains('dp-parts-dialog__scroll-progress')) return;
-        var thumb = track.firstElementChild;
+        var tracks = [wrap.previousElementSibling, wrap.nextElementSibling].filter(function (track) {
+          return track && track.classList.contains('dp-parts-dialog__scroll-progress');
+        });
+        if (!tracks.length) return;
         var scrollable = wrap.scrollWidth > wrap.clientWidth + 1;
-        track.style.visibility = scrollable ? 'visible' : 'hidden';
-        if (!scrollable) return;
-        var ratio = Math.min(1, wrap.clientWidth / wrap.scrollWidth);
-        var thumbWidth = Math.max(28, track.clientWidth * ratio);
-        var travel = Math.max(0, track.clientWidth - thumbWidth);
-        var progress = wrap.scrollLeft / Math.max(1, wrap.scrollWidth - wrap.clientWidth);
-        thumb.style.width = thumbWidth + 'px';
-        thumb.style.transform = 'translateX(' + (travel * progress) + 'px)';
+        tracks.forEach(function (track) {
+          var thumb = track.firstElementChild;
+          track.style.visibility = scrollable ? 'visible' : 'hidden';
+          if (!scrollable) return;
+          var ratio = Math.min(1, wrap.clientWidth / wrap.scrollWidth);
+          var thumbWidth = Math.max(28, track.clientWidth * ratio);
+          var travel = Math.max(0, track.clientWidth - thumbWidth);
+          var progress = wrap.scrollLeft / Math.max(1, wrap.scrollWidth - wrap.clientWidth);
+          thumb.style.width = thumbWidth + 'px';
+          thumb.style.transform = 'translateX(' + (travel * progress) + 'px)';
+        });
       }
       function refresh() {
         mountPartsDetails();
