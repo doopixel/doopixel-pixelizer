@@ -982,10 +982,11 @@ function drawStudCountForContext(
     const radius = scalingFactor / 2;
     ctx.font = `${scalingFactor / 2}px Arial`;
     availableStudHexList.forEach((pixelHex, i) => {
-        const number = i + 1;
+        const rowNumber = i + 1;
+        const instructionCode = getInstructionCode(pixelHex, rowNumber);
         ctx.beginPath();
         const x = horizontalOffset;
-        const y = verticalOffset + radius * 2.5 * number;
+        const y = verticalOffset + radius * 2.5 * rowNumber;
         drawPixel(
             ctx,
             x - radius,
@@ -996,7 +997,7 @@ function drawStudCountForContext(
             PIXEL_TYPE_TO_FLATTENED[pixelType]
         );
         ctx.fillStyle = inverseHex(pixelHex);
-        ctx.fillText(number, x - (scalingFactor * (1 + Math.floor(number / 2) / 6)) / 8, y + scalingFactor / 8);
+        drawCenteredInstructionCode(ctx, instructionCode, x, y, scalingFactor);
         ctx.fillStyle = "#000000";
         if (!("" + pixelType).match("^variable.*$")) {
             ctx.fillText(`X ${studMap[pixelHex] || 0}`, x + radius * 1.5, y);
@@ -1016,6 +1017,22 @@ function drawStudCountForContext(
         radius * 2.5 * (availableStudHexList.length + 0.5)
     );
     ctx.stroke();
+}
+
+function getInstructionCode(pixelHex, fallback) {
+    const label = typeof HEX_TO_COLOR_NAME !== "undefined" ? HEX_TO_COLOR_NAME[pixelHex] : "";
+    const match = String(label || "").match(/^([A-Za-z]?\d+)\s+-\s+/);
+    return match ? match[1].toUpperCase() : String(fallback);
+}
+
+function drawCenteredInstructionCode(ctx, code, x, y, scalingFactor) {
+    const text = String(code);
+    const baseFontSize = scalingFactor / 2;
+    const fontSize = text.length >= 3 ? baseFontSize * 0.72 : baseFontSize;
+    ctx.font = `${fontSize}px Arial`;
+    const width = ctx.measureText(text).width;
+    ctx.fillText(text, x - width / 2, y + fontSize * 0.35);
+    ctx.font = `${baseFontSize}px Arial`;
 }
 
 function generateInstructionTitlePage(
@@ -1147,9 +1164,9 @@ function generateInstructionPage(
 
     ctx.lineWidth = 1;
 
-    const studToNumber = {};
+    const studToInstructionCode = {};
     availableStudHexList.forEach((stud, i) => {
-        studToNumber[stud] = i + 1;
+        studToInstructionCode[stud] = getInstructionCode(stud, i + 1);
     });
 
     ctx.font = `${scalingFactor / 2}px Arial`;
@@ -1175,10 +1192,12 @@ function generateInstructionPage(
                 PIXEL_TYPE_TO_FLATTENED[pixelType]
             );
             ctx.fillStyle = inverseHex(pixelHex);
-            ctx.fillText(
-                studToNumber[pixelHex],
-                x - (scalingFactor * (1 + Math.floor(studToNumber[pixelHex] / 2) / 6)) / 8,
-                y + scalingFactor / 8
+            drawCenteredInstructionCode(
+                ctx,
+                studToInstructionCode[pixelHex],
+                x,
+                y,
+                scalingFactor
             );
         }
     }

@@ -4,21 +4,21 @@
     "colorName": "Black",
     "bricklinkColorId": 11,
     "flatSku": "DP-FLAT-001",
-    "studSku": "DP-STUD-001"
+    "studSku": "DP-STUD-A1"
   },
   "#0057a6": {
     "doopixelNo": "002",
     "colorName": "Blue",
     "bricklinkColorId": 7,
     "flatSku": "DP-FLAT-002",
-    "studSku": "DP-STUD-002"
+    "studSku": "DP-STUD-A2"
   },
   "#10cb31": {
     "doopixelNo": "003",
     "colorName": "Bright Green",
     "bricklinkColorId": 36,
     "flatSku": "DP-FLAT-003",
-    "studSku": "DP-STUD-003"
+    "studSku": "DP-STUD-A3"
   },
   "#9fc3e9": {
     "doopixelNo": "004",
@@ -39,21 +39,21 @@
     "colorName": "Bright Light Yellow",
     "bricklinkColorId": 103,
     "flatSku": "DP-FLAT-006",
-    "studSku": "DP-STUD-006"
+    "studSku": "DP-STUD-A6"
   },
   "#ffbbff": {
     "doopixelNo": "007",
     "colorName": "Bright Pink",
     "bricklinkColorId": 104,
     "flatSku": "DP-FLAT-007",
-    "studSku": "DP-STUD-007"
+    "studSku": "DP-STUD-A7"
   },
   "#532115": {
     "doopixelNo": "008",
     "colorName": "Brown",
     "bricklinkColorId": 8,
     "flatSku": null,
-    "studSku": "DP-STUD-008"
+    "studSku": "DP-STUD-A8"
   },
   "#f88379": {
     "doopixelNo": "009",
@@ -74,63 +74,63 @@
     "colorName": "Dark Blue",
     "bricklinkColorId": 63,
     "flatSku": "DP-FLAT-011",
-    "studSku": "DP-STUD-011"
+    "studSku": "DP-STUD-A11"
   },
   "#595d60": {
     "doopixelNo": "012",
     "colorName": "Dark Bluish Gray",
     "bricklinkColorId": 85,
     "flatSku": "DP-FLAT-012",
-    "studSku": "DP-STUD-012"
+    "studSku": "DP-STUD-A12"
   },
   "#330000": {
     "doopixelNo": "013",
     "colorName": "Dark Brown",
     "bricklinkColorId": 120,
     "flatSku": "DP-FLAT-013",
-    "studSku": "DP-STUD-013"
+    "studSku": "DP-STUD-A13"
   },
   "#6b5a5a": {
     "doopixelNo": "014",
     "colorName": "Dark Gray",
     "bricklinkColorId": 10,
     "flatSku": null,
-    "studSku": "DP-STUD-014"
+    "studSku": "DP-STUD-A14"
   },
   "#b35408": {
     "doopixelNo": "015",
     "colorName": "Dark Orange",
     "bricklinkColorId": 68,
     "flatSku": "DP-FLAT-015",
-    "studSku": "DP-STUD-015"
+    "studSku": "DP-STUD-A15"
   },
   "#c87080": {
     "doopixelNo": "016",
     "colorName": "Dark Pink",
     "bricklinkColorId": 47,
     "flatSku": "DP-FLAT-016",
-    "studSku": "DP-STUD-016"
+    "studSku": "DP-STUD-A16"
   },
   "#5f2683": {
     "doopixelNo": "017",
     "colorName": "Dark Purple",
     "bricklinkColorId": 89,
     "flatSku": null,
-    "studSku": "DP-STUD-017"
+    "studSku": "DP-STUD-A17"
   },
   "#6a0e15": {
     "doopixelNo": "018",
     "colorName": "Dark Red",
     "bricklinkColorId": 59,
     "flatSku": "DP-FLAT-018",
-    "studSku": "DP-STUD-018"
+    "studSku": "DP-STUD-A18"
   },
   "#907450": {
     "doopixelNo": "019",
     "colorName": "Dark Tan",
     "bricklinkColorId": 69,
     "flatSku": "DP-FLAT-019",
-    "studSku": "DP-STUD-019"
+    "studSku": "DP-STUD-A19"
   },
   "#008a80": {
     "doopixelNo": "020",
@@ -144,14 +144,14 @@
     "colorName": "Flat Silver",
     "bricklinkColorId": 95,
     "flatSku": "DP-FLAT-021",
-    "studSku": "DP-STUD-021"
+    "studSku": "DP-STUD-A21"
   },
   "#00642e": {
     "doopixelNo": "022",
     "colorName": "Green",
     "bricklinkColorId": 6,
     "flatSku": null,
-    "studSku": "DP-STUD-022"
+    "studSku": "DP-STUD-A22"
   },
   "#b18cbf": {
     "doopixelNo": "023",
@@ -165,21 +165,21 @@
     "colorName": "Light Aqua",
     "bricklinkColorId": 152,
     "flatSku": "DP-FLAT-024",
-    "studSku": "DP-STUD-024"
+    "studSku": "DP-STUD-A24"
   },
   "#afb5c7": {
     "doopixelNo": "025",
     "colorName": "Light Bluish Gray",
     "bricklinkColorId": 86,
     "flatSku": "DP-FLAT-025",
-    "studSku": "DP-STUD-025"
+    "studSku": "DP-STUD-A25"
   },
   "#9c9c9c": {
     "doopixelNo": "026",
     "colorName": "Light Gray",
     "bricklinkColorId": 9,
     "flatSku": null,
-    "studSku": "DP-STUD-026"
+    "studSku": "DP-STUD-A26"
   },
   "#feccb0": {
     "doopixelNo": "027",
@@ -193,21 +193,21 @@
     "colorName": "Lime",
     "bricklinkColorId": 34,
     "flatSku": "DP-FLAT-028",
-    "studSku": "DP-STUD-028"
+    "studSku": "DP-STUD-A28"
   },
   "#b52952": {
     "doopixelNo": "029",
     "colorName": "Magenta",
     "bricklinkColorId": 71,
     "flatSku": "DP-FLAT-029",
-    "studSku": "DP-STUD-029"
+    "studSku": "DP-STUD-A29"
   },
   "#42c0fb": {
     "doopixelNo": "030",
     "colorName": "Medium Azure",
     "bricklinkColorId": 156,
     "flatSku": "DP-FLAT-030",
-    "studSku": "DP-STUD-030"
+    "studSku": "DP-STUD-A30"
   },
   "#61afff": {
     "doopixelNo": "031",
@@ -221,21 +221,21 @@
     "colorName": "Medium Lavender",
     "bricklinkColorId": 157,
     "flatSku": null,
-    "studSku": "DP-STUD-032"
+    "studSku": "DP-STUD-A32"
   },
   "#bdc618": {
     "doopixelNo": "033",
     "colorName": "Medium Lime",
     "bricklinkColorId": 76,
     "flatSku": null,
-    "studSku": "DP-STUD-033"
+    "studSku": "DP-STUD-A33"
   },
   "#e3a05b": {
     "doopixelNo": "034",
     "colorName": "Medium Nougat",
     "bricklinkColorId": 150,
     "flatSku": "DP-FLAT-034",
-    "studSku": "DP-STUD-034"
+    "studSku": "DP-STUD-A34"
   },
   "#fffc00": {
     "doopixelNo": "035",
@@ -256,83 +256,83 @@
     "colorName": "Olive Green",
     "bricklinkColorId": 155,
     "flatSku": "DP-FLAT-037",
-    "studSku": "DP-STUD-037"
+    "studSku": "DP-STUD-A37"
   },
   "#ff7e14": {
     "doopixelNo": "038",
     "colorName": "Orange",
     "bricklinkColorId": 4,
     "flatSku": "DP-FLAT-038",
-    "studSku": "DP-STUD-038"
+    "studSku": "DP-STUD-A38"
   },
   "#666660": {
     "doopixelNo": "039",
     "colorName": "Pearl Dark Gray",
     "bricklinkColorId": 77,
     "flatSku": null,
-    "studSku": "DP-STUD-039"
+    "studSku": "DP-STUD-A39"
   },
   "#e79500": {
     "doopixelNo": "040",
     "colorName": "Pearl Gold",
     "bricklinkColorId": 115,
     "flatSku": "DP-FLAT-040",
-    "studSku": "DP-STUD-040"
+    "studSku": "DP-STUD-A40"
   },
   "#b30006": {
     "doopixelNo": "041",
     "colorName": "Red",
     "bricklinkColorId": 5,
     "flatSku": "DP-FLAT-041",
-    "studSku": "DP-STUD-041"
+    "studSku": "DP-STUD-A41"
   },
   "#89351d": {
     "doopixelNo": "042",
     "colorName": "Reddish Brown",
     "bricklinkColorId": 88,
     "flatSku": "DP-FLAT-042",
-    "studSku": "DP-STUD-042"
+    "studSku": "DP-STUD-A42"
   },
   "#5a7184": {
     "doopixelNo": "043",
     "colorName": "Sand Blue",
     "bricklinkColorId": 55,
     "flatSku": "DP-FLAT-043",
-    "studSku": "DP-STUD-043"
+    "studSku": "DP-STUD-A43"
   },
   "#76a290": {
     "doopixelNo": "044",
     "colorName": "Sand Green",
     "bricklinkColorId": 48,
     "flatSku": null,
-    "studSku": "DP-STUD-044"
+    "studSku": "DP-STUD-A44"
   },
   "#dec69c": {
     "doopixelNo": "045",
     "colorName": "Tan",
     "bricklinkColorId": 2,
     "flatSku": "DP-FLAT-045",
-    "studSku": "DP-STUD-045"
+    "studSku": "DP-STUD-A45"
   },
   "#ffffff": {
     "doopixelNo": "046",
     "colorName": "White",
     "bricklinkColorId": 1,
     "flatSku": "DP-FLAT-046",
-    "studSku": "DP-STUD-046"
+    "studSku": "DP-STUD-A46"
   },
   "#f7d117": {
     "doopixelNo": "047",
     "colorName": "Yellow",
     "bricklinkColorId": 3,
     "flatSku": "DP-FLAT-047",
-    "studSku": "DP-STUD-047"
+    "studSku": "DP-STUD-A47"
   },
   "#dfeea5": {
     "doopixelNo": "048",
     "colorName": "Yellowish Green",
     "bricklinkColorId": 158,
     "flatSku": "DP-FLAT-048",
-    "studSku": "DP-STUD-048"
+    "studSku": "DP-STUD-A48"
   }
 }

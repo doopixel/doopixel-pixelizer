@@ -155,7 +155,7 @@ export async function onRequestGet() {
 
     <script src="/js/doopixel-image-upload.js?v=20260808a"></script>
     <script>
-      const SKU_MAP_URL = "/doopixel-pixelizer-sku-map.json";
+      const SKU_MAP_URL = "/doopixel-pixelizer-sku-map.json?v=20260818a";
       const loginForm = document.getElementById("login");
       const verifiedForm = document.getElementById("verified-form");
       const tokenInput = document.getElementById("token");
@@ -165,8 +165,8 @@ export async function onRequestGet() {
       let token = sessionStorage.getItem("doopixelGalleryAdminToken") || "";
       let skuMap = null;
       const PIECE_TYPES = {
-        "98138": "Flat Pixel Pieces (1x1 Round Tile)",
-        "4073": "Raised Pixel Pieces (1x1 Round Plate)",
+        "98138": "Flat Pixel Pieces (98138)",
+        "4073": "Raised Pixel Pieces (4073)",
       };
 
       function showMessage(text, type) {

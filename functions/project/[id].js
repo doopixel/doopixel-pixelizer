@@ -146,9 +146,9 @@ export async function onRequestGet({ params }) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" crossorigin="anonymous"></script>
     <script>window.DOOPIXEL_INSTRUCTION_BRAND = "DooPixel";</script>
     <script src="/js/bricklink-colors.js"></script>
-    <script src="/js/algo.js"></script>
-    <script src="/js/doopixel-instruction-data.js?v=20260802a"></script>
-    <script src="/js/doopixel-project-instructions.js?v=20260802a"></script>
+    <script src="/js/algo.js?v=20260818a"></script>
+    <script src="/js/doopixel-instruction-data.js?v=20260818a"></script>
+    <script src="/js/doopixel-project-instructions.js?v=20260818a"></script>
     <script src="/js/doopixel-image-upload.js?v=20260808a"></script>
     <script>
       const PROJECT_ID = ${JSON.stringify(projectId)};
@@ -169,8 +169,8 @@ export async function onRequestGet({ params }) {
           const type = document.createElement("td");
           type.textContent = part.pieceTypeName ||
             (String(part.pieceType) === "4073"
-              ? "Raised Pixel Pieces (1x1 Round Plate)"
-              : "Flat Pixel Pieces (1x1 Round Tile)");
+              ? "Raised Pixel Pieces (4073)"
+              : "Flat Pixel Pieces (98138)");
           const color = document.createElement("td");
           const swatch = document.createElement("span");
           swatch.className = "swatch";

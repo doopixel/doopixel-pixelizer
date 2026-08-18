@@ -18,6 +18,16 @@
     return hex;
   }
 
+  function formatWarehouseCode(pieceType, doopixelNo) {
+    const rawNumber = String(doopixelNo || "").trim();
+    const normalizedNumber = /^\d+$/.test(rawNumber)
+      ? String(Number(rawNumber))
+      : rawNumber;
+
+    if (!normalizedNumber) return "";
+    return String(pieceType) === "4073" ? "A" + normalizedNumber : normalizedNumber;
+  }
+
   function bytesToBase64(bytes) {
     let binary = "";
     const chunkSize = 8192;
@@ -193,5 +203,6 @@
     VERSION: VERSION,
     create: create,
     decode: decode,
+    formatWarehouseCode: formatWarehouseCode,
   };
 });

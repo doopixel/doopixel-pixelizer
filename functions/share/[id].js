@@ -794,8 +794,8 @@ export async function onRequestGet({ params, env, request }) {
           const typeCell = document.createElement("td");
           typeCell.textContent = part.pieceTypeName ||
             (String(part.pieceType) === "4073"
-              ? "Raised Pixel Pieces (1x1 Round Plate)"
-              : "Flat Pixel Pieces (1x1 Round Tile)");
+              ? "Raised Pixel Pieces (4073)"
+              : "Flat Pixel Pieces (98138)");
           const colorCell = document.createElement("td");
           const swatch = document.createElement("span");
           swatch.className = "swatch";

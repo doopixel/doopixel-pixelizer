@@ -80,7 +80,7 @@ test("approved design API returns the cover first and all stored photos", async 
                   id: "DP-DESIGN1",
                   title: "Multi Photo Design",
                   piece_type: "98138",
-                  piece_type_name: "Flat Pixel Pieces (1x1 Round Tile)",
+                  piece_type_name: "Flat Pixel Pieces (98138)",
                   width: 48,
                   height: 48,
                   parts_json: "[]",

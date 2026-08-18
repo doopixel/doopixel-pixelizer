@@ -42,7 +42,11 @@
     const title = (options && options.title) || "Pixel Art";
 
     decoded.palette.forEach(function (color) {
-      HEX_TO_COLOR_NAME[color.hex] = color.doopixelNo + " - " + color.colorName;
+      const warehouseCode = window.DooPixelInstructionData.formatWarehouseCode(
+        decoded.pieceType,
+        color.doopixelNo
+      );
+      HEX_TO_COLOR_NAME[color.hex] = warehouseCode + " - " + color.colorName;
     });
 
     const finalImageCanvas = document.createElement("canvas");
