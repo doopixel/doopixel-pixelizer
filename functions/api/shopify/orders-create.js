@@ -107,6 +107,7 @@ export async function onRequestPost({ request, env }) {
 
   const now = new Date().toISOString();
   const projectUpdates = [];
+  const partsImportUpdates = [];
 
   for (const lineItem of Array.isArray(order.line_items) ? order.line_items : []) {
     const properties = propertiesToMap(lineItem.properties);
@@ -117,6 +118,31 @@ export async function onRequestPost({ request, env }) {
     ]).toUpperCase();
     const accessToken = findProperty(properties, ["_DooPixel Project Token", "DooPixel Project Token"]);
     const projectId = findProperty(properties, ["_DooPixel Project ID", "DooPixel Project ID"]).toUpperCase();
+
+    const partsImportId = findProperty(properties, [
+      "_DooPixel Parts Import ID",
+      "DooPixel Import ID",
+    ]).toUpperCase();
+    const partsImportToken = findProperty(properties, ["_DooPixel Parts Import Token"]);
+    const purchasedPacks = Number(lineItem.quantity);
+    if (/^IMP-[A-Z0-9]{12}$/.test(partsImportId) && partsImportToken && Number.isInteger(purchasedPacks) && purchasedPacks > 0) {
+      partsImportUpdates.push(
+        env.DB.prepare(
+          `UPDATE parts_imports
+           SET status = 'ordered',
+               shopify_order_id = ?,
+               order_number = ?,
+               order_email_hash = ?,
+               ordered_at = COALESCE(ordered_at, ?),
+               updated_at = ?
+           WHERE id = ? AND charge_blocks = ?
+             AND EXISTS (
+               SELECT 1 FROM parts_import_access_tokens t
+               WHERE t.import_id = parts_imports.id AND t.token_hash = ?
+             )`
+        ).bind(orderId, orderNumber, emailHash || null, now, now, partsImportId, purchasedPacks, await sha256Hex(partsImportToken))
+      );
+    }
 
     if (
       !/^DP-[A-Z0-9]{6,32}$/.test(designId) ||
@@ -144,6 +170,7 @@ export async function onRequestPost({ request, env }) {
 
   const statements = [
     ...projectUpdates,
+    ...partsImportUpdates,
     env.DB.prepare("INSERT INTO webhook_deliveries (id, topic, received_at) VALUES (?, ?, ?)").bind(
       deliveryId,
       "orders/create",
@@ -154,13 +181,19 @@ export async function onRequestPost({ request, env }) {
   const updatedProjects = results.slice(0, projectUpdates.length).reduce((total, result) => {
     return total + Number(result?.meta?.changes || 0);
   }, 0);
+  const partsStart = projectUpdates.length;
+  const updatedPartsImports = results.slice(partsStart, partsStart + partsImportUpdates.length).reduce((total, result) => {
+    return total + Number(result?.meta?.changes || 0);
+  }, 0);
 
   logWebhook("accepted", {
     deliveryId,
     sourceShop,
     projectCandidates: projectUpdates.length,
     updatedProjects,
+    partsImportCandidates: partsImportUpdates.length,
+    updatedPartsImports,
     lookupAvailable: Boolean(emailHash),
   });
-  return jsonResponse({ ok: true, updatedProjects, lookupAvailable: Boolean(emailHash) });
+  return jsonResponse({ ok: true, updatedProjects, updatedPartsImports, lookupAvailable: Boolean(emailHash) });
 }

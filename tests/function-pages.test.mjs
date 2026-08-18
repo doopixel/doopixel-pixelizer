@@ -1,6 +1,7 @@
 import test from "node:test";
 
 import { onRequestGet as getVerifiedAdmin } from "../functions/admin/verified.js";
+import { onRequestGet as getPartsImportsAdmin } from "../functions/admin/parts-imports.js";
 import { onRequestGet as getGallery } from "../functions/gallery.js";
 import { onRequestGet as getProject } from "../functions/project/[id].js";
 import { onRequestGet as getShare } from "../functions/share/[id].js";
@@ -19,6 +20,7 @@ function assertInlineScriptsParse(html) {
 test("dynamic HTML pages contain valid inline JavaScript", async () => {
   const responses = [
     await getVerifiedAdmin(),
+    await getPartsImportsAdmin(),
     await getGallery(),
     await getProject({ params: { id: "PRJ-TEST1234" } }),
     await getShare({

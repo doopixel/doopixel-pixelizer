@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Import BrickLink XML | DooPixel</title>
+    <link href="/assets/png/doopixel-tab-icon.png?v=20260806" rel="icon" type="image/png" />
+    <link rel="stylesheet" href="/css/doopixel-site-header.css?v=20260816d" />
+    <link rel="stylesheet" href="/css/doopixel-site-footer.css?v=20260816b" />
+    <style>
+      :root { --blue:#4961bd; --ink:#171717; --muted:#626262; --line:#d8d8d8; --soft:#f5f6fb; --yellow:#f4ce21; }
+      * { box-sizing:border-box; }
+      body { margin:0; color:var(--ink); background:#fff; font-family:Arial,Helvetica,sans-serif; }
+      .shell { width:min(100% - 32px, 960px); margin:0 auto; padding:46px 0 72px; }
+      .hero { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(280px,.7fr); gap:34px; align-items:start; }
+      h1 { margin:0 0 14px; font-size:clamp(32px,5vw,54px); line-height:1.02; }
+      h2 { margin:0 0 12px; font-size:22px; }
+      p { line-height:1.55; }
+      .lead { color:var(--muted); font-size:18px; max-width:680px; }
+      .card { border:1px solid var(--line); background:#fff; padding:24px; }
+      .notice { border-left:5px solid var(--yellow); background:#fffbe7; padding:14px 16px; margin:22px 0; }
+      .upload { display:grid; gap:14px; margin-top:26px; padding:26px; border:2px dashed #aeb7d7; background:var(--soft); }
+      input[type=file] { width:100%; padding:14px; background:#fff; border:1px solid var(--line); }
+      button { min-height:46px; border:1px solid #111; padding:10px 18px; background:#111; color:#fff; font:inherit; font-weight:700; cursor:pointer; }
+      button:disabled { opacity:.55; cursor:wait; }
+      .summary { margin-top:30px; }
+      .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line); }
+      .stat { background:#fff; padding:18px; }
+      .stat strong { display:block; font-size:26px; margin-top:5px; }
+      .label { color:var(--muted); font-size:13px; }
+      .warning { color:#8b4a00; }
+      table { width:100%; border-collapse:collapse; margin-top:18px; }
+      th,td { text-align:left; border-bottom:1px solid var(--line); padding:10px 8px; }
+      th { font-size:13px; color:var(--muted); }
+      td:last-child,th:last-child { text-align:right; }
+      .actions { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-top:22px; }
+      .price { font-size:24px; font-weight:700; }
+      .hidden { display:none; }
+      @media (max-width:720px) { .hero { grid-template-columns:1fr; } .stats { grid-template-columns:repeat(2,1fr); } .actions { align-items:stretch; flex-direction:column; } }
+    </style>
+  </head>
+  <body>
+    <div class="dp-site-nav-wrap">
+      <nav class="dp-site-nav" aria-label="DooPixel main navigation">
+        <button class="dp-site-menu-button" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="dp-site-links"><img class="dp-site-icon" src="/assets/icons/lucide-menu.svg" alt="" /></button>
+        <a class="dp-site-logo" href="https://doopixel.com/" aria-label="DooPixel shop"><img src="https://cdn.shopify.com/s/files/1/0738/7562/0006/files/20260408-001830.png?v=1775578807" alt="DooPixel" /></a>
+        <div class="dp-site-links" id="dp-site-links">
+          <a class="dp-site-link" href="https://pixelizer.doopixel.com/">Upload Images</a>
+          <a class="dp-site-link" href="https://pixelizer.doopixel.com/gallery">Gallery &amp; Shop</a>
+          <a class="dp-site-link" href="https://pixelizer.doopixel.com/find-project">Find My Project</a>
+        </div>
+        <a class="dp-site-cart-icon" href="https://doopixel.com/cart" aria-label="Shopping cart"><img class="dp-site-icon" src="/assets/icons/lucide-shopping-cart.svg" alt="" /></a>
+      </nav>
+    </div>
+
+    <main class="shell">
+      <div class="hero">
+        <section>
+          <h1>Import a BrickLink XML Parts List</h1>
+          <p class="lead">Upload your BrickLink Wanted List XML. We match supported colors to DooPixel warehouse numbers, calculate the quantity, and prepare one cart item.</p>
+        </section>
+        <aside class="card">
+          <h2>Supported parts</h2>
+          <p><strong>Flat Pixel Pieces (98138)</strong><br /><strong>Raised Pixel Pieces (4073)</strong></p>
+          <p class="label">Other parts in the XML file are ignored and shown before checkout.</p>
+        </aside>
+      </div>
+
+      <div class="notice"><strong>Important:</strong> DooPixel pieces are third-party compatible pixel pieces and are not LEGO® products. LEGO® is a trademark of the LEGO Group, which does not sponsor, authorize, or endorse this product or website.</div>
+
+      <form id="upload-form" class="upload">
+        <label for="xml-file"><strong>Choose a BrickLink XML file</strong></label>
+        <input id="xml-file" name="file" type="file" accept=".xml,text/xml,application/xml" required />
+        <span class="label">Only .xml files up to 256 KB. Your original XML file is not retained.</span>
+        <button id="analyze" type="submit">Match My Parts</button>
+      </form>
+      <div id="message" class="notice hidden" role="alert"></div>
+
+      <section id="summary" class="summary hidden" aria-live="polite">
+        <h2>Your matched DooPixel pieces</h2>
+        <div class="stats">
+          <div class="stat"><span class="label">Total pieces</span><strong id="total"></strong></div>
+          <div class="stat"><span class="label">Flat 98138</span><strong id="flat"></strong></div>
+          <div class="stat"><span class="label">Raised 4073</span><strong id="raised"></strong></div>
+          <div class="stat"><span class="label">100-piece packs</span><strong id="packs"></strong></div>
+        </div>
+        <p id="ignored" class="warning hidden"></p>
+        <p id="unsupported" class="warning hidden"></p>
+        <div style="overflow-x:auto">
+          <table>
+            <thead><tr><th>Warehouse No.</th><th>Part</th><th>Color</th><th>SKU</th><th>Qty</th></tr></thead>
+            <tbody id="lines"></tbody>
+          </table>
+        </div>
+        <div class="actions">
+          <div><span class="label">$2.00 per 100 pieces; a partial 100 counts as one pack.</span><div id="price" class="price"></div></div>
+          <button id="checkout" type="button">Add Custom Pixel Pieces to Cart</button>
+        </div>
+      </section>
+    </main>
+    <div data-doopixel-footer></div>
+    <script src="/js/doopixel-site-header.js?v=20260816d"></script>
+    <script src="/js/doopixel-site-footer.js?v=20260816b"></script>
+    <script>
+      (function () {
+        const SHOPIFY_URL = "https://doopixel.com/products/custom-pixel-pieces";
+        const form = document.getElementById("upload-form");
+        const button = document.getElementById("analyze");
+        const message = document.getElementById("message");
+        const summary = document.getElementById("summary");
+        let result = null;
+
+        function showMessage(text) { message.textContent = text; message.classList.toggle("hidden", !text); }
+        function encodePayload(payload) {
+          const bytes = new TextEncoder().encode(JSON.stringify(payload));
+          let binary = ""; bytes.forEach((byte) => { binary += String.fromCharCode(byte); });
+          return btoa(binary);
+        }
+        function number(value) { return Number(value || 0).toLocaleString(); }
+        function render(data) {
+          document.getElementById("total").textContent = number(data.totalPieces);
+          document.getElementById("flat").textContent = number(data.flatPieces);
+          document.getElementById("raised").textContent = number(data.raisedPieces);
+          document.getElementById("packs").textContent = number(data.chargeBlocks);
+          document.getElementById("price").textContent = "$" + (data.priceCents / 100).toFixed(2);
+          const ignored = document.getElementById("ignored");
+          ignored.textContent = data.ignoredLines ? data.ignoredLines + " unsupported part row(s), containing " + number(data.ignoredPieces) + " piece(s), were ignored." : "";
+          ignored.classList.toggle("hidden", !data.ignoredLines);
+          const unsupported = document.getElementById("unsupported");
+          unsupported.textContent = data.unsupportedLines.length ? data.unsupportedLines.length + " supported-part color row(s) are not stocked and were not charged." : "";
+          unsupported.classList.toggle("hidden", !data.unsupportedLines.length);
+          const tbody = document.getElementById("lines"); tbody.innerHTML = "";
+          data.lines.forEach((line) => {
+            const row = document.createElement("tr");
+            [line.warehouseCode, line.pieceType, line.colorName + " (BL " + line.bricklinkColorId + ")", line.sku, number(line.quantity)].forEach((value) => {
+              const cell = document.createElement("td"); cell.textContent = value; row.appendChild(cell);
+            });
+            tbody.appendChild(row);
+          });
+          summary.classList.remove("hidden");
+          summary.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        form.addEventListener("submit", async (event) => {
+          event.preventDefault(); button.disabled = true; button.textContent = "Matching..."; showMessage(""); summary.classList.add("hidden");
+          try {
+            const response = await fetch("/api/parts-imports/create", { method: "POST", body: new FormData(form) });
+            const data = await response.json();
+            if (!response.ok || !data.ok) throw new Error(data.error || "Could not import this XML file.");
+            result = data; render(data);
+          } catch (error) { showMessage(error.message || String(error)); }
+          finally { button.disabled = false; button.textContent = "Match My Parts"; }
+        });
+        document.getElementById("checkout").addEventListener("click", () => {
+          if (!result) return;
+          const payload = {
+            v: 1, importId: result.importId, importToken: result.importToken,
+            variantId: result.variantId, quantity: result.chargeBlocks,
+            totalPieces: result.totalPieces, flatPieces: result.flatPieces,
+            raisedPieces: result.raisedPieces, colorLines: result.colorLines,
+            ignoredLines: result.ignoredLines,
+            lines: result.lines.map(function (line) {
+              return {
+                pieceType: line.pieceType,
+                warehouseCode: line.warehouseCode,
+                colorName: line.colorName,
+                quantity: line.quantity,
+              };
+            }),
+          };
+          window.location.href = SHOPIFY_URL + "#doopixel-import=" + encodeURIComponent(encodePayload(payload));
+        });
+      })();
+    </script>
+  </body>
+</html>

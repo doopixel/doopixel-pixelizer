@@ -1,0 +1,62 @@
+{% comment %}Add this block to the Custom Pixel Pieces product template only.{% endcomment %}
+<div id="doopixel-parts-import-entry">
+  <a href="https://pixelizer.doopixel.com/parts-import" style="display:inline-flex;min-height:48px;align-items:center;justify-content:center;padding:10px 20px;background:#111;color:#fff;text-decoration:none;font-weight:700;">
+    Upload BrickLink XML
+  </a>
+  <p style="margin-top:10px;line-height:1.5;">Supports only Flat Pixel Pieces (98138) and Raised Pixel Pieces (4073). Other parts are ignored.</p>
+  <p style="font-size:.9em;line-height:1.5;">DooPixel pieces are third-party compatible pixel pieces and are not LEGO® products. LEGO® is a trademark of the LEGO Group, which does not sponsor, authorize, or endorse this product or website.</p>
+</div>
+<div id="doopixel-parts-import-status" hidden role="status"></div>
+<script>
+  (function () {
+    var prefix = "#doopixel-import=";
+    if (window.location.hash.indexOf(prefix) !== 0) return;
+    var status = document.getElementById("doopixel-parts-import-status");
+    document.getElementById("doopixel-parts-import-entry").hidden = true;
+    status.hidden = false;
+    status.textContent = "Adding your imported pixel pieces to cart...";
+    try {
+      var encoded = decodeURIComponent(window.location.hash.slice(prefix.length));
+      var binary = atob(encoded);
+      var bytes = Uint8Array.from(binary, function (character) { return character.charCodeAt(0); });
+      var payload = JSON.parse(new TextDecoder().decode(bytes));
+      if (Number(payload.v) !== 1 || String(payload.variantId) !== "57037331595430" || !payload.importId || !payload.importToken) {
+        throw new Error("Invalid DooPixel parts import.");
+      }
+      var quantity = Number(payload.quantity);
+      if (!Number.isInteger(quantity) || quantity < 1 || quantity > 100000) throw new Error("Invalid pack quantity.");
+      var properties = {
+        "Imported Pieces": String(payload.totalPieces),
+        "Flat Pieces (98138)": String(payload.flatPieces),
+        "Raised Pieces (4073)": String(payload.raisedPieces),
+        "Color Lines": String(payload.colorLines),
+        "Ignored XML Lines": String(payload.ignoredLines || 0),
+        "DooPixel Import ID": String(payload.importId),
+        "_DooPixel Parts Import ID": String(payload.importId),
+        "_DooPixel Parts Import Token": String(payload.importToken)
+      };
+      if (!Array.isArray(payload.lines) || payload.lines.length < 1 || payload.lines.length > 100) {
+        throw new Error("Invalid DooPixel color list.");
+      }
+      payload.lines.forEach(function (line) {
+        var pieceType = String(line.pieceType);
+        var warehouseCode = String(line.warehouseCode).slice(0, 8);
+        var colorName = String(line.colorName).slice(0, 80);
+        var lineQuantity = Number(line.quantity);
+        if ((pieceType !== "98138" && pieceType !== "4073") || !warehouseCode || !colorName || !Number.isInteger(lineQuantity) || lineQuantity < 1) {
+          throw new Error("Invalid DooPixel color line.");
+        }
+        var typeLabel = pieceType === "98138" ? "Flat 98138" : "Raised 4073";
+        properties[typeLabel + " · " + warehouseCode + " · " + colorName] = String(lineQuantity);
+      });
+      fetch(window.Shopify.routes.root + "cart/add.js", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({ items: [{ id: 57037331595430, quantity: quantity, properties: properties }] })
+      }).then(function (response) {
+        if (!response.ok) return response.json().then(function (body) { throw new Error(body.description || "Could not add this item to cart."); });
+        window.location.replace(window.Shopify.routes.root + "cart");
+      }).catch(function (error) { status.textContent = error.message || String(error); });
+    } catch (error) { status.textContent = error.message || String(error); }
+  })();
+</script>
