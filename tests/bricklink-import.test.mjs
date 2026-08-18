@@ -80,3 +80,21 @@ test("customer and cart tables show synchronized mobile scroll progress above an
   assert.match(page, /Turn A BrickLink List Into A Ready-To-Pick DooPixel Order/);
   assert.match(cart, /Matching Parts Details/);
 });
+
+test("Shopify pick properties are readable and do not expose color codes", async () => {
+  const page = await fs.readFile(new URL("../app/parts-import/index.html", import.meta.url), "utf8");
+  const cart = await fs.readFile(new URL("../shopify/cart-matching-parts-details-custom-liquid.liquid", import.meta.url), "utf8");
+  assert.match(page, /_Pick · .*warehouseCode.*colorName.*typeLabel/);
+  assert.match(page, /properties\[_Import ID\]/);
+  assert.match(page, /properties\[_Import Token\]/);
+  assert.doesNotMatch(page, /properties\[_DooPixel Total Pieces\]/);
+  assert.doesNotMatch(page, /_DP\|/);
+  assert.doesNotMatch(page, /const key = .*line\.hex/);
+  assert.match(cart, /split: ' · '/);
+  assert.doesNotMatch(cart, /dp_property_parts\[4\]/);
+
+  const skuMap = JSON.parse(await fs.readFile(new URL("../app/doopixel-pixelizer-sku-map.json", import.meta.url), "utf8"));
+  Object.entries(skuMap).forEach(([hex, color]) => {
+    assert.match(cart, new RegExp(`dp-parts-dialog__swatch--${Number(color.doopixelNo)} \\{ background: ${hex}; \\}`));
+  });
+});

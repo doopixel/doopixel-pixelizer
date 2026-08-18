@@ -264,14 +264,11 @@
           const cartForm = document.createElement("form"); cartForm.method = "post"; cartForm.action = SHOPIFY_CART_ADD_URL; cartForm.style.display = "none";
           hiddenInput(cartForm, "form_type", "product"); hiddenInput(cartForm, "utf8", "✓"); hiddenInput(cartForm, "id", SHOPIFY_VARIANT_ID);
           hiddenInput(cartForm, "quantity", data.chargeBlocks); hiddenInput(cartForm, "return_to", "/cart");
-          hiddenInput(cartForm, "properties[_DooPixel Parts Import ID]", data.importId);
-          hiddenInput(cartForm, "properties[_DooPixel Parts Import Token]", data.importToken);
-          hiddenInput(cartForm, "properties[_DooPixel Total Pieces]", data.totalPieces);
-          hiddenInput(cartForm, "properties[_DooPixel Flat Pieces]", data.flatPieces);
-          hiddenInput(cartForm, "properties[_DooPixel Raised Pieces]", data.raisedPieces);
+          hiddenInput(cartForm, "properties[_Import ID]", data.importId);
+          hiddenInput(cartForm, "properties[_Import Token]", data.importToken);
           data.lines.forEach(function (line) {
             const typeLabel = line.pieceType === "98138" ? "Flat (98138)" : "Raised (4073)";
-            const key = "_DP|" + typeLabel + "|" + line.warehouseCode + "|" + line.colorName + "|" + line.hex;
+            const key = "_Pick · " + line.warehouseCode + " · " + line.colorName + " · " + typeLabel;
             hiddenInput(cartForm, "properties[" + key + "]", line.quantity);
           });
           document.body.appendChild(cartForm); cartForm.submit();

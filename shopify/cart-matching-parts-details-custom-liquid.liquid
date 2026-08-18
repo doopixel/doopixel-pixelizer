@@ -36,6 +36,54 @@
     .dp-parts-dialog td:first-child, .dp-parts-dialog td:nth-child(3) { font-weight: 700; }
     .dp-parts-dialog__color { display: inline-flex; align-items: center; gap: 9px; white-space: nowrap; }
     .dp-parts-dialog__swatch { width: 22px; height: 22px; border: 1px solid rgba(0,0,0,.22); border-radius: 50%; box-shadow: inset 0 0 0 2px rgba(255,255,255,.3); }
+    .dp-parts-dialog__swatch--1 { background: #212121; }
+    .dp-parts-dialog__swatch--2 { background: #0057a6; }
+    .dp-parts-dialog__swatch--3 { background: #10cb31; }
+    .dp-parts-dialog__swatch--4 { background: #9fc3e9; }
+    .dp-parts-dialog__swatch--5 { background: #f7ba30; }
+    .dp-parts-dialog__swatch--6 { background: #f3e055; }
+    .dp-parts-dialog__swatch--7 { background: #ffbbff; }
+    .dp-parts-dialog__swatch--8 { background: #532115; }
+    .dp-parts-dialog__swatch--9 { background: #f88379; }
+    .dp-parts-dialog__swatch--10 { background: #3399ff; }
+    .dp-parts-dialog__swatch--11 { background: #143044; }
+    .dp-parts-dialog__swatch--12 { background: #595d60; }
+    .dp-parts-dialog__swatch--13 { background: #330000; }
+    .dp-parts-dialog__swatch--14 { background: #6b5a5a; }
+    .dp-parts-dialog__swatch--15 { background: #b35408; }
+    .dp-parts-dialog__swatch--16 { background: #c87080; }
+    .dp-parts-dialog__swatch--17 { background: #5f2683; }
+    .dp-parts-dialog__swatch--18 { background: #6a0e15; }
+    .dp-parts-dialog__swatch--19 { background: #907450; }
+    .dp-parts-dialog__swatch--20 { background: #008a80; }
+    .dp-parts-dialog__swatch--21 { background: #898788; }
+    .dp-parts-dialog__swatch--22 { background: #00642e; }
+    .dp-parts-dialog__swatch--23 { background: #b18cbf; }
+    .dp-parts-dialog__swatch--24 { background: #ccffff; }
+    .dp-parts-dialog__swatch--25 { background: #afb5c7; }
+    .dp-parts-dialog__swatch--26 { background: #9c9c9c; }
+    .dp-parts-dialog__swatch--27 { background: #feccb0; }
+    .dp-parts-dialog__swatch--28 { background: #a6ca55; }
+    .dp-parts-dialog__swatch--29 { background: #b52952; }
+    .dp-parts-dialog__swatch--30 { background: #42c0fb; }
+    .dp-parts-dialog__swatch--31 { background: #61afff; }
+    .dp-parts-dialog__swatch--32 { background: #885e9e; }
+    .dp-parts-dialog__swatch--33 { background: #bdc618; }
+    .dp-parts-dialog__swatch--34 { background: #e3a05b; }
+    .dp-parts-dialog__swatch--35 { background: #fffc00; }
+    .dp-parts-dialog__swatch--36 { background: #ffaf7d; }
+    .dp-parts-dialog__swatch--37 { background: #7c9051; }
+    .dp-parts-dialog__swatch--38 { background: #ff7e14; }
+    .dp-parts-dialog__swatch--39 { background: #666660; }
+    .dp-parts-dialog__swatch--40 { background: #e79500; }
+    .dp-parts-dialog__swatch--41 { background: #b30006; }
+    .dp-parts-dialog__swatch--42 { background: #89351d; }
+    .dp-parts-dialog__swatch--43 { background: #5a7184; }
+    .dp-parts-dialog__swatch--44 { background: #76a290; }
+    .dp-parts-dialog__swatch--45 { background: #dec69c; }
+    .dp-parts-dialog__swatch--46 { background: #ffffff; }
+    .dp-parts-dialog__swatch--47 { background: #f7d117; }
+    .dp-parts-dialog__swatch--48 { background: #dfeea5; }
     .dp-parts-dialog__scroll-progress { display: none; height: 6px; margin: 10px 2px 0; overflow: hidden; border-radius: 999px; background: #dfece3; }
     .dp-parts-dialog__scroll-progress span { display: block; width: 100%; height: 100%; border-radius: inherit; background: #1f9d48; transform: translateX(0); }
     @media (max-width: 640px) {
@@ -75,13 +123,14 @@
                 <thead><tr><th>Doo Number</th><th>Color</th><th>Qty</th><th>Part Type</th></tr></thead>
                 <tbody>
                   {% for property in item.properties %}
-                    {% assign dp_property_parts = property.first | split: '|' %}
-                    {% if dp_property_parts[0] == '_DP' %}
+                    {% assign dp_property_parts = property.first | split: ' · ' %}
+                    {% if dp_property_parts[0] == '_Pick' %}
+                      {% assign dp_color_number = dp_property_parts[1] | remove: 'A' %}
                       <tr>
-                        <td>{{ dp_property_parts[2] | escape }}</td>
-                        <td><span class="dp-parts-dialog__color"><span class="dp-parts-dialog__swatch" style="background:{{ dp_property_parts[4] | escape }}"></span>{{ dp_property_parts[3] | escape }}</span></td>
-                        <td>{{ property.last | escape }}</td>
                         <td>{{ dp_property_parts[1] | escape }}</td>
+                        <td><span class="dp-parts-dialog__color"><span class="dp-parts-dialog__swatch dp-parts-dialog__swatch--{{ dp_color_number | escape }}"></span>{{ dp_property_parts[2] | escape }}</span></td>
+                        <td>{{ property.last | escape }}</td>
+                        <td>{{ dp_property_parts[3] | escape }}</td>
                       </tr>
                     {% endif %}
                   {% endfor %}
