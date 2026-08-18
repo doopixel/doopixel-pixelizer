@@ -45,3 +45,10 @@ test("public pages use the shared DooPixel header", async () => {
 
   pages.forEach(([pageName, html]) => assertSharedHeader(html, pageName));
 });
+
+test("shared navigation injects Matching Parts before project lookup", async () => {
+  const source = await readFile(new URL("../app/js/doopixel-site-header.js", import.meta.url), "utf8");
+  assert.match(source, /Matching Parts/);
+  assert.match(source, /pixelizer\.doopixel\.com\/parts-import\//);
+  assert.match(source, /insertBefore\(matchingParts, projectLink/);
+});

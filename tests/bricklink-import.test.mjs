@@ -8,11 +8,11 @@ import { parseBrickLinkXml } from "../functions/_lib/bricklink-xml.js";
 test("server catalog stays aligned with the public SKU map", async () => {
   const skuMap = JSON.parse(await fs.readFile(new URL("../app/doopixel-pixelizer-sku-map.json", import.meta.url), "utf8"));
   const expected = [];
-  Object.values(skuMap).forEach((color) => {
-    if (color.flatSku) expected.push(["98138", Number(color.bricklinkColorId), color.flatSku, String(Number(color.doopixelNo))]);
-    if (color.studSku) expected.push(["4073", Number(color.bricklinkColorId), color.studSku, `A${Number(color.doopixelNo)}`]);
+  Object.entries(skuMap).forEach(([hex, color]) => {
+    if (color.flatSku) expected.push(["98138", Number(color.bricklinkColorId), color.flatSku, String(Number(color.doopixelNo)), hex]);
+    if (color.studSku) expected.push(["4073", Number(color.bricklinkColorId), color.studSku, `A${Number(color.doopixelNo)}`, hex]);
   });
-  const actual = getCatalogRows().map((row) => [row.pieceType, row.bricklinkColorId, row.sku, row.warehouseCode]);
+  const actual = getCatalogRows().map((row) => [row.pieceType, row.bricklinkColorId, row.sku, row.warehouseCode, row.hex]);
   assert.deepEqual(actual.sort(), expected.sort());
 });
 
@@ -29,6 +29,7 @@ test("parses Wanted List quantities, aggregates duplicates, ignores other parts,
   assert.equal(result.raisedPieces, 1);
   assert.equal(result.chargeBlocks, 2);
   assert.equal(result.priceCents, 400);
+  assert.equal(result.estimatedWeightGrams, 12);
   assert.equal(result.ignoredLines, 1);
   assert.equal(result.ignoredPieces, 12);
   assert.deepEqual(result.lines.map((line) => [line.warehouseCode, line.sku, line.quantity]), [
@@ -51,12 +52,22 @@ test("rejects dangerous or unrelated XML", () => {
   assert.throws(() => parseBrickLinkXml("<root></root>"), /INVENTORY/);
 });
 
-test("customer import page and Shopify bridge contain valid inline JavaScript", async () => {
+test("customer import page and Shopify cart details contain valid inline JavaScript", async () => {
   const files = [
     await fs.readFile(new URL("../app/parts-import/index.html", import.meta.url), "utf8"),
-    await fs.readFile(new URL("../shopify/custom-pixel-pieces-import-custom-liquid.liquid", import.meta.url), "utf8"),
+    await fs.readFile(new URL("../shopify/cart-matching-parts-details-custom-liquid.liquid", import.meta.url), "utf8"),
   ];
   files.forEach((source) => {
     Array.from(source.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)).forEach((match) => new Function(match[1]));
   });
+});
+
+test("customer flow goes directly to Shopify cart and shows only useful match columns", async () => {
+  const page = await fs.readFile(new URL("../app/parts-import/index.html", import.meta.url), "utf8");
+  assert.match(page, /https:\/\/doopixel\.com\/cart\/add/);
+  assert.doesNotMatch(page, /products\/custom-pixel-pieces/);
+  assert.match(page, /Doo Number<\/th><th>Color<\/th><th>Qty<\/th><th>Part Type/);
+  assert.doesNotMatch(page, /<th>SKU<\/th>/);
+  assert.doesNotMatch(page, /unsupported part row/);
+  assert.match(page, /XML files up to 3 MB/);
 });

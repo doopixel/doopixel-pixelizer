@@ -4,40 +4,80 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,nofollow" />
-    <title>Import BrickLink XML | DooPixel</title>
+    <title>Matching Parts | DooPixel</title>
     <link href="/assets/png/doopixel-tab-icon.png?v=20260806" rel="icon" type="image/png" />
     <link rel="stylesheet" href="/css/doopixel-site-header.css?v=20260816d" />
     <link rel="stylesheet" href="/css/doopixel-site-footer.css?v=20260816b" />
     <style>
-      :root { --blue:#4961bd; --ink:#171717; --muted:#626262; --line:#d8d8d8; --soft:#f5f6fb; --yellow:#f4ce21; }
+      :root { --blue:#4961bd; --blue-dark:#34499c; --green:#1f9d48; --ink:#17191f; --muted:#626774; --line:#dfe2ea; --canvas:#f5f7fb; --white:#fff; --warning:#9a5b00; }
       * { box-sizing:border-box; }
-      body { margin:0; color:var(--ink); background:#fff; font-family:Arial,Helvetica,sans-serif; }
-      .shell { width:min(100% - 32px, 960px); margin:0 auto; padding:46px 0 72px; }
-      .hero { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(280px,.7fr); gap:34px; align-items:start; }
-      h1 { margin:0 0 14px; font-size:clamp(32px,5vw,54px); line-height:1.02; }
-      h2 { margin:0 0 12px; font-size:22px; }
-      p { line-height:1.55; }
-      .lead { color:var(--muted); font-size:18px; max-width:680px; }
-      .card { border:1px solid var(--line); background:#fff; padding:24px; }
-      .notice { border-left:5px solid var(--yellow); background:#fffbe7; padding:14px 16px; margin:22px 0; }
-      .upload { display:grid; gap:14px; margin-top:26px; padding:26px; border:2px dashed #aeb7d7; background:var(--soft); }
-      input[type=file] { width:100%; padding:14px; background:#fff; border:1px solid var(--line); }
-      button { min-height:46px; border:1px solid #111; padding:10px 18px; background:#111; color:#fff; font:inherit; font-weight:700; cursor:pointer; }
-      button:disabled { opacity:.55; cursor:wait; }
-      .summary { margin-top:30px; }
-      .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line); }
-      .stat { background:#fff; padding:18px; }
-      .stat strong { display:block; font-size:26px; margin-top:5px; }
-      .label { color:var(--muted); font-size:13px; }
-      .warning { color:#8b4a00; }
-      table { width:100%; border-collapse:collapse; margin-top:18px; }
-      th,td { text-align:left; border-bottom:1px solid var(--line); padding:10px 8px; }
-      th { font-size:13px; color:var(--muted); }
-      td:last-child,th:last-child { text-align:right; }
-      .actions { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-top:22px; }
-      .price { font-size:24px; font-weight:700; }
-      .hidden { display:none; }
-      @media (max-width:720px) { .hero { grid-template-columns:1fr; } .stats { grid-template-columns:repeat(2,1fr); } .actions { align-items:stretch; flex-direction:column; } }
+      body { margin:0; color:var(--ink); background:var(--canvas); font-family:Arial,Helvetica,sans-serif; }
+      button,input { font:inherit; }
+      .shell { width:min(100% - 32px,1080px); margin:0 auto; padding:44px 0 76px; }
+      .hero { position:relative; overflow:hidden; padding:clamp(28px,5vw,54px); color:#fff; background:linear-gradient(135deg,var(--blue-dark),var(--blue)); box-shadow:0 16px 45px rgba(42,62,137,.18); }
+      .hero::after { content:""; position:absolute; width:280px; height:280px; right:-90px; top:-120px; border:42px solid rgba(255,255,255,.09); border-radius:50%; }
+      .eyebrow { margin:0 0 12px; font-size:13px; font-weight:800; letter-spacing:.11em; text-transform:uppercase; }
+      h1 { max-width:760px; margin:0; font-size:clamp(34px,6vw,62px); line-height:.98; letter-spacing:-.035em; }
+      .lead { max-width:690px; margin:18px 0 0; color:rgba(255,255,255,.88); font-size:18px; line-height:1.58; }
+      .steps { position:relative; z-index:1; display:flex; flex-wrap:wrap; gap:10px; margin-top:28px; }
+      .step { display:inline-flex; align-items:center; gap:8px; min-height:36px; padding:7px 12px; border:1px solid rgba(255,255,255,.3); background:rgba(255,255,255,.1); font-size:13px; font-weight:700; }
+      .step-number { display:inline-grid; width:20px; height:20px; place-items:center; color:var(--blue-dark); background:#fff; border-radius:50%; font-size:11px; }
+      .panel { margin-top:24px; padding:clamp(22px,4vw,38px); border:1px solid var(--line); background:var(--white); box-shadow:0 12px 35px rgba(31,38,61,.08); }
+      .panel-heading { display:flex; justify-content:space-between; gap:24px; align-items:flex-start; }
+      h2 { margin:0; font-size:clamp(23px,3vw,30px); letter-spacing:-.02em; }
+      .support { margin:8px 0 0; color:var(--muted); line-height:1.5; }
+      .part-pills { display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end; }
+      .pill { padding:8px 11px; border:1px solid #cbd2ea; color:var(--blue-dark); background:#f2f4fc; font-size:13px; font-weight:800; white-space:nowrap; }
+      .upload-zone { display:grid; place-items:center; min-height:230px; margin-top:26px; padding:28px; border:2px dashed #aeb8d8; background:#f8f9fd; text-align:center; transition:border-color .18s,background .18s; }
+      .upload-zone.is-dragging { border-color:var(--blue); background:#eef1fc; }
+      .upload-icon { display:grid; width:54px; height:54px; margin-bottom:15px; place-items:center; color:#fff; background:var(--blue); border-radius:50%; font-size:25px; }
+      .upload-zone strong { font-size:18px; }
+      .upload-zone p { margin:8px 0 18px; color:var(--muted); }
+      .choose-button,.primary-button { display:inline-flex; min-height:46px; align-items:center; justify-content:center; border:1px solid #111; padding:10px 19px; color:#fff; background:#111; font-weight:800; cursor:pointer; text-decoration:none; }
+      .choose-button:hover,.primary-button:hover { background:#303030; }
+      .file-name { min-height:20px; margin-top:14px; color:var(--blue-dark); font-size:14px; font-weight:700; overflow-wrap:anywhere; }
+      .upload-actions { display:flex; align-items:center; justify-content:space-between; gap:18px; margin-top:18px; }
+      .privacy { margin:0; color:var(--muted); font-size:13px; line-height:1.45; }
+      .primary-button { min-width:190px; background:var(--blue); border-color:var(--blue); }
+      .primary-button:hover { background:var(--blue-dark); }
+      .primary-button:disabled { opacity:.55; cursor:wait; }
+      .message { margin-top:18px; padding:14px 16px; border-left:4px solid #c13e3e; color:#7a2222; background:#fff0f0; }
+      .results { margin-top:24px; }
+      .results-head { display:flex; justify-content:space-between; gap:18px; align-items:end; }
+      .import-id { color:var(--muted); font-size:13px; }
+      .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; margin-top:22px; border:1px solid var(--line); background:var(--line); }
+      .stat { min-width:0; padding:18px; background:#fff; }
+      .stat-label { display:block; color:var(--muted); font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
+      .stat strong { display:block; margin-top:7px; font-size:clamp(23px,3vw,31px); }
+      .match-note { margin:18px 0 0; padding:14px 16px; border-left:4px solid var(--green); color:#176f35; background:#effaf2; line-height:1.5; }
+      .match-note.warning { border-color:#e39a1a; color:var(--warning); background:#fff8e8; }
+      .table-wrap { margin-top:20px; overflow-x:auto; border:1px solid var(--line); }
+      table { width:100%; border-collapse:collapse; background:#fff; }
+      th,td { padding:13px 15px; border-bottom:1px solid var(--line); text-align:left; vertical-align:middle; }
+      tr:last-child td { border-bottom:0; }
+      th { color:#555c69; background:#f7f8fb; font-size:12px; letter-spacing:.04em; text-transform:uppercase; }
+      td:nth-child(1),td:nth-child(3) { font-weight:800; }
+      .color-cell { display:inline-flex; align-items:center; gap:10px; white-space:nowrap; }
+      .swatch { flex:0 0 auto; width:24px; height:24px; border:1px solid rgba(0,0,0,.22); border-radius:50%; box-shadow:inset 0 0 0 2px rgba(255,255,255,.32); }
+      .unmatched { margin-top:16px; }
+      .unmatched h3 { margin:0 0 8px; font-size:17px; }
+      .checkout { display:grid; grid-template-columns:1fr auto; gap:20px; align-items:center; margin-top:22px; padding:22px; color:#fff; background:#17191f; }
+      .checkout-price { margin:4px 0 0; font-size:31px; font-weight:800; }
+      .checkout-copy { margin:5px 0 0; color:#bfc3cc; font-size:13px; }
+      .checkout .primary-button { min-width:260px; border-color:#fff; background:#fff; color:#17191f; }
+      .legal { margin:18px 0 0; color:var(--muted); font-size:12px; line-height:1.55; }
+      .hidden { display:none !important; }
+      @media (max-width:760px) {
+        .shell { width:min(100% - 20px,1080px); padding-top:20px; }
+        .hero,.panel { padding:24px 18px; }
+        .panel-heading,.results-head,.upload-actions { display:block; }
+        .part-pills { justify-content:flex-start; margin-top:14px; }
+        .stats { grid-template-columns:repeat(2,1fr); }
+        .upload-actions .primary-button { width:100%; margin-top:16px; }
+        .checkout { grid-template-columns:1fr; }
+        .checkout .primary-button { width:100%; min-width:0; }
+        th,td { padding:11px 10px; }
+      }
     </style>
   </head>
   <body>
@@ -48,6 +88,7 @@
         <div class="dp-site-links" id="dp-site-links">
           <a class="dp-site-link" href="https://pixelizer.doopixel.com/">Upload Images</a>
           <a class="dp-site-link" href="https://pixelizer.doopixel.com/gallery">Gallery &amp; Shop</a>
+          <a class="dp-site-link is-active" href="https://pixelizer.doopixel.com/parts-import/" aria-current="page">Matching Parts</a>
           <a class="dp-site-link" href="https://pixelizer.doopixel.com/find-project">Find My Project</a>
         </div>
         <a class="dp-site-cart-icon" href="https://doopixel.com/cart" aria-label="Shopping cart"><img class="dp-site-icon" src="/assets/icons/lucide-shopping-cart.svg" alt="" /></a>
@@ -55,121 +96,167 @@
     </div>
 
     <main class="shell">
-      <div class="hero">
-        <section>
-          <h1>Import a BrickLink XML Parts List</h1>
-          <p class="lead">Upload your BrickLink Wanted List XML. We match supported colors to DooPixel warehouse numbers, calculate the quantity, and prepare one cart item.</p>
-        </section>
-        <aside class="card">
-          <h2>Supported parts</h2>
-          <p><strong>Flat Pixel Pieces (98138)</strong><br /><strong>Raised Pixel Pieces (4073)</strong></p>
-          <p class="label">Other parts in the XML file are ignored and shown before checkout.</p>
-        </aside>
-      </div>
-
-      <div class="notice"><strong>Important:</strong> DooPixel pieces are third-party compatible pixel pieces and are not LEGO® products. LEGO® is a trademark of the LEGO Group, which does not sponsor, authorize, or endorse this product or website.</div>
-
-      <form id="upload-form" class="upload">
-        <label for="xml-file"><strong>Choose a BrickLink XML file</strong></label>
-        <input id="xml-file" name="file" type="file" accept=".xml,text/xml,application/xml" required />
-        <span class="label">Only .xml files up to 256 KB. Your original XML file is not retained.</span>
-        <button id="analyze" type="submit">Match My Parts</button>
-      </form>
-      <div id="message" class="notice hidden" role="alert"></div>
-
-      <section id="summary" class="summary hidden" aria-live="polite">
-        <h2>Your matched DooPixel pieces</h2>
-        <div class="stats">
-          <div class="stat"><span class="label">Total pieces</span><strong id="total"></strong></div>
-          <div class="stat"><span class="label">Flat 98138</span><strong id="flat"></strong></div>
-          <div class="stat"><span class="label">Raised 4073</span><strong id="raised"></strong></div>
-          <div class="stat"><span class="label">100-piece packs</span><strong id="packs"></strong></div>
-        </div>
-        <p id="ignored" class="warning hidden"></p>
-        <p id="unsupported" class="warning hidden"></p>
-        <div style="overflow-x:auto">
-          <table>
-            <thead><tr><th>Warehouse No.</th><th>Part</th><th>Color</th><th>SKU</th><th>Qty</th></tr></thead>
-            <tbody id="lines"></tbody>
-          </table>
-        </div>
-        <div class="actions">
-          <div><span class="label">$2.00 per 100 pieces; a partial 100 counts as one pack.</span><div id="price" class="price"></div></div>
-          <button id="checkout" type="button">Add Custom Pixel Pieces to Cart</button>
+      <section class="hero">
+        <p class="eyebrow">DooPixel Matching Parts</p>
+        <h1>Turn a BrickLink list into a ready-to-pick DooPixel order.</h1>
+        <p class="lead">Upload your Wanted List XML. We match 98138 and 4073 colors to our warehouse numbers, calculate the exact quantity, and prepare your cart.</p>
+        <div class="steps" aria-label="How it works">
+          <span class="step"><span class="step-number">1</span> Upload XML</span>
+          <span class="step"><span class="step-number">2</span> Review matches</span>
+          <span class="step"><span class="step-number">3</span> Add to cart</span>
         </div>
       </section>
+
+      <section class="panel" aria-labelledby="upload-heading">
+        <div class="panel-heading">
+          <div>
+            <h2 id="upload-heading">Upload your BrickLink XML</h2>
+            <p class="support">Only the two pixel-piece types below are checked. Other part types are skipped silently.</p>
+          </div>
+          <div class="part-pills" aria-label="Supported parts">
+            <span class="pill">Flat · 98138</span><span class="pill">Raised · 4073</span>
+          </div>
+        </div>
+        <form id="upload-form">
+          <div id="upload-zone" class="upload-zone">
+            <span class="upload-icon" aria-hidden="true">↑</span>
+            <strong>Drop your BrickLink XML here</strong>
+            <p>or choose a file from your device</p>
+            <label class="choose-button" for="xml-file">Choose XML File</label>
+            <input id="xml-file" name="file" class="hidden" type="file" accept=".xml,text/xml,application/xml" required />
+            <div id="file-name" class="file-name">No file selected</div>
+          </div>
+          <div class="upload-actions">
+            <p class="privacy">XML files up to 3 MB. Your original file is analyzed securely and is not retained.</p>
+            <button id="analyze" class="primary-button" type="submit">Match My Parts</button>
+          </div>
+        </form>
+        <div id="message" class="message hidden" role="alert"></div>
+      </section>
+
+      <section id="summary" class="panel results hidden" aria-live="polite">
+        <div class="results-head">
+          <div><p class="eyebrow" style="color:var(--blue)">Match Results</p><h2>Your DooPixel parts</h2></div>
+          <span id="import-id" class="import-id"></span>
+        </div>
+        <div class="stats">
+          <div class="stat"><span class="stat-label">Total pieces</span><strong id="total"></strong></div>
+          <div class="stat"><span class="stat-label">Flat · 98138</span><strong id="flat"></strong></div>
+          <div class="stat"><span class="stat-label">Raised · 4073</span><strong id="raised"></strong></div>
+          <div class="stat"><span class="stat-label">Est. weight</span><strong id="weight"></strong></div>
+        </div>
+        <p id="match-note" class="match-note"></p>
+        <div class="table-wrap">
+          <table><thead><tr><th>Doo Number</th><th>Color</th><th>Qty</th><th>Part Type</th></tr></thead><tbody id="lines"></tbody></table>
+        </div>
+        <div id="unmatched" class="unmatched hidden">
+          <h3>Unmatched 98138 / 4073 colors</h3>
+          <p class="support">These colors are not currently in the DooPixel catalog, so they are not included or charged.</p>
+          <div class="table-wrap"><table><thead><tr><th>Part Type</th><th>BrickLink Color ID</th><th>Qty</th></tr></thead><tbody id="unmatched-lines"></tbody></table></div>
+        </div>
+        <div class="checkout">
+          <div><span class="stat-label" style="color:#bfc3cc">Order total</span><div id="price" class="checkout-price"></div><p id="pricing-copy" class="checkout-copy"></p></div>
+          <button id="checkout" class="primary-button" type="button">Add Matching Parts to Cart</button>
+        </div>
+        <p class="legal"><strong>Independent product notice:</strong> DooPixel pieces are third-party compatible pixel pieces and are not LEGO® products. LEGO® is a trademark of the LEGO Group, which does not sponsor, authorize, or endorse this product or website.</p>
+      </section>
     </main>
+
     <div data-doopixel-footer></div>
-    <script src="/js/doopixel-site-header.js?v=20260816d"></script>
-    <script src="/js/doopixel-site-footer.js?v=20260816b"></script>
+    <script src="/js/doopixel-site-header.js?v=20260818b"></script>
+    <script src="/js/doopixel-site-footer.js?v=20260818b"></script>
     <script>
       (function () {
-        const SHOPIFY_URL = "https://doopixel.com/products/custom-pixel-pieces";
+        const SHOPIFY_CART_ADD_URL = "https://doopixel.com/cart/add";
+        const SHOPIFY_VARIANT_ID = "57037331595430";
         const form = document.getElementById("upload-form");
+        const fileInput = document.getElementById("xml-file");
+        const fileName = document.getElementById("file-name");
+        const zone = document.getElementById("upload-zone");
         const button = document.getElementById("analyze");
         const message = document.getElementById("message");
         const summary = document.getElementById("summary");
+        const checkout = document.getElementById("checkout");
         let result = null;
 
         function showMessage(text) { message.textContent = text; message.classList.toggle("hidden", !text); }
-        function encodePayload(payload) {
-          const bytes = new TextEncoder().encode(JSON.stringify(payload));
-          let binary = ""; bytes.forEach((byte) => { binary += String.fromCharCode(byte); });
-          return btoa(binary);
+        function formatNumber(value) { return Number(value || 0).toLocaleString(); }
+        function appendCell(row, value) {
+          const cell = document.createElement("td");
+          if (value instanceof Node) cell.appendChild(value); else cell.textContent = value;
+          row.appendChild(cell);
         }
-        function number(value) { return Number(value || 0).toLocaleString(); }
+        function colorLabel(line) {
+          const wrap = document.createElement("span"); wrap.className = "color-cell";
+          const swatch = document.createElement("span"); swatch.className = "swatch"; swatch.style.backgroundColor = line.hex; swatch.setAttribute("aria-hidden", "true");
+          const name = document.createElement("span"); name.textContent = line.colorName;
+          wrap.append(swatch, name); return wrap;
+        }
         function render(data) {
-          document.getElementById("total").textContent = number(data.totalPieces);
-          document.getElementById("flat").textContent = number(data.flatPieces);
-          document.getElementById("raised").textContent = number(data.raisedPieces);
-          document.getElementById("packs").textContent = number(data.chargeBlocks);
+          document.getElementById("total").textContent = formatNumber(data.totalPieces);
+          document.getElementById("flat").textContent = formatNumber(data.flatPieces);
+          document.getElementById("raised").textContent = formatNumber(data.raisedPieces);
+          document.getElementById("weight").textContent = "~" + formatNumber(data.estimatedWeightGrams) + " g";
           document.getElementById("price").textContent = "$" + (data.priceCents / 100).toFixed(2);
-          const ignored = document.getElementById("ignored");
-          ignored.textContent = data.ignoredLines ? data.ignoredLines + " unsupported part row(s), containing " + number(data.ignoredPieces) + " piece(s), were ignored." : "";
-          ignored.classList.toggle("hidden", !data.ignoredLines);
-          const unsupported = document.getElementById("unsupported");
-          unsupported.textContent = data.unsupportedLines.length ? data.unsupportedLines.length + " supported-part color row(s) are not stocked and were not charged." : "";
-          unsupported.classList.toggle("hidden", !data.unsupportedLines.length);
+          document.getElementById("pricing-copy").textContent = data.chargeBlocks + " × 100-piece pack" + (data.chargeBlocks === 1 ? "" : "s") + " · $2.00 per pack";
+          document.getElementById("import-id").textContent = "Import " + data.importId;
+          const matchNote = document.getElementById("match-note");
+          if (data.unsupportedLines.length) {
+            matchNote.textContent = "Some 98138 / 4073 colors could not be matched. Review the unmatched list below before adding the available pieces to your cart.";
+            matchNote.classList.add("warning");
+          } else {
+            matchNote.textContent = "All requested 98138 and 4073 colors in this XML matched the DooPixel catalog.";
+            matchNote.classList.remove("warning");
+          }
           const tbody = document.getElementById("lines"); tbody.innerHTML = "";
-          data.lines.forEach((line) => {
+          data.lines.forEach(function (line) {
             const row = document.createElement("tr");
-            [line.warehouseCode, line.pieceType, line.colorName + " (BL " + line.bricklinkColorId + ")", line.sku, number(line.quantity)].forEach((value) => {
-              const cell = document.createElement("td"); cell.textContent = value; row.appendChild(cell);
-            });
-            tbody.appendChild(row);
+            appendCell(row, line.warehouseCode); appendCell(row, colorLabel(line)); appendCell(row, formatNumber(line.quantity));
+            appendCell(row, line.pieceType === "98138" ? "Flat (98138)" : "Raised (4073)"); tbody.appendChild(row);
           });
-          summary.classList.remove("hidden");
-          summary.scrollIntoView({ behavior: "smooth", block: "start" });
+          const unmatched = document.getElementById("unmatched");
+          const unmatchedBody = document.getElementById("unmatched-lines"); unmatchedBody.innerHTML = "";
+          data.unsupportedLines.forEach(function (line) {
+            const row = document.createElement("tr");
+            appendCell(row, line.pieceType === "98138" ? "Flat (98138)" : "Raised (4073)"); appendCell(row, line.bricklinkColorId); appendCell(row, formatNumber(line.quantity));
+            unmatchedBody.appendChild(row);
+          });
+          unmatched.classList.toggle("hidden", !data.unsupportedLines.length);
+          summary.classList.remove("hidden"); summary.scrollIntoView({ behavior:"smooth", block:"start" });
         }
-        form.addEventListener("submit", async (event) => {
+        function hiddenInput(target, name, value) {
+          const input = document.createElement("input"); input.type = "hidden"; input.name = name; input.value = String(value); target.appendChild(input);
+        }
+        function submitToShopify(data) {
+          const cartForm = document.createElement("form"); cartForm.method = "post"; cartForm.action = SHOPIFY_CART_ADD_URL; cartForm.style.display = "none";
+          hiddenInput(cartForm, "form_type", "product"); hiddenInput(cartForm, "utf8", "✓"); hiddenInput(cartForm, "id", SHOPIFY_VARIANT_ID);
+          hiddenInput(cartForm, "quantity", data.chargeBlocks); hiddenInput(cartForm, "return_to", "/cart");
+          hiddenInput(cartForm, "properties[_DooPixel Parts Import ID]", data.importId);
+          hiddenInput(cartForm, "properties[_DooPixel Parts Import Token]", data.importToken);
+          hiddenInput(cartForm, "properties[_DooPixel Total Pieces]", data.totalPieces);
+          hiddenInput(cartForm, "properties[_DooPixel Flat Pieces]", data.flatPieces);
+          hiddenInput(cartForm, "properties[_DooPixel Raised Pieces]", data.raisedPieces);
+          data.lines.forEach(function (line) {
+            const typeLabel = line.pieceType === "98138" ? "Flat (98138)" : "Raised (4073)";
+            const key = "_DP|" + typeLabel + "|" + line.warehouseCode + "|" + line.colorName + "|" + line.hex;
+            hiddenInput(cartForm, "properties[" + key + "]", line.quantity);
+          });
+          document.body.appendChild(cartForm); cartForm.submit();
+        }
+        fileInput.addEventListener("change", function () { fileName.textContent = fileInput.files[0] ? fileInput.files[0].name : "No file selected"; });
+        ["dragenter","dragover"].forEach(function (name) { zone.addEventListener(name, function (event) { event.preventDefault(); zone.classList.add("is-dragging"); }); });
+        ["dragleave","drop"].forEach(function (name) { zone.addEventListener(name, function (event) { event.preventDefault(); zone.classList.remove("is-dragging"); }); });
+        zone.addEventListener("drop", function (event) { if (!event.dataTransfer.files.length) return; fileInput.files = event.dataTransfer.files; fileName.textContent = event.dataTransfer.files[0].name; });
+        form.addEventListener("submit", async function (event) {
           event.preventDefault(); button.disabled = true; button.textContent = "Matching..."; showMessage(""); summary.classList.add("hidden");
           try {
-            const response = await fetch("/api/parts-imports/create", { method: "POST", body: new FormData(form) });
-            const data = await response.json();
-            if (!response.ok || !data.ok) throw new Error(data.error || "Could not import this XML file.");
+            const response = await fetch("/api/parts-imports/create", { method:"POST", body:new FormData(form) });
+            const data = await response.json(); if (!response.ok || !data.ok) throw new Error(data.error || "Could not import this XML file.");
             result = data; render(data);
           } catch (error) { showMessage(error.message || String(error)); }
           finally { button.disabled = false; button.textContent = "Match My Parts"; }
         });
-        document.getElementById("checkout").addEventListener("click", () => {
-          if (!result) return;
-          const payload = {
-            v: 1, importId: result.importId, importToken: result.importToken,
-            variantId: result.variantId, quantity: result.chargeBlocks,
-            totalPieces: result.totalPieces, flatPieces: result.flatPieces,
-            raisedPieces: result.raisedPieces, colorLines: result.colorLines,
-            ignoredLines: result.ignoredLines,
-            lines: result.lines.map(function (line) {
-              return {
-                pieceType: line.pieceType,
-                warehouseCode: line.warehouseCode,
-                colorName: line.colorName,
-                quantity: line.quantity,
-              };
-            }),
-          };
-          window.location.href = SHOPIFY_URL + "#doopixel-import=" + encodeURIComponent(encodePayload(payload));
-        });
+        checkout.addEventListener("click", function () { if (!result) return; checkout.disabled = true; checkout.textContent = "Adding to cart..."; submitToShopify(result); });
       })();
     </script>
   </body>

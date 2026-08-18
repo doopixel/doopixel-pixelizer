@@ -679,8 +679,8 @@ export async function onRequestGet() {
     </div>
 
     <div data-doopixel-footer></div>
-    <script src="/js/doopixel-site-footer.js?v=20260816b"></script>
-    <script src="/js/doopixel-site-header.js?v=20260816b"></script>
+    <script src="/js/doopixel-site-footer.js?v=20260818b"></script>
+    <script src="/js/doopixel-site-header.js?v=20260818b"></script>
     <script>
       const loading = document.getElementById("loading");
       const empty = document.getElementById("empty");

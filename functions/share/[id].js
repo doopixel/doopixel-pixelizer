@@ -707,8 +707,8 @@ export async function onRequestGet({ params, env, request }) {
     </div>
 
     <div data-doopixel-footer></div>
-    <script src="/js/doopixel-site-footer.js?v=20260816b"></script>
-    <script src="/js/doopixel-site-header.js?v=20260816b"></script>
+    <script src="/js/doopixel-site-footer.js?v=20260818b"></script>
+    <script src="/js/doopixel-site-header.js?v=20260818b"></script>
     <script>
       const DESIGN_ID = ${JSON.stringify(rawId)};
       const CANONICAL_URL = ${JSON.stringify(canonicalUrl)};
