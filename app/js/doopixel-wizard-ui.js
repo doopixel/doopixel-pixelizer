@@ -407,17 +407,17 @@
 
     function normalizeButton() {
       if (button.textContent.indexOf("Round Tile") !== -1) {
-        button.textContent = "Flat Pixel Pieces (1x1 Round Tile)";
+        button.textContent = "Flat Pixel Pieces (98138)";
       } else if (button.textContent.indexOf("Round Plate") !== -1) {
-        button.textContent = "Raised Pixel Pieces (1x1 Round Plate)";
+        button.textContent = "Raised Pixel Pieces (4073)";
       }
     }
 
     Array.from(menu.children).forEach(function (option) {
       if (option.textContent.indexOf("Round Tile") !== -1) {
-        option.textContent = "Flat Pixel Pieces (1x1 Round Tile)";
+        option.textContent = "Flat Pixel Pieces (98138)";
       } else if (option.textContent.indexOf("Round Plate") !== -1) {
-        option.textContent = "Raised Pixel Pieces (1x1 Round Plate)";
+        option.textContent = "Raised Pixel Pieces (4073)";
       }
       option.addEventListener("click", function () {
         setTimeout(normalizeButton, 0);

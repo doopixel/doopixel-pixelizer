@@ -1,7 +1,7 @@
 (function () {
   const SHOPIFY_ADD_KIT_URL =
     window.DOOPIXEL_SHOPIFY_ADD_KIT_URL || "https://doopixel.com/pages/add-pixel-kit";
-  const SKU_MAP_URL = window.DOOPIXEL_SKU_MAP_URL || "/doopixel-pixelizer-sku-map.json";
+  const SKU_MAP_URL = window.DOOPIXEL_SKU_MAP_URL || "/doopixel-pixelizer-sku-map.json?v=20260818a";
   const CREATE_DESIGN_URL = window.DOOPIXEL_CREATE_DESIGN_URL || "/api/designs/create";
 
   const KIT_SKU_PREFIX = window.DOOPIXEL_CUSTOM_KIT_SKU_PREFIX || "DP-KIT";
@@ -58,14 +58,14 @@
     if (String(selectedPixelPartNumber) === "98138") {
       return {
         skuField: "flatSku",
-        pieceTypeName: "Flat Pixel Pieces (1x1 Round Tile)",
+        pieceTypeName: "Flat Pixel Pieces (98138)",
       };
     }
 
     if (String(selectedPixelPartNumber) === "4073") {
       return {
         skuField: "studSku",
-        pieceTypeName: "Raised Pixel Pieces (1x1 Round Plate)",
+        pieceTypeName: "Raised Pixel Pieces (4073)",
       };
     }
 

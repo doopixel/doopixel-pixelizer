@@ -12,7 +12,7 @@ const ADMIN_TOKEN = "test-admin-token";
 function makePart(overrides = {}) {
   return {
     pieceType: "98138",
-    pieceTypeName: "Flat Pixel Pieces (1x1 Round Tile)",
+    pieceTypeName: "Flat Pixel Pieces (98138)",
     sku: "DP-FLAT-001",
     quantity: 120,
     doopixelNo: "001",
@@ -121,8 +121,8 @@ test("publishes mixed tile and plate pieces with per-row type metadata", async (
       makePart(),
       makePart({
         pieceType: "4073",
-        pieceTypeName: "Raised Pixel Pieces (1x1 Round Plate)",
-        sku: "DP-STUD-001",
+        pieceTypeName: "Raised Pixel Pieces (4073)",
+        sku: "DP-STUD-A1",
       }),
     ]),
     env: harness.env,
@@ -141,7 +141,7 @@ test("publishes custom colors without requiring a Shopify catalog SKU", async ()
   const harness = makeEnv();
   const customPart = makePart({
     pieceType: "4073",
-    pieceTypeName: "Raised Pixel Pieces (1x1 Round Plate)",
+    pieceTypeName: "Raised Pixel Pieces (4073)",
     sku: "not-a-shopify-sku",
     quantity: 24,
     doopixelNo: "W-105",

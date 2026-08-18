@@ -3,6 +3,13 @@ const test = require("node:test");
 
 const codec = require("../app/js/doopixel-instruction-data.js");
 
+test("formats warehouse codes by physical piece type", () => {
+  assert.equal(codec.formatWarehouseCode("98138", "001"), "1");
+  assert.equal(codec.formatWarehouseCode("98138", "018"), "18");
+  assert.equal(codec.formatWarehouseCode("4073", "001"), "A1");
+  assert.equal(codec.formatWarehouseCode("4073", "018"), "A18");
+});
+
 function makePixelArray(width, height, colors) {
   const pixels = new Uint8ClampedArray(width * height * 4);
   for (let index = 0; index < width * height; index += 1) {

@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { sortPartsByColorNumber } from "../functions/_lib/piece-types.js";
+import {
+  getCatalogSku,
+  sortPartsByColorNumber,
+} from "../functions/_lib/piece-types.js";
 import { onRequestPost as deleteDesign } from "../functions/api/admin/designs/[id]/delete.js";
 import { onRequestPost as updateFiles } from "../functions/api/admin/designs/[id]/files.js";
 
@@ -32,6 +35,18 @@ test("sorts catalog colors by number and places custom colors last", () => {
     ["Two", "Three", "Twenty", "One Hundred", "Custom"]
   );
   assert.equal(parts[0].colorName, "Twenty");
+});
+
+test("normalizes old saved catalog SKUs when projects are read", () => {
+  assert.equal(getCatalogSku("98138", "018"), "DP-FLAT-018");
+  assert.equal(getCatalogSku("4073", "018"), "DP-STUD-A18");
+
+  const parts = sortPartsByColorNumber([
+    { doopixelNo: "018", pieceType: "4073", sku: "DP-STUD-018" },
+    { doopixelNo: "018", pieceType: "98138", sku: "DP-FLAT-018" },
+  ]);
+
+  assert.deepEqual(parts.map((part) => part.sku), ["DP-FLAT-018", "DP-STUD-A18"]);
 });
 
 test("replaces verified photos and PDF before deleting obsolete files", async () => {
