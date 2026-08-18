@@ -12,31 +12,38 @@
 
 {% if dp_has_matching_parts %}
   <style>
-    .dp-cart-parts { max-width: 1200px; margin: 16px auto 28px; padding: 0 20px; }
-    .dp-cart-parts__item { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 18px; border: 1px solid #dfe2ea; background: #f7f8fb; }
-    .dp-cart-parts__item + .dp-cart-parts__item { margin-top: 10px; }
+    .dp-cart-parts { width: 0; height: 0; margin: 0; padding: 0; }
+    .dp-cart-parts__item { display: none; }
+    .dp-cart-parts__item.is-mounted { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px; padding: 10px 12px; border: 1px solid #b9ddc4; background: #f2faf4; }
     .dp-cart-parts__title { margin: 0; font-weight: 700; }
     .dp-cart-parts__meta { margin: 5px 0 0; color: #666; font-size: 13px; }
-    .dp-cart-parts__button { min-height: 42px; border: 1px solid #171717; padding: 8px 15px; color: #fff; background: #171717; font: inherit; font-weight: 700; cursor: pointer; white-space: nowrap; }
+    .dp-cart-parts__button { min-height: 38px; border: 1px solid #1f9d48; padding: 7px 13px; color: #fff; background: #1f9d48; font: inherit; font-weight: 700; cursor: pointer; white-space: nowrap; }
+    .dp-cart-parts__button:hover { border-color: #14733b; background: #14733b; }
     .dp-parts-dialog { width: min(760px, calc(100vw - 28px)); max-height: min(760px, calc(100vh - 40px)); border: 0; padding: 0; color: #171717; background: #fff; box-shadow: 0 24px 70px rgba(0,0,0,.28); }
     .dp-parts-dialog::backdrop { background: rgba(13,16,25,.58); }
     .dp-parts-dialog__head { position: sticky; top: 0; display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; padding: 22px 24px; border-bottom: 1px solid #dfe2ea; background: #fff; }
     .dp-parts-dialog__head h2 { margin: 0; font-size: 24px; }
     .dp-parts-dialog__head p { margin: 5px 0 0; color: #666; font-size: 13px; }
     .dp-parts-dialog__close { width: 38px; height: 38px; border: 1px solid #ccc; color: #171717; background: #fff; font-size: 24px; line-height: 1; cursor: pointer; }
-    .dp-parts-dialog__body { padding: 0 24px 24px; overflow: auto; }
-    .dp-parts-dialog table { width: 100%; border-collapse: collapse; }
+    .dp-parts-dialog__body { padding: 0 24px 24px; overflow-y: auto; }
+    .dp-parts-dialog__table-wrap { overflow-x: auto; scrollbar-width: thin; scrollbar-color: #1f9d48 #dfece3; }
+    .dp-parts-dialog__table-wrap::-webkit-scrollbar { height: 8px; }
+    .dp-parts-dialog__table-wrap::-webkit-scrollbar-track { background: #dfece3; border-radius: 999px; }
+    .dp-parts-dialog__table-wrap::-webkit-scrollbar-thumb { background: #1f9d48; border-radius: 999px; }
+    .dp-parts-dialog table { width: 100%; min-width: 590px; border-collapse: collapse; }
     .dp-parts-dialog th, .dp-parts-dialog td { padding: 12px 9px; border-bottom: 1px solid #e3e3e3; text-align: left; }
     .dp-parts-dialog th { color: #626774; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; }
     .dp-parts-dialog td:first-child, .dp-parts-dialog td:nth-child(3) { font-weight: 700; }
     .dp-parts-dialog__color { display: inline-flex; align-items: center; gap: 9px; white-space: nowrap; }
     .dp-parts-dialog__swatch { width: 22px; height: 22px; border: 1px solid rgba(0,0,0,.22); border-radius: 50%; box-shadow: inset 0 0 0 2px rgba(255,255,255,.3); }
+    .dp-parts-dialog__scroll-progress { display: none; height: 6px; margin: 10px 2px 0; overflow: hidden; border-radius: 999px; background: #dfece3; }
+    .dp-parts-dialog__scroll-progress span { display: block; width: 100%; height: 100%; border-radius: inherit; background: #1f9d48; transform: translateX(0); }
     @media (max-width: 640px) {
-      .dp-cart-parts { padding: 0 12px; }
-      .dp-cart-parts__item { align-items: stretch; flex-direction: column; }
+      .dp-cart-parts__item.is-mounted { align-items: flex-start; flex-direction: column; }
       .dp-parts-dialog__head { padding: 18px; }
-      .dp-parts-dialog__body { padding: 0 12px 18px; overflow-x: auto; }
+      .dp-parts-dialog__body { padding: 0 12px 18px; }
       .dp-parts-dialog th, .dp-parts-dialog td { padding: 10px 7px; }
+      .dp-parts-dialog__scroll-progress { display: block; }
     }
   </style>
 
@@ -44,7 +51,7 @@
     {% for item in cart.items %}
       {% if item.variant_id == 57037331595430 %}
         {% assign dp_modal_id = 'dp-parts-dialog-' | append: forloop.index %}
-        <div class="dp-cart-parts__item">
+        <div class="dp-cart-parts__item" data-dp-cart-line="{{ forloop.index }}">
           <div>
             <p class="dp-cart-parts__title">Matching Parts details</p>
             <p class="dp-cart-parts__meta">{{ item.quantity }} × 100-piece packs</p>
@@ -61,22 +68,25 @@
             <button class="dp-parts-dialog__close" type="button" data-dp-dialog-close aria-label="Close">×</button>
           </div>
           <div class="dp-parts-dialog__body">
-            <table>
-              <thead><tr><th>Doo Number</th><th>Color</th><th>Qty</th><th>Part Type</th></tr></thead>
-              <tbody>
-                {% for property in item.properties %}
-                  {% assign dp_property_parts = property.first | split: '|' %}
-                  {% if dp_property_parts[0] == '_DP' %}
-                    <tr>
-                      <td>{{ dp_property_parts[2] | escape }}</td>
-                      <td><span class="dp-parts-dialog__color"><span class="dp-parts-dialog__swatch" style="background:{{ dp_property_parts[4] | escape }}"></span>{{ dp_property_parts[3] | escape }}</span></td>
-                      <td>{{ property.last | escape }}</td>
-                      <td>{{ dp_property_parts[1] | escape }}</td>
-                    </tr>
-                  {% endif %}
-                {% endfor %}
-              </tbody>
-            </table>
+            <div class="dp-parts-dialog__table-wrap" data-dp-scroll-table>
+              <table>
+                <thead><tr><th>Doo Number</th><th>Color</th><th>Qty</th><th>Part Type</th></tr></thead>
+                <tbody>
+                  {% for property in item.properties %}
+                    {% assign dp_property_parts = property.first | split: '|' %}
+                    {% if dp_property_parts[0] == '_DP' %}
+                      <tr>
+                        <td>{{ dp_property_parts[2] | escape }}</td>
+                        <td><span class="dp-parts-dialog__color"><span class="dp-parts-dialog__swatch" style="background:{{ dp_property_parts[4] | escape }}"></span>{{ dp_property_parts[3] | escape }}</span></td>
+                        <td>{{ property.last | escape }}</td>
+                        <td>{{ dp_property_parts[1] | escape }}</td>
+                      </tr>
+                    {% endif %}
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <div class="dp-parts-dialog__scroll-progress" aria-hidden="true"><span></span></div>
           </div>
         </dialog>
       {% endif %}
@@ -85,9 +95,19 @@
 
   <script>
     (function () {
-      function hideThemeDetails() {
-        document.querySelectorAll('a[href*="/products/custom-pixel-pieces"]').forEach(function (link) {
-          var container = link.closest('.cart-item, [data-cart-item], li, tr') || link.parentElement;
+      var mountQueued = false;
+      function mountPartsDetails() {
+        document.querySelectorAll('.dp-cart-parts > .dp-cart-parts__item[data-dp-cart-line]').forEach(function (template) {
+          var line = template.getAttribute('data-dp-cart-line');
+          var container = document.querySelector('.item-cart[data-line="' + line + '"]') || document.querySelector('[data-cart-item][data-line="' + line + '"]');
+          var target = container && (container.querySelector('.cart-table__col--product .info') || container.querySelector('.cart-item__details'));
+          if (target && !target.querySelector('.dp-cart-parts__item[data-dp-mounted-line="' + line + '"]')) {
+            var card = template.cloneNode(true);
+            card.removeAttribute('data-dp-cart-line');
+            card.setAttribute('data-dp-mounted-line', line);
+            card.classList.add('is-mounted');
+            target.appendChild(card);
+          }
           if (!container) return;
           container.querySelectorAll('details').forEach(function (details) {
             var summary = details.querySelector('summary');
@@ -95,11 +115,37 @@
           });
         });
       }
+      function updateScrollProgress(wrap) {
+        var track = wrap.nextElementSibling;
+        if (!track || !track.classList.contains('dp-parts-dialog__scroll-progress')) return;
+        var thumb = track.firstElementChild;
+        var scrollable = wrap.scrollWidth > wrap.clientWidth + 1;
+        track.style.visibility = scrollable ? 'visible' : 'hidden';
+        if (!scrollable) return;
+        var ratio = Math.min(1, wrap.clientWidth / wrap.scrollWidth);
+        var thumbWidth = Math.max(28, track.clientWidth * ratio);
+        var travel = Math.max(0, track.clientWidth - thumbWidth);
+        var progress = wrap.scrollLeft / Math.max(1, wrap.scrollWidth - wrap.clientWidth);
+        thumb.style.width = thumbWidth + 'px';
+        thumb.style.transform = 'translateX(' + (travel * progress) + 'px)';
+      }
+      function refresh() {
+        mountPartsDetails();
+        document.querySelectorAll('[data-dp-scroll-table]').forEach(updateScrollProgress);
+      }
+      function queueRefresh() {
+        if (mountQueued) return;
+        mountQueued = true;
+        requestAnimationFrame(function () { mountQueued = false; refresh(); });
+      }
       document.addEventListener('click', function (event) {
         var openButton = event.target.closest('[data-dp-dialog-open]');
         if (openButton) {
           var dialog = document.getElementById(openButton.getAttribute('data-dp-dialog-open'));
-          if (dialog && typeof dialog.showModal === 'function') dialog.showModal();
+          if (dialog && typeof dialog.showModal === 'function') {
+            dialog.showModal();
+            requestAnimationFrame(function () { dialog.querySelectorAll('[data-dp-scroll-table]').forEach(updateScrollProgress); });
+          }
           return;
         }
         var closeButton = event.target.closest('[data-dp-dialog-close]');
@@ -110,8 +156,12 @@
           if (event.target === dialog) dialog.close();
         });
       });
-      hideThemeDetails();
-      new MutationObserver(hideThemeDetails).observe(document.body, { childList: true, subtree: true });
+      document.querySelectorAll('[data-dp-scroll-table]').forEach(function (wrap) {
+        wrap.addEventListener('scroll', function () { updateScrollProgress(wrap); }, { passive: true });
+      });
+      window.addEventListener('resize', queueRefresh);
+      refresh();
+      new MutationObserver(queueRefresh).observe(document.body, { childList: true, subtree: true });
     })();
   </script>
 {% endif %}
