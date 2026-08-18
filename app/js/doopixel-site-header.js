@@ -4,6 +4,15 @@
     const links = document.getElementById("dp-site-links");
     if (!button || !links || button.dataset.headerReady === "true") return;
 
+    if (!links.querySelector('a[href*="/parts-import"]')) {
+      const matchingParts = document.createElement("a");
+      matchingParts.className = "dp-site-link";
+      matchingParts.href = "https://pixelizer.doopixel.com/parts-import/";
+      matchingParts.textContent = "Matching Parts";
+      const projectLink = links.querySelector('a[href*="/find-project"]');
+      links.insertBefore(matchingParts, projectLink || null);
+    }
+
     button.dataset.headerReady = "true";
     function setOpen(isOpen) {
       links.classList.toggle("is-open", isOpen);

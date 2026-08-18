@@ -18,6 +18,7 @@
           <ul class="dp-site-footer__links">
             <li><a href="https://pixelizer.doopixel.com/">Upload Images</a></li>
             <li><a href="https://pixelizer.doopixel.com/gallery">Gallery &amp; Shop</a></li>
+            <li><a href="https://pixelizer.doopixel.com/parts-import/">Matching Parts</a></li>
             <li><a href="https://pixelizer.doopixel.com/find-project">Find My Project</a></li>
           </ul>
         </nav>

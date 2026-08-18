@@ -1,7 +1,7 @@
 import { findWarehousePart } from "./bricklink-parts.js";
 
-const MAX_XML_BYTES = 256 * 1024;
-const MAX_ITEM_ROWS = 5000;
+const MAX_XML_BYTES = 3 * 1024 * 1024;
+const MAX_ITEM_ROWS = 20000;
 const TARGET_PARTS = new Set(["98138", "4073"]);
 
 function decodeXml(value) {
@@ -31,7 +31,7 @@ function positiveInteger(value, label) {
 export function parseBrickLinkXml(xmlText) {
   const xml = String(xmlText || "");
   if (!xml.trim()) throw new Error("Please choose a BrickLink XML file.");
-  if (new TextEncoder().encode(xml).length > MAX_XML_BYTES) throw new Error("XML file is larger than 256 KB.");
+  if (new TextEncoder().encode(xml).length > MAX_XML_BYTES) throw new Error("XML file is larger than 3 MB.");
   if (/<!DOCTYPE|<!ENTITY/i.test(xml)) throw new Error("DOCTYPE and ENTITY declarations are not accepted.");
   if (!/<INVENTORY(?:\s[^>]*)?>[\s\S]*<\/INVENTORY\s*>/i.test(xml)) {
     throw new Error("This does not look like a BrickLink INVENTORY XML file.");
@@ -92,5 +92,6 @@ export function parseBrickLinkXml(xmlText) {
     colorLines: lines.length, ignoredLines, ignoredPieces,
     chargeBlocks: Math.ceil(totalPieces / 100),
     priceCents: Math.ceil(totalPieces / 100) * 200,
+    estimatedWeightGrams: Math.round(totalPieces * 0.1),
   };
 }
