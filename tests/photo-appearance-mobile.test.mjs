@@ -12,7 +12,16 @@ test("photo appearance sliders redraw on mobile input events", async () => {
     assert.match(source, new RegExp(`bindLivePhotoAppearanceSlider\\("${name}-slider"`));
   });
   assert.match(source, /80 - \(Date\.now\(\) - photoAppearanceLastUpdate\)/);
-  assert.match(page, /js\/index\.js\?v=20260820a/);
+  assert.match(page, /js\/index\.js\?v=20260820b/);
+});
+
+test("photo appearance resets flush pending mobile updates", async () => {
+  const source = await fs.readFile(new URL("../app/js/index.js", import.meta.url), "utf8");
+
+  assert.match(source, /const flushPhotoAppearanceUpdate = \(\) => \{/);
+  assert.match(source, /window\.clearTimeout\(photoAppearanceUpdateTimer\)/);
+  assert.match(source, /runStep2\(\);[\s\S]*photoAppearanceLastUpdate = 0;/);
+  assert.equal((source.match(/flushPhotoAppearanceUpdate\(\);/g) || []).length, 3);
 });
 
 test("pixelizer uses the current DooPixel green visual theme", async () => {
