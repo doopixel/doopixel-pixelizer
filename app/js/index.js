@@ -974,11 +974,30 @@ document.getElementById("add-custom-stud-button").addEventListener("click", () =
     runCustomStudMap();
 });
 
+let photoAppearanceUpdateTimer = null;
+let photoAppearanceLastUpdate = 0;
+const schedulePhotoAppearanceUpdate = () => {
+    if (photoAppearanceUpdateTimer !== null) {
+        return;
+    }
+    const wait = Math.max(0, 80 - (Date.now() - photoAppearanceLastUpdate));
+    photoAppearanceUpdateTimer = window.setTimeout(() => {
+        photoAppearanceUpdateTimer = null;
+        photoAppearanceLastUpdate = Date.now();
+        runStep2();
+    }, wait);
+};
+const bindLivePhotoAppearanceSlider = (id, handler) => {
+    const slider = document.getElementById(id);
+    slider.addEventListener("input", handler, false);
+    slider.addEventListener("change", handler, false);
+};
+
 const onHueChange = () => {
     document.getElementById("hue-text").innerHTML = document.getElementById("hue-slider").value + "<span>&#176;</span>";
-    runStep2();
+    schedulePhotoAppearanceUpdate();
 };
-document.getElementById("hue-slider").addEventListener("change", onHueChange, false);
+bindLivePhotoAppearanceSlider("hue-slider", onHueChange);
 document.getElementById("hue-increment").addEventListener(
     "click",
     () => {
@@ -1002,9 +1021,9 @@ document.getElementById("hue-decrement").addEventListener(
 
 const onSaturationChange = () => {
     document.getElementById("saturation-text").innerHTML = document.getElementById("saturation-slider").value + "%";
-    runStep2();
+    schedulePhotoAppearanceUpdate();
 };
-document.getElementById("saturation-slider").addEventListener("change", onSaturationChange, false);
+bindLivePhotoAppearanceSlider("saturation-slider", onSaturationChange);
 document.getElementById("saturation-increment").addEventListener(
     "click",
     () => {
@@ -1036,9 +1055,9 @@ document.getElementById("saturation-decrement").addEventListener(
 
 const onValueChange = () => {
     document.getElementById("value-text").innerHTML = document.getElementById("value-slider").value + "%";
-    runStep2();
+    schedulePhotoAppearanceUpdate();
 };
-document.getElementById("value-slider").addEventListener("change", onValueChange, false);
+bindLivePhotoAppearanceSlider("value-slider", onValueChange);
 document.getElementById("value-increment").addEventListener(
     "click",
     () => {
@@ -1068,9 +1087,9 @@ const onBrightnessChange = () => {
     document.getElementById("brightness-text").innerHTML =
         (document.getElementById("brightness-slider").value > 0 ? "+" : "") +
         document.getElementById("brightness-slider").value;
-    runStep2();
+    schedulePhotoAppearanceUpdate();
 };
-document.getElementById("brightness-slider").addEventListener("change", onBrightnessChange, false);
+bindLivePhotoAppearanceSlider("brightness-slider", onBrightnessChange);
 document.getElementById("brightness-increment").addEventListener(
     "click",
     () => {
@@ -1104,9 +1123,9 @@ const onContrastChange = () => {
     document.getElementById("contrast-text").innerHTML =
         (document.getElementById("contrast-slider").value > 0 ? "+" : "") +
         document.getElementById("contrast-slider").value;
-    runStep2();
+    schedulePhotoAppearanceUpdate();
 };
-document.getElementById("contrast-slider").addEventListener("change", onContrastChange, false);
+bindLivePhotoAppearanceSlider("contrast-slider", onContrastChange);
 document.getElementById("contrast-increment").addEventListener(
     "click",
     () => {
@@ -1180,7 +1199,7 @@ document.getElementById("reset-hsv-button").addEventListener(
             document.getElementById("hue-slider").value + "<span>&#176;</span>";
         document.getElementById("saturation-text").innerHTML = document.getElementById("saturation-slider").value + "%";
         document.getElementById("value-text").innerHTML = document.getElementById("value-slider").value + "%";
-        runStep2();
+        schedulePhotoAppearanceUpdate();
     },
     false
 );
@@ -1190,7 +1209,7 @@ document.getElementById("reset-brightness-button").addEventListener(
     () => {
         document.getElementById("brightness-slider").value = 0;
         document.getElementById("brightness-text").innerHTML = document.getElementById("brightness-slider").value;
-        runStep2();
+        schedulePhotoAppearanceUpdate();
     },
     false
 );
@@ -1200,7 +1219,7 @@ document.getElementById("reset-contrast-button").addEventListener(
     () => {
         document.getElementById("contrast-slider").value = 0;
         document.getElementById("contrast-text").innerHTML = document.getElementById("contrast-slider").value;
-        runStep2();
+        schedulePhotoAppearanceUpdate();
     },
     false
 );
