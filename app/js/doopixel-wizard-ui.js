@@ -43,6 +43,7 @@
       <header class="dp-wizard-intro">
         <h1>DooPixel Pixel Art Maker</h1>
         <p>Turn your photo into a buildable pixel artwork, then get the exact pieces and guide you need.</p>
+        <p class="dp-desktop-tip">For the best experience, we recommend using this tool on a desktop computer.</p>
       </header>
 
       <div class="dp-progress-wrap" id="dp-progress-wrap">
