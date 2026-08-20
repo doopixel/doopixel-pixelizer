@@ -33,7 +33,16 @@ test("pixelizer uses the current DooPixel green visual theme", async () => {
   assert.match(styles, /--dp-blue-dark: #14733b/);
   assert.doesNotMatch(styles, /#4961bd|#35499d|#289b3a/);
   assert.match(page, /theme-color" content="#1f9d48"/);
-  assert.match(page, /doopixel-wizard\.css\?v=20260820a/);
+  assert.match(page, /doopixel-wizard\.css\?v=20260820b/);
   assert.doesNotMatch(page, /#4961bd|#35499d|#289b3a/);
   assert.equal(JSON.parse(manifest).theme_color, "#1f9d48");
+});
+
+test("pixelizer recommends desktop use without blocking mobile users", async () => {
+  const page = await fs.readFile(new URL("../app/index.html", import.meta.url), "utf8");
+  const wizard = await fs.readFile(new URL("../app/js/doopixel-wizard-ui.js", import.meta.url), "utf8");
+
+  assert.match(wizard, /For the best experience, we recommend using this tool on a desktop computer\./);
+  assert.match(wizard, /class="dp-desktop-tip"/);
+  assert.match(page, /doopixel-wizard-ui\.js\?v=20260820a/);
 });

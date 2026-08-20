@@ -97,6 +97,13 @@ body.dp-wizard-ready .dp-site-menu-button {
   font-size: 14px;
 }
 
+.dp-wizard-intro .dp-desktop-tip {
+  margin-top: 6px;
+  color: var(--dp-blue-dark);
+  font-size: 13px;
+  font-weight: 650;
+}
+
 .dp-progress-wrap {
   position: sticky;
   top: 64px;
@@ -793,6 +800,10 @@ body.dp-wizard-ready .dp-site-menu-button {
 
   .dp-wizard-intro p {
     font-size: 13px;
+  }
+
+  .dp-wizard-intro .dp-desktop-tip {
+    font-size: 12px;
   }
 
   .dp-progress-wrap {
