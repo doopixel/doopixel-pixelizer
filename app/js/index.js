@@ -987,6 +987,16 @@ const schedulePhotoAppearanceUpdate = () => {
         runStep2();
     }, wait);
 };
+const flushPhotoAppearanceUpdate = () => {
+    if (photoAppearanceUpdateTimer !== null) {
+        window.clearTimeout(photoAppearanceUpdateTimer);
+        photoAppearanceUpdateTimer = null;
+    }
+    runStep2();
+    // A reset starts a fresh interaction cycle so the next mobile drag is never
+    // grouped with, or delayed by, the reset render.
+    photoAppearanceLastUpdate = 0;
+};
 const bindLivePhotoAppearanceSlider = (id, handler) => {
     const slider = document.getElementById(id);
     slider.addEventListener("input", handler, false);
@@ -1199,7 +1209,7 @@ document.getElementById("reset-hsv-button").addEventListener(
             document.getElementById("hue-slider").value + "<span>&#176;</span>";
         document.getElementById("saturation-text").innerHTML = document.getElementById("saturation-slider").value + "%";
         document.getElementById("value-text").innerHTML = document.getElementById("value-slider").value + "%";
-        schedulePhotoAppearanceUpdate();
+        flushPhotoAppearanceUpdate();
     },
     false
 );
@@ -1209,7 +1219,7 @@ document.getElementById("reset-brightness-button").addEventListener(
     () => {
         document.getElementById("brightness-slider").value = 0;
         document.getElementById("brightness-text").innerHTML = document.getElementById("brightness-slider").value;
-        schedulePhotoAppearanceUpdate();
+        flushPhotoAppearanceUpdate();
     },
     false
 );
@@ -1219,7 +1229,7 @@ document.getElementById("reset-contrast-button").addEventListener(
     () => {
         document.getElementById("contrast-slider").value = 0;
         document.getElementById("contrast-text").innerHTML = document.getElementById("contrast-slider").value;
-        schedulePhotoAppearanceUpdate();
+        flushPhotoAppearanceUpdate();
     },
     false
 );
