@@ -2,7 +2,7 @@
   "name": "DooPixel Pixel Art Maker",
   "short_name": "DooPixel",
   "description": "Create custom pixel art from your own photo with DooPixel pieces.",
-  "theme_color": "#4961bd",
+  "theme_color": "#1f9d48",
   "background_color": "#FCFCFC",
   "icons": [
     {
