@@ -154,6 +154,7 @@ export async function onRequestGet() {
       <div id="message" class="notice hidden" aria-live="polite"></div>
     </div>
 
+    <script src="/js/doopixel-instruction-data.js?v=20260818a"></script>
     <script src="/js/doopixel-image-upload.js?v=20260808a"></script>
     <script>
       const SKU_MAP_URL = "/doopixel-pixelizer-sku-map.json?v=20260818a";
@@ -231,7 +232,8 @@ export async function onRequestGet() {
         availableColors(pieceType).forEach(function (color) {
           const option = document.createElement("option");
           option.value = color.hex;
-          option.textContent = color.doopixelNo + " - " + color.colorName;
+          option.textContent = window.DooPixelInstructionData.formatWarehouseCode(pieceType, color.doopixelNo) +
+            " - " + color.colorName;
           option.selected = color.hex === selectedHex;
           select.appendChild(option);
         });

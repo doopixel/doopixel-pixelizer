@@ -709,6 +709,7 @@ export async function onRequestGet({ params, env, request }) {
     <div data-doopixel-footer></div>
     <script src="/js/doopixel-site-footer.js?v=20260818b"></script>
     <script src="/js/doopixel-site-header.js?v=20260818b"></script>
+    <script src="/js/doopixel-instruction-data.js?v=20260818a"></script>
     <script>
       const DESIGN_ID = ${JSON.stringify(rawId)};
       const CANONICAL_URL = ${JSON.stringify(canonicalUrl)};
@@ -800,7 +801,10 @@ export async function onRequestGet({ params, env, request }) {
           const swatch = document.createElement("span");
           swatch.className = "swatch";
           swatch.style.background = part.hex;
-          colorCell.append(swatch, document.createTextNode(part.doopixelNo + " - " + part.colorName));
+          const displayNumber = part.isCustom
+            ? part.doopixelNo
+            : window.DooPixelInstructionData.formatWarehouseCode(part.pieceType, part.doopixelNo);
+          colorCell.append(swatch, document.createTextNode(displayNumber + " - " + part.colorName));
           const quantityCell = document.createElement("td");
           quantityCell.textContent = part.quantity;
           row.append(typeCell, colorCell, quantityCell);
