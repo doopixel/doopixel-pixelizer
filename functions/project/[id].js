@@ -175,7 +175,10 @@ export async function onRequestGet({ params }) {
           const swatch = document.createElement("span");
           swatch.className = "swatch";
           swatch.style.background = part.hex;
-          color.append(swatch, document.createTextNode(part.doopixelNo + " - " + part.colorName));
+          const displayNumber = part.isCustom
+            ? part.doopixelNo
+            : window.DooPixelInstructionData.formatWarehouseCode(part.pieceType, part.doopixelNo);
+          color.append(swatch, document.createTextNode(displayNumber + " - " + part.colorName));
           const sku = document.createElement("td");
           sku.textContent = part.isCustom ? "Custom Color" : part.sku;
           const quantity = document.createElement("td");

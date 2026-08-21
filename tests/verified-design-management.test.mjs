@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import fs from "node:fs/promises";
 import test from "node:test";
 
 import {
@@ -47,6 +48,19 @@ test("normalizes old saved catalog SKUs when projects are read", () => {
   ]);
 
   assert.deepEqual(parts.map((part) => part.sku), ["DP-FLAT-018", "DP-STUD-A18"]);
+});
+
+test("verified design pages show raised catalog numbers with A and preserve custom numbers", async () => {
+  const [adminPage, sharePage, projectPage] = await Promise.all([
+    fs.readFile(new URL("../functions/admin/verified.js", import.meta.url), "utf8"),
+    fs.readFile(new URL("../functions/share/[id].js", import.meta.url), "utf8"),
+    fs.readFile(new URL("../functions/project/[id].js", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(adminPage, /formatWarehouseCode\(pieceType, color\.doopixelNo\)/);
+  [sharePage, projectPage].forEach((page) => {
+    assert.match(page, /part\.isCustom\s*\? part\.doopixelNo\s*:\s*window\.DooPixelInstructionData\.formatWarehouseCode/);
+  });
 });
 
 test("replaces verified photos and PDF before deleting obsolete files", async () => {
