@@ -27,6 +27,7 @@ test("footer uses valid storefront destinations in the same window", () => {
   assert.match(source, /https:\/\/doopixel\.com\/contact#contact_form/);
   assert.match(source, /contact\[email\]/);
   assert.match(source, /Follow on Facebook/);
+  assert.match(source, /href="https:\/\/www\.facebook\.com\/doopixel"/);
   assert.match(source, /Secure payments/);
   assert.doesNotMatch(source, /target=["']_blank["']/);
   assert.doesNotMatch(source, /href=["']#["']/);

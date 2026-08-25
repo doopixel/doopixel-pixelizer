@@ -70,10 +70,11 @@ export async function onRequestGet({ params }) {
         .button { width:100%; }
       }
     </style>
+    <link rel="stylesheet" href="/css/doopixel-page-polish.css?v=20260825a" />
     <link rel="stylesheet" href="/css/doopixel-site-header.css?v=20260825a" />
     <link rel="stylesheet" href="/css/doopixel-site-footer.css?v=20260816b" />
   </head>
-  <body>
+  <body class="dp-page-project">
     <div class="dp-site-nav-wrap">
       <div class="dp-site-topbar" role="note"><span class="dp-site-topbar__dot" aria-hidden="true"></span><strong>Free U.S. Shipping $99+</strong><span class="dp-site-topbar__separator" aria-hidden="true">·</span><span>Ships from the USA</span></div>
       <nav class="dp-site-nav" aria-label="DooPixel main navigation">

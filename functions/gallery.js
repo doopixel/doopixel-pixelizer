@@ -483,10 +483,11 @@ export async function onRequestGet() {
         h1 { font-size: 26px; }
       }
     </style>
+    <link rel="stylesheet" href="/css/doopixel-page-polish.css?v=20260825a" />
     <link rel="stylesheet" href="/css/doopixel-site-header.css?v=20260825a" />
     <link rel="stylesheet" href="/css/doopixel-site-footer.css?v=20260816b" />
   </head>
-  <body>
+  <body class="dp-page-gallery">
     <div class="dp-site-nav-wrap">
       <div class="dp-site-topbar" role="note">
         <span class="dp-site-topbar__dot" aria-hidden="true"></span><strong>Free U.S. Shipping $99+</strong><span class="dp-site-topbar__separator" aria-hidden="true">·</span><span>Ships from the USA</span>

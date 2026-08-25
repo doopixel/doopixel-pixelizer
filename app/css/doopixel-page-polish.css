@@ -1,0 +1,213 @@
+:root {
+  --dp-blue: #20a83b;
+  --dp-blue-dark: #173e27;
+  --dp-green: #20a83b;
+  --dp-ink: #1b261e;
+  --dp-muted: #667069;
+  --dp-line: #dce5dd;
+  --dp-soft: #f3f6f1;
+  --blue: #20a83b;
+  --green: #20a83b;
+  --green-dark: #177a34;
+  --accent: #20a83b;
+  --ink: #1b261e;
+  --text: #1b261e;
+  --muted: #667069;
+  --line: #dce5dd;
+  --soft: #f3f6f1;
+  --canvas: #f4f7f2;
+  --paper: #fffdf8;
+}
+
+html,
+body {
+  background-color: #f4f7f2 !important;
+}
+
+/* Pixelizer: retain the workflow and controls, soften only the surfaces. */
+.dp-page-pixelizer .dp-wizard-intro,
+.dp-page-pixelizer .dp-progress-wrap {
+  background-color: #fffdf8;
+}
+
+.dp-page-pixelizer .dp-upload-panel,
+.dp-page-pixelizer .dp-preview-frame,
+.dp-page-pixelizer .dp-panel,
+.dp-page-pixelizer .dp-control-group {
+  border-color: #dce5dd;
+  border-radius: 18px;
+  box-shadow: 0 12px 32px rgba(23, 62, 39, 0.06);
+}
+
+.dp-page-pixelizer .dp-primary-button,
+.dp-page-pixelizer .dp-secondary-button,
+.dp-page-pixelizer .dp-quiet-button,
+.dp-page-pixelizer .dp-final-controls #download-instructions-button,
+.dp-page-pixelizer .dp-final-controls #doopixel-add-to-cart-button,
+.dp-page-pixelizer .dp-controls-column .btn {
+  border-radius: 12px;
+}
+
+.dp-page-pixelizer .dp-stat,
+.dp-page-pixelizer .dp-piece-list,
+.dp-page-pixelizer .dp-rare-notice,
+.dp-page-pixelizer .dp-guide-warning {
+  border-radius: 14px;
+}
+
+/* BrickLink matching page. */
+.dp-page-parts-import .hero {
+  border-radius: 24px;
+  background: linear-gradient(135deg, #173e27, #20a83b);
+}
+
+.dp-page-parts-import .step,
+.dp-page-parts-import .pill,
+.dp-page-parts-import .choose-button,
+.dp-page-parts-import .primary-button {
+  border-radius: 12px;
+}
+
+.dp-page-parts-import .panel,
+.dp-page-parts-import .upload-zone,
+.dp-page-parts-import .message,
+.dp-page-parts-import .match-note,
+.dp-page-parts-import .stats,
+.dp-page-parts-import .table-wrap,
+.dp-page-parts-import .checkout {
+  border-radius: 18px;
+}
+
+.dp-page-parts-import .stats,
+.dp-page-parts-import .table-wrap {
+  overflow: hidden;
+}
+
+.dp-page-parts-import .choose-button {
+  border-color: #173e27;
+  background: #173e27;
+}
+
+/* Gallery cards and filters. */
+.dp-page-gallery .button {
+  border-color: #20a83b;
+  border-radius: 12px;
+  background: #20a83b;
+}
+
+.dp-page-gallery .button:hover {
+  border-color: #177a34;
+  background: #177a34;
+}
+
+.dp-page-gallery .intro,
+.dp-page-gallery .sort-control,
+.dp-page-gallery .gallery-search,
+.dp-page-gallery .card,
+.dp-page-gallery .empty,
+.dp-page-gallery .page-button {
+  border-color: #dce5dd;
+  border-radius: 18px;
+}
+
+.dp-page-gallery .intro,
+.dp-page-gallery .card,
+.dp-page-gallery .empty {
+  box-shadow: 0 12px 32px rgba(23, 62, 39, 0.055);
+}
+
+.dp-page-gallery .sort-button.active {
+  background: #edf7ef;
+  color: #173e27;
+}
+
+.dp-page-gallery .gallery-search:focus-within {
+  border-color: #20a83b;
+  outline-color: rgba(32, 168, 59, 0.14);
+}
+
+/* Project lookup and private project pages. */
+.dp-page-find-project form,
+.dp-page-find-project .result,
+.dp-page-project .notice,
+.dp-page-project .preview-wrap,
+.dp-page-project details {
+  border: 1px solid #dce5dd;
+  border-radius: 18px;
+  background: #fffdf8;
+  box-shadow: 0 10px 28px rgba(23, 62, 39, 0.05);
+}
+
+.dp-page-find-project form {
+  padding: 24px;
+}
+
+.dp-page-find-project input,
+.dp-page-find-project button,
+.dp-page-project input[type="file"],
+.dp-page-project textarea,
+.dp-page-project .button {
+  border-radius: 12px;
+}
+
+.dp-page-find-project button,
+.dp-page-project .button {
+  border-color: #173e27;
+  background: #173e27;
+}
+
+.dp-page-find-project button:hover,
+.dp-page-find-project button:focus-visible,
+.dp-page-project .button:hover,
+.dp-page-project .button:focus-visible {
+  border-color: #20a83b;
+  background: #20a83b;
+  color: #fff;
+}
+
+.dp-page-find-project .eyebrow,
+.dp-page-find-project .result span,
+.dp-page-project .eyebrow {
+  color: #177a34;
+}
+
+/* Public design detail page. */
+.dp-page-share .preview,
+.dp-page-share .preview-thumb,
+.dp-page-share .panel,
+.dp-page-share .description-panel,
+.dp-page-share .pieces-section,
+.dp-page-share .comments-section,
+.dp-page-share .upload-box,
+.dp-page-share .comment-form,
+.dp-page-share .share-box {
+  border-color: #dce5dd;
+  border-radius: 18px;
+}
+
+.dp-page-share .panel,
+.dp-page-share .description-panel,
+.dp-page-share .pieces-section,
+.dp-page-share .comments-section {
+  box-shadow: 0 12px 32px rgba(23, 62, 39, 0.05);
+}
+
+.dp-page-share button,
+.dp-page-share .button,
+.dp-page-share input,
+.dp-page-share textarea {
+  border-radius: 12px;
+}
+
+@media (max-width: 680px) {
+  .dp-page-parts-import .hero,
+  .dp-page-parts-import .panel,
+  .dp-page-gallery .intro,
+  .dp-page-gallery .card,
+  .dp-page-share .panel,
+  .dp-page-share .description-panel,
+  .dp-page-share .pieces-section,
+  .dp-page-share .comments-section {
+    border-radius: 16px;
+  }
+}
