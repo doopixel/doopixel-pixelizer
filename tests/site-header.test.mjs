@@ -7,7 +7,7 @@ import { onRequestGet as getGallery } from "../functions/gallery.js";
 import { onRequestGet as getProject } from "../functions/project/[id].js";
 import { onRequestGet as getShare } from "../functions/share/[id].js";
 
-const EXPECTED_LABELS = ["Upload Images", "Gallery &amp; Shop", "Find My Project"];
+const EXPECTED_LABELS = ["Upload Images", "Gallery &amp; Shop", "Matching Parts", "Find My Project"];
 
 function assertSharedHeader(html, pageName) {
   let previousIndex = -1;
@@ -21,6 +21,9 @@ function assertSharedHeader(html, pageName) {
   assert.doesNotMatch(html, /Community Gallery/, `${pageName} should not contain the old gallery label`);
   assert.match(html, /class="dp-site-menu-button"[^>]*>[\s\S]*?lucide-menu\.svg/);
   assert.match(html, /class="dp-site-cart-icon"[^>]*aria-label="Shopping cart"[^>]*>[\s\S]*?lucide-shopping-cart\.svg/);
+  assert.match(html, /class="dp-site-topbar"[\s\S]*?Free U\.S\. Shipping \$99\+[\s\S]*?Ships from the USA/);
+  assert.match(html, /class="dp-site-logo"[\s\S]*?logo3\.png\?v=1787501605/);
+  assert.match(html, /class="dp-site-actions"[\s\S]*?class="dp-site-search-button"/);
   assert.match(html, /doopixel-site-header\.css/);
   assert.match(html, /doopixel-site-header\.js/);
 }

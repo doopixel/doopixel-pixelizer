@@ -52,78 +52,6 @@ export async function onRequestGet() {
         font-family: Arial, Helvetica, sans-serif;
       }
 
-      .dp-site-nav-wrap {
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        border: 0;
-        background: var(--blue);
-      }
-
-      .dp-site-nav {
-        position: relative;
-        display: flex;
-        align-items: center;
-        gap: 22px;
-        width: min(100% - 36px, 1220px);
-        min-height: 64px;
-        margin: 0 auto;
-      }
-
-      .dp-site-logo {
-        display: inline-flex;
-        flex: 0 0 auto;
-        align-items: center;
-      }
-
-      .dp-site-logo img {
-        display: block;
-        width: auto;
-        height: 34px;
-      }
-
-      .dp-site-links {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        margin-left: auto;
-      }
-
-      .dp-site-link {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 40px;
-        border: 1px solid transparent;
-        padding: 8px 12px;
-        color: #fff;
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 700;
-        white-space: nowrap;
-      }
-
-      .dp-site-link:hover {
-        background: rgba(255, 255, 255, 0.14);
-        color: #fff;
-      }
-
-      .dp-site-link.is-active {
-        border-color: #fff;
-        background: #fff;
-        color: #35499d;
-      }
-
-      .dp-site-cart {
-        border-color: rgba(255, 255, 255, 0.75);
-        color: #fff;
-      }
-
-      .dp-site-menu-button,
-      .dp-site-mobile-cart {
-        display: none;
-      }
-
       .shell {
         width: min(100% - 36px, 1220px);
         margin: 0 auto;
@@ -482,53 +410,6 @@ export async function onRequestGet() {
 
       @media (max-width: 680px) {
         .shell { width: min(100% - 20px, 1220px); }
-        .dp-site-nav {
-          width: min(100% - 28px, 1220px);
-          min-height: 58px;
-          gap: 10px;
-        }
-        .dp-site-logo img { height: 29px; }
-        .dp-site-links {
-          position: absolute;
-          top: calc(100% + 1px);
-          right: -14px;
-          left: -14px;
-          display: none;
-          align-items: stretch;
-          margin-left: 0;
-          padding: 10px 14px 14px;
-          border-bottom: 0;
-          background: var(--blue);
-        }
-        .dp-site-links.is-open { display: grid; gap: 6px; }
-        .dp-site-link {
-          justify-content: flex-start;
-          min-height: 44px;
-          padding: 10px 12px;
-        }
-        .dp-site-links .dp-site-cart { display: none; }
-        .dp-site-mobile-cart,
-        .dp-site-menu-button {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          min-height: 38px;
-          border: 1px solid rgba(255, 255, 255, 0.75);
-          background: transparent;
-          color: #fff;
-          font-size: 13px;
-          font-weight: 800;
-        }
-        .dp-site-mobile-cart {
-          margin-left: auto;
-          padding: 7px 10px;
-          text-decoration: none;
-        }
-        .dp-site-menu-button {
-          width: 40px;
-          padding: 0;
-          cursor: pointer;
-        }
         .intro {
           display: block;
           margin-top: 18px;
@@ -602,11 +483,14 @@ export async function onRequestGet() {
         h1 { font-size: 26px; }
       }
     </style>
-    <link rel="stylesheet" href="/css/doopixel-site-header.css?v=20260816d" />
+    <link rel="stylesheet" href="/css/doopixel-site-header.css?v=20260825a" />
     <link rel="stylesheet" href="/css/doopixel-site-footer.css?v=20260816b" />
   </head>
   <body>
     <div class="dp-site-nav-wrap">
+      <div class="dp-site-topbar" role="note">
+        <span class="dp-site-topbar__dot" aria-hidden="true"></span><strong>Free U.S. Shipping $99+</strong><span class="dp-site-topbar__separator" aria-hidden="true">·</span><span>Ships from the USA</span>
+      </div>
       <nav class="dp-site-nav" aria-label="DooPixel main navigation">
         <button
           class="dp-site-menu-button"
@@ -619,18 +503,20 @@ export async function onRequestGet() {
         </button>
         <a class="dp-site-logo" href="https://doopixel.com/" aria-label="DooPixel shop">
           <img
-            src="https://cdn.shopify.com/s/files/1/0738/7562/0006/files/20260408-001830.png?v=1775578807"
+            src="https://cdn.shopify.com/s/files/1/0738/7562/0006/files/logo3.png?v=1787501605"
             alt="DooPixel"
           />
         </a>
         <div class="dp-site-links" id="dp-site-links">
           <a class="dp-site-link" href="https://pixelizer.doopixel.com/">Upload Images</a>
           <a class="dp-site-link is-active" href="https://pixelizer.doopixel.com/gallery" aria-current="page">Gallery &amp; Shop</a>
+          <a class="dp-site-link" href="https://pixelizer.doopixel.com/parts-import/">Matching Parts</a>
           <a class="dp-site-link" href="https://pixelizer.doopixel.com/find-project">Find My Project</a>
         </div>
-        <a class="dp-site-cart-icon" href="https://doopixel.com/cart" aria-label="Shopping cart">
-          <img class="dp-site-icon" src="/assets/icons/lucide-shopping-cart.svg" alt="" />
-        </a>
+        <div class="dp-site-actions">
+          <button class="dp-site-search-button" type="button" aria-label="Search DooPixel shop" aria-expanded="false" aria-controls="dp-site-search-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.25 4.25"></path></svg></button>
+          <a class="dp-site-cart-icon" href="https://doopixel.com/cart" aria-label="Shopping cart"><img class="dp-site-icon" src="/assets/icons/lucide-shopping-cart.svg" alt="" /><span class="dp-site-cart-count" data-dp-cart-count>0</span></a>
+        </div>
       </nav>
     </div>
 
@@ -680,7 +566,7 @@ export async function onRequestGet() {
 
     <div data-doopixel-footer></div>
     <script src="/js/doopixel-site-footer.js?v=20260818b"></script>
-    <script src="/js/doopixel-site-header.js?v=20260818b"></script>
+    <script src="/js/doopixel-site-header.js?v=20260825a"></script>
     <script>
       const loading = document.getElementById("loading");
       const empty = document.getElementById("empty");

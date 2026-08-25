@@ -253,150 +253,10 @@
       }
     </style>
 
-    <style>
-      .dp-site-nav-wrap {
-        position: sticky;
-        top: 0;
-        z-index: 2000;
-        border-top: 4px solid #f4ce21;
-        border-bottom: 1px solid #333;
-        background: #171717;
-      }
-
-      .dp-site-nav {
-        display: flex;
-        min-height: 66px;
-        max-width: 1440px;
-        margin: 0 auto;
-        padding: 0 22px;
-        align-items: center;
-        gap: 24px;
-      }
-
-      .dp-site-logo {
-        display: inline-flex;
-        margin-right: auto;
-        align-items: center;
-      }
-
-      .dp-site-logo img {
-        display: block;
-        width: 132px;
-        height: auto;
-      }
-
-      .dp-site-links {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-      }
-
-      .dp-site-link,
-      .dp-site-cart-mobile {
-        display: inline-flex;
-        min-height: 42px;
-        padding: 0 14px;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid transparent;
-        color: #fff !important;
-        font-size: 14px;
-        font-weight: 700;
-      }
-
-      .dp-site-link:hover,
-      .dp-site-link:focus,
-      .dp-site-cart-mobile:hover,
-      .dp-site-cart-mobile:focus {
-        border-color: #f4ce21;
-        color: #f4ce21 !important;
-      }
-
-      .dp-site-link.is-active {
-        background: #f4ce21;
-        color: #171717 !important;
-      }
-
-      .dp-site-menu-button,
-      .dp-site-cart-mobile {
-        display: none;
-      }
-
-      @media (max-width: 767px) {
-        .dp-site-nav {
-          position: relative;
-          min-height: 60px;
-          padding: 0 14px;
-          gap: 8px;
-        }
-
-        .dp-site-logo img {
-          width: 113px;
-        }
-
-        .dp-site-cart-mobile,
-        .dp-site-menu-button {
-          display: inline-flex;
-          width: 48px;
-          height: 42px;
-          padding: 0;
-          align-items: center;
-          justify-content: center;
-          border: 1px solid #f4ce21;
-          border-radius: 0;
-          background: transparent;
-          color: #f4ce21 !important;
-          font-size: 14px;
-          font-weight: 700;
-        }
-
-        .dp-site-cart-mobile {
-          width: auto;
-          padding: 0 12px;
-        }
-
-        .dp-site-links {
-          position: absolute;
-          top: 100%;
-          right: 0;
-          left: 0;
-          display: none;
-          padding: 10px 14px 14px;
-          border-bottom: 1px solid #333;
-          background: #171717;
-        }
-
-        .dp-site-links.is-open {
-          display: grid;
-          gap: 4px;
-        }
-
-        .dp-site-link {
-          justify-content: flex-start;
-        }
-      }
-    </style>
     <link rel="stylesheet" href="css/doopixel-wizard.css?v=20260820b" />
     <style>
       #dp-boot-screen {
         display: none;
-      }
-
-      html.dp-wizard-booting .dp-site-nav-wrap {
-        border-top: 0;
-        border-bottom: 0;
-        background: #1f9d48;
-      }
-
-      html.dp-wizard-booting .dp-site-link,
-      html.dp-wizard-booting .dp-site-cart-mobile,
-      html.dp-wizard-booting .dp-site-menu-button {
-        color: #ffffff !important;
-      }
-
-      html.dp-wizard-booting .dp-site-link.is-active {
-        background: #ffffff;
-        color: #14733b !important;
       }
 
       html.dp-wizard-booting #dp-legacy-app {
@@ -438,25 +298,10 @@
         animation: dp-boot-piece 1.2s ease-in-out infinite;
       }
 
-      .dp-boot-mosaic span:nth-child(3n) {
-        background: #f4ce21;
-        animation-delay: 0.1s;
-      }
-
-      .dp-boot-mosaic span:nth-child(4n) {
-        background: #e899bc;
-        animation-delay: 0.2s;
-      }
-
-      .dp-boot-mosaic span:nth-child(5n) {
-        background: #1f9d48;
-        animation-delay: 0.3s;
-      }
-
-      .dp-boot-mosaic span:nth-child(7n) {
-        background: #d4141a;
-        animation-delay: 0.4s;
-      }
+      .dp-boot-mosaic span:nth-child(3n) { background: #f4ce21; animation-delay: 0.1s; }
+      .dp-boot-mosaic span:nth-child(4n) { background: #e899bc; animation-delay: 0.2s; }
+      .dp-boot-mosaic span:nth-child(5n) { background: #1f9d48; animation-delay: 0.3s; }
+      .dp-boot-mosaic span:nth-child(7n) { background: #d4141a; animation-delay: 0.4s; }
 
       .dp-boot-card p {
         margin: 0;
@@ -465,29 +310,26 @@
       }
 
       @keyframes dp-boot-piece {
-        0%,
-        100% {
-          transform: translateY(0);
-          opacity: 0.65;
-        }
-        50% {
-          transform: translateY(-3px);
-          opacity: 1;
-        }
+        0%, 100% { transform: translateY(0); opacity: 0.65; }
+        50% { transform: translateY(-3px); opacity: 1; }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        .dp-boot-mosaic span {
-          animation: none;
-        }
+        .dp-boot-mosaic span { animation: none; }
       }
     </style>
-    <link rel="stylesheet" href="/css/doopixel-site-header.css?v=20260816d" />
+    <link rel="stylesheet" href="/css/doopixel-site-header.css?v=20260825a" />
     <link rel="stylesheet" href="/css/doopixel-site-footer.css?v=20260816b" />
   </head>
 
   <body>
     <div class="dp-site-nav-wrap">
+      <div class="dp-site-topbar" role="note">
+        <span class="dp-site-topbar__dot" aria-hidden="true"></span>
+        <strong>Free U.S. Shipping $99+</strong>
+        <span class="dp-site-topbar__separator" aria-hidden="true">·</span>
+        <span>Ships from the USA</span>
+      </div>
       <nav class="dp-site-nav" aria-label="DooPixel main navigation">
         <button
           class="dp-site-menu-button"
@@ -500,18 +342,25 @@
         </button>
         <a class="dp-site-logo" href="https://doopixel.com/" aria-label="DooPixel shop">
           <img
-            src="https://cdn.shopify.com/s/files/1/0738/7562/0006/files/20260408-001830.png?v=1775578807"
+            src="https://cdn.shopify.com/s/files/1/0738/7562/0006/files/logo3.png?v=1787501605"
             alt="DooPixel"
           />
         </a>
         <div class="dp-site-links" id="dp-site-links">
           <a class="dp-site-link is-active" href="https://pixelizer.doopixel.com/" aria-current="page">Upload Images</a>
           <a class="dp-site-link" href="https://pixelizer.doopixel.com/gallery">Gallery &amp; Shop</a>
+          <a class="dp-site-link" href="https://pixelizer.doopixel.com/parts-import/">Matching Parts</a>
           <a class="dp-site-link" href="https://pixelizer.doopixel.com/find-project">Find My Project</a>
         </div>
-        <a class="dp-site-cart-icon" href="https://doopixel.com/cart" aria-label="Shopping cart">
-          <img class="dp-site-icon" src="/assets/icons/lucide-shopping-cart.svg" alt="" />
-        </a>
+        <div class="dp-site-actions">
+          <button class="dp-site-search-button" type="button" aria-label="Search DooPixel shop" aria-expanded="false" aria-controls="dp-site-search-panel">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.25 4.25"></path></svg>
+          </button>
+          <a class="dp-site-cart-icon" href="https://doopixel.com/cart" aria-label="Shopping cart">
+            <img class="dp-site-icon" src="/assets/icons/lucide-shopping-cart.svg" alt="" />
+            <span class="dp-site-cart-count" data-dp-cart-count>0</span>
+          </a>
+        </div>
       </nav>
     </div>
     <div id="dp-boot-screen" aria-live="polite" aria-label="Loading DooPixel Pixel Art Maker">
@@ -2750,7 +2599,7 @@
     <script src="js/doopixel-instruction-data.js?v=20260818a"></script>
     <script src="js/doopixel-pixelizer-add-to-cart.js?v=20260818a"></script>
     <script src="js/doopixel-wizard-ui.js?v=20260820a"></script>
-    <script src="/js/doopixel-site-header.js?v=20260818b"></script>
+    <script src="/js/doopixel-site-header.js?v=20260825a"></script>
     <script src="js/metrics.js"></script>
     <div data-doopixel-footer></div>
     <script src="/js/doopixel-site-footer.js?v=20260818b"></script>

@@ -32,26 +32,29 @@ export async function onRequestGet() {
       .result strong { display:block; margin-bottom:4px; }
       .result span { color:var(--blue); font-size:13px; }
     </style>
-    <link rel="stylesheet" href="/css/doopixel-site-header.css?v=20260816d" />
+    <link rel="stylesheet" href="/css/doopixel-site-header.css?v=20260825a" />
     <link rel="stylesheet" href="/css/doopixel-site-footer.css?v=20260816b" />
   </head>
   <body>
     <div class="dp-site-nav-wrap">
+      <div class="dp-site-topbar" role="note"><span class="dp-site-topbar__dot" aria-hidden="true"></span><strong>Free U.S. Shipping $99+</strong><span class="dp-site-topbar__separator" aria-hidden="true">·</span><span>Ships from the USA</span></div>
       <nav class="dp-site-nav" aria-label="DooPixel main navigation">
         <button class="dp-site-menu-button" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="dp-site-links">
           <img class="dp-site-icon" src="/assets/icons/lucide-menu.svg" alt="" />
         </button>
         <a class="dp-site-logo" href="https://doopixel.com/" aria-label="DooPixel shop">
-          <img src="https://cdn.shopify.com/s/files/1/0738/7562/0006/files/20260408-001830.png?v=1775578807" alt="DooPixel" />
+          <img src="https://cdn.shopify.com/s/files/1/0738/7562/0006/files/logo3.png?v=1787501605" alt="DooPixel" />
         </a>
         <div class="dp-site-links" id="dp-site-links">
           <a class="dp-site-link" href="https://pixelizer.doopixel.com/">Upload Images</a>
           <a class="dp-site-link" href="https://pixelizer.doopixel.com/gallery">Gallery &amp; Shop</a>
+          <a class="dp-site-link" href="https://pixelizer.doopixel.com/parts-import/">Matching Parts</a>
           <a class="dp-site-link is-active" href="https://pixelizer.doopixel.com/find-project" aria-current="page">Find My Project</a>
         </div>
-        <a class="dp-site-cart-icon" href="https://doopixel.com/cart" aria-label="Shopping cart">
-          <img class="dp-site-icon" src="/assets/icons/lucide-shopping-cart.svg" alt="" />
-        </a>
+        <div class="dp-site-actions">
+          <button class="dp-site-search-button" type="button" aria-label="Search DooPixel shop" aria-expanded="false" aria-controls="dp-site-search-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.25 4.25"></path></svg></button>
+          <a class="dp-site-cart-icon" href="https://doopixel.com/cart" aria-label="Shopping cart"><img class="dp-site-icon" src="/assets/icons/lucide-shopping-cart.svg" alt="" /><span class="dp-site-cart-count" data-dp-cart-count>0</span></a>
+        </div>
       </nav>
     </div>
     <main>
@@ -68,7 +71,7 @@ export async function onRequestGet() {
     </main>
     <div data-doopixel-footer></div>
     <script src="/js/doopixel-site-footer.js?v=20260818b"></script>
-    <script src="/js/doopixel-site-header.js?v=20260818b"></script>
+    <script src="/js/doopixel-site-header.js?v=20260825a"></script>
     <script>
       document.getElementById("lookup-form").addEventListener("submit", async function (event) {
         event.preventDefault();

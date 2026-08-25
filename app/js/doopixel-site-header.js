@@ -69,36 +69,48 @@
       links.insertBefore(matchingParts, projectLink || null);
     }
 
-    const drawerHeader = document.createElement("div");
-    drawerHeader.className = "dp-site-drawer-header";
-    drawerHeader.innerHTML = `
-      <a href="${SHOPIFY_ORIGIN}/" class="dp-site-drawer-logo" aria-label="DooPixel shop">
-        <img src="${LOGO_URL}" alt="DooPixel" />
-      </a>
-      <span class="dp-site-drawer-label">Menu</span>
-      <button class="dp-site-drawer-close" type="button" aria-label="Close navigation menu">×</button>`;
-    links.insertBefore(drawerHeader, links.firstChild);
+    let drawerHeader = links.querySelector(".dp-site-drawer-header");
+    if (!drawerHeader) {
+      drawerHeader = document.createElement("div");
+      drawerHeader.className = "dp-site-drawer-header";
+      drawerHeader.innerHTML = `
+        <a href="${SHOPIFY_ORIGIN}/" class="dp-site-drawer-logo" aria-label="DooPixel shop">
+          <img src="${LOGO_URL}" alt="DooPixel" />
+        </a>
+        <span class="dp-site-drawer-label">Menu</span>
+        <button class="dp-site-drawer-close" type="button" aria-label="Close navigation menu">×</button>`;
+      links.insertBefore(drawerHeader, links.firstChild);
+    }
 
-    const overlay = document.createElement("button");
-    overlay.className = "dp-site-menu-overlay";
-    overlay.type = "button";
-    overlay.setAttribute("aria-label", "Close navigation menu");
-    wrap.appendChild(overlay);
+    let overlay = wrap.querySelector(".dp-site-menu-overlay");
+    if (!overlay) {
+      overlay = document.createElement("button");
+      overlay.className = "dp-site-menu-overlay";
+      overlay.type = "button";
+      overlay.setAttribute("aria-label", "Close navigation menu");
+      wrap.appendChild(overlay);
+    }
 
-    const actions = document.createElement("div");
-    actions.className = "dp-site-actions";
+    let actions = nav.querySelector(".dp-site-actions");
+    if (!actions) {
+      actions = document.createElement("div");
+      actions.className = "dp-site-actions";
+      cart.insertAdjacentElement("beforebegin", actions);
+    }
 
-    const searchButton = document.createElement("button");
-    searchButton.className = "dp-site-search-button";
-    searchButton.type = "button";
-    searchButton.setAttribute("aria-label", "Search DooPixel shop");
-    searchButton.setAttribute("aria-expanded", "false");
-    searchButton.setAttribute("aria-controls", "dp-site-search-panel");
-    searchButton.innerHTML = searchIcon;
+    let searchButton = actions.querySelector(".dp-site-search-button");
+    if (!searchButton) {
+      searchButton = document.createElement("button");
+      searchButton.className = "dp-site-search-button";
+      searchButton.type = "button";
+      searchButton.setAttribute("aria-label", "Search DooPixel shop");
+      searchButton.setAttribute("aria-expanded", "false");
+      searchButton.setAttribute("aria-controls", "dp-site-search-panel");
+      searchButton.innerHTML = searchIcon;
+      actions.insertBefore(searchButton, actions.firstChild);
+    }
 
-    cart.insertAdjacentElement("beforebegin", actions);
-    actions.appendChild(searchButton);
-    actions.appendChild(cart);
+    if (cart.parentElement !== actions) actions.appendChild(cart);
 
     if (!cart.querySelector("[data-dp-cart-count]")) {
       const count = document.createElement("span");
@@ -108,28 +120,31 @@
       cart.appendChild(count);
     }
 
-    const searchPanel = document.createElement("div");
-    searchPanel.className = "dp-site-search-panel";
-    searchPanel.id = "dp-site-search-panel";
-    searchPanel.hidden = true;
-    searchPanel.innerHTML = `
-      <button class="dp-site-search-backdrop" type="button" aria-label="Close search"></button>
-      <section class="dp-site-search-dialog" role="dialog" aria-modal="true" aria-labelledby="dp-site-search-title">
-        <div class="dp-site-search-heading">
-          <div>
-            <span>Find Your Next Build</span>
-            <h2 id="dp-site-search-title">Search DooPixel</h2>
+    let searchPanel = wrap.querySelector("#dp-site-search-panel");
+    if (!searchPanel) {
+      searchPanel = document.createElement("div");
+      searchPanel.className = "dp-site-search-panel";
+      searchPanel.id = "dp-site-search-panel";
+      searchPanel.hidden = true;
+      searchPanel.innerHTML = `
+        <button class="dp-site-search-backdrop" type="button" aria-label="Close search"></button>
+        <section class="dp-site-search-dialog" role="dialog" aria-modal="true" aria-labelledby="dp-site-search-title">
+          <div class="dp-site-search-heading">
+            <div>
+              <span>Find Your Next Build</span>
+              <h2 id="dp-site-search-title">Search DooPixel</h2>
+            </div>
+            <button class="dp-site-search-close" type="button" aria-label="Close search">×</button>
           </div>
-          <button class="dp-site-search-close" type="button" aria-label="Close search">×</button>
-        </div>
-        <form action="${SHOPIFY_ORIGIN}/search" method="get" role="search">
-          <input type="hidden" name="type" value="product" />
-          <label class="dp-site-visually-hidden" for="dp-site-search-input">Search products</label>
-          <input id="dp-site-search-input" name="q" type="search" autocomplete="off" placeholder="Search pixel art and pieces" required />
-          <button type="submit" aria-label="Submit search">${searchIcon}</button>
-        </form>
-      </section>`;
-    wrap.appendChild(searchPanel);
+          <form action="${SHOPIFY_ORIGIN}/search" method="get" role="search">
+            <input type="hidden" name="type" value="product" />
+            <label class="dp-site-visually-hidden" for="dp-site-search-input">Search products</label>
+            <input id="dp-site-search-input" name="q" type="search" autocomplete="off" placeholder="Search pixel art and pieces" required />
+            <button type="submit" aria-label="Submit search">${searchIcon}</button>
+          </form>
+        </section>`;
+      wrap.appendChild(searchPanel);
+    }
 
     const searchInput = searchPanel.querySelector("#dp-site-search-input");
 
