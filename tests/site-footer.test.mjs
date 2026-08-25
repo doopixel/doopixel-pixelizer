@@ -23,7 +23,20 @@ test("footer uses valid storefront destinations in the same window", () => {
   assert.match(source, /https:\/\/pixelizer\.doopixel\.com\/gallery/);
   assert.match(source, /https:\/\/pixelizer\.doopixel\.com\/parts-import\//);
   assert.match(source, /https:\/\/doopixel\.com\/pages\/contact/);
-  assert.match(source, /20260408-001830\.png/);
+  assert.match(source, /logo3\.png\?v=1787501605/);
+  assert.match(source, /https:\/\/doopixel\.com\/contact#contact_form/);
+  assert.match(source, /contact\[email\]/);
+  assert.match(source, /Follow on Facebook/);
+  assert.match(source, /Secure payments/);
   assert.doesNotMatch(source, /target=["']_blank["']/);
   assert.doesNotMatch(source, /href=["']#["']/);
+});
+
+test("footer keeps the Shopify-inspired responsive visual structure", () => {
+  const styles = fs.readFileSync("app/css/doopixel-site-footer.css", "utf8");
+  assert.match(styles, /grid-template-areas:/);
+  assert.match(styles, /"brand connect"/);
+  assert.match(styles, /#0e100f/);
+  assert.match(styles, /#b9ed65/);
+  assert.match(styles, /@media \(max-width: 899px\)/);
 });

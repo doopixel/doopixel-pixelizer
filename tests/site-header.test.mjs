@@ -52,3 +52,19 @@ test("shared navigation injects Matching Parts before project lookup", async () 
   assert.match(source, /pixelizer\.doopixel\.com\/parts-import\//);
   assert.match(source, /insertBefore\(matchingParts, projectLink/);
 });
+
+test("shared header matches the Shopify visual shell without replacing page routes", async () => {
+  const source = await readFile(new URL("../app/js/doopixel-site-header.js", import.meta.url), "utf8");
+  const styles = await readFile(new URL("../app/css/doopixel-site-header.css", import.meta.url), "utf8");
+
+  assert.match(source, /logo3\.png\?v=1787501605/);
+  assert.match(source, /Free U\.S\. Shipping \$99\+/);
+  assert.match(source, /Ships from the USA/);
+  assert.match(source, /dp-site-search-panel/);
+  assert.match(source, /SHOPIFY_ORIGIN.*\/search/s);
+  assert.match(source, /dataset\.dpCartCount/);
+  assert.match(source, /doopixel\.com.*\/cart\.js/s);
+  assert.match(styles, /\.dp-site-drawer-header/);
+  assert.match(styles, /\.dp-site-menu-overlay/);
+  assert.match(styles, /@media \(max-width: 1199px\)/);
+});
