@@ -42,3 +42,44 @@ test("gallery API searches all approved designs with parameterized keywords", as
   assert.deepEqual(statements[0].bindings, ["Mickey%", "%Mickey\\%%", "%Mickey\\%%", "%Mickey\\%%", 11, 0]);
   assert.deepEqual(statements[1].bindings, ["Mickey%", "%Mickey\\%%", "%Mickey\\%%", "%Mickey\\%%"]);
 });
+
+test("gallery API includes the matching kit price and piece type", async () => {
+  let queryIndex = 0;
+  const env = {
+    DB: {
+      prepare() {
+        queryIndex += 1;
+        return {
+          bind() { return this; },
+          async all() {
+            return {
+              results: [{
+                id: "DP-TEST",
+                title: "Test Design",
+                piece_type: "4073",
+                width: 48,
+                height: 64,
+                parts_json: JSON.stringify([{ quantity: 3072 }]),
+                finished_image_key: "finished/DP-TEST/image.webp",
+                is_verified: 1,
+              }],
+            };
+          },
+          async first() { return { total: 1 }; },
+        };
+      },
+    },
+  };
+
+  const response = await onRequestGet({
+    request: new Request("https://pixelizer.doopixel.com/api/gallery"),
+    env,
+  });
+  const payload = await response.json();
+
+  assert.equal(queryIndex, 2);
+  assert.equal(payload.designs[0].pieceTypeName, "Raised Pixel Pieces (4073)");
+  assert.equal(payload.designs[0].sku, "DP-KIT-3X4");
+  assert.equal(payload.designs[0].priceCents, 9144);
+  assert.equal(payload.designs[0].currency, "USD");
+});

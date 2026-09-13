@@ -1,4 +1,5 @@
 import { getPieceTypeDisplayName } from "../_lib/piece-types.js";
+import { getKitPrice } from "../_lib/kit-pricing.js";
 
 function jsonResponse(body, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -42,6 +43,7 @@ export async function onRequestGet({ request, env }) {
       `SELECT
         id,
         title,
+        piece_type,
         piece_type_name,
         width,
         height,
@@ -91,6 +93,7 @@ export async function onRequestGet({ request, env }) {
     const hasMore = rows.length > limit;
     const designs = rows.slice(0, limit).map((design) => {
       const parts = parseParts(design.parts_json);
+      const price = getKitPrice(design.width, design.height);
       return {
         id: design.id,
         title: design.title,
@@ -98,6 +101,7 @@ export async function onRequestGet({ request, env }) {
         size: [design.width, design.height],
         totalPieces: parts.reduce((sum, part) => sum + Number(part.quantity || 0), 0),
         colorLines: parts.length,
+        ...price,
         finishedImageKey: design.finished_image_key,
         customerCaption: design.customer_caption,
         isVerified: Boolean(design.is_verified),

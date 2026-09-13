@@ -1,5 +1,6 @@
 import { getPieceTypeDisplayName, sortPartsByColorNumber } from "../../_lib/piece-types.js";
 import { listDesignImageKeys } from "../../_lib/design-images.js";
+import { getKitPrice } from "../../_lib/kit-pricing.js";
 
 function jsonResponse(body, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -57,6 +58,7 @@ export async function onRequestGet({ env, params }) {
       design.finished_image_key
     );
 
+    const price = getKitPrice(design.width, design.height);
     return jsonResponse({
       ok: true,
       design: {
@@ -77,6 +79,7 @@ export async function onRequestGet({ env, params }) {
         status: design.status,
         createdAt: design.created_at,
         updatedAt: design.updated_at,
+        ...price,
       },
     });
   } catch (error) {
