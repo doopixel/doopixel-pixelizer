@@ -1,5 +1,6 @@
 import { getPieceTypeDisplayName } from "../_lib/piece-types.js";
 import { getKitPrice } from "../_lib/kit-pricing.js";
+import { toPublicSlug } from "../_lib/public-slug.js";
 
 function jsonResponse(body, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -97,6 +98,7 @@ export async function onRequestGet({ request, env }) {
       return {
         id: design.id,
         title: design.title,
+        slug: toPublicSlug(design.title),
         pieceTypeName: getPieceTypeDisplayName(design.piece_type),
         size: [design.width, design.height],
         totalPieces: parts.reduce((sum, part) => sum + Number(part.quantity || 0), 0),
