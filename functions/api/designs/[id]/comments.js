@@ -21,35 +21,6 @@ function jsonResponse(body, visitor, status = 200) {
   return new Response(JSON.stringify(body), { status, headers });
 }
 
-async function validateTurnstile(request, env, token) {
-  if (!env.TURNSTILE_SECRET_KEY) {
-    throw new Error("Comment protection is not configured.");
-  }
-  if (!token) {
-    throw new Error("Please complete the security check.");
-  }
-
-  const form = new FormData();
-  form.append("secret", String(env.TURNSTILE_SECRET_KEY));
-  form.append("response", token);
-  const remoteIp = request.headers.get("CF-Connecting-IP");
-  if (remoteIp) {
-    form.append("remoteip", remoteIp);
-  }
-
-  const response = await fetch(
-    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-    {
-      method: "POST",
-      body: form,
-    }
-  );
-  const result = await response.json();
-  if (!result.success) {
-    throw new Error("Security check failed. Please try again.");
-  }
-}
-
 export async function onRequestPost({ request, env, params }) {
   const visitor = visitorFromRequest(request);
   try {
@@ -74,7 +45,18 @@ export async function onRequestPost({ request, env, params }) {
     const body = await request.json();
     const displayName = String(body.displayName || "").trim().slice(0, 40);
     const commentBody = String(body.body || "").trim().slice(0, 500);
-    const turnstileToken = String(body.turnstileToken || "");
+    const website = String(body.website || "").trim();
+
+    if (website) {
+      return jsonResponse(
+        {
+          ok: true,
+          status: "pending",
+          message: "Your comment was submitted and is waiting for review.",
+        },
+        visitor
+      );
+    }
 
     if (displayName.length < 2) {
       return jsonResponse(
@@ -90,8 +72,6 @@ export async function onRequestPost({ request, env, params }) {
         400
       );
     }
-
-    await validateTurnstile(request, env, turnstileToken);
 
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
     const recentRow = await env.DB.prepare(
