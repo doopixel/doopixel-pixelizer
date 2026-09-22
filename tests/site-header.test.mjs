@@ -7,9 +7,13 @@ import { onRequestGet as getGallery } from "../functions/gallery.js";
 import { onRequestGet as getProject } from "../functions/project/[id].js";
 import { onRequestGet as getShare } from "../functions/share/[id].js";
 
-const EXPECTED_LABELS = ["Upload Images", "Gallery &amp; Shop", "Matching Parts", "Find My Project"];
+const EXPECTED_LABELS = ["Gallery &amp; Shop", "Upload Image", "Matching Parts", "Doo Parts", "Contact"];
 
 function assertSharedHeader(html, pageName) {
+  const navigation = html.match(/id="dp-site-links">([\s\S]*?)<\/div>/)[1];
+  assert.match(navigation, /href="https:\/\/doopixel\.com\/pages\/gallery"/);
+  assert.match(navigation, /href="https:\/\/doopixel\.com\/collections\/doo-parts"/);
+  assert.doesNotMatch(navigation, /pixelizer\.doopixel\.com\/gallery/);
   let previousIndex = -1;
   EXPECTED_LABELS.forEach((label) => {
     const index = html.indexOf(`>${label}</a>`);
@@ -31,6 +35,7 @@ function assertSharedHeader(html, pageName) {
 test("public pages use the shared DooPixel header", async () => {
   const pages = [
     ["Pixel Art Maker", await readFile(new URL("../app/index.html", import.meta.url), "utf8")],
+    ["Matching Parts", await readFile(new URL("../app/parts-import/index.html", import.meta.url), "utf8")],
     ["Gallery", await (await getGallery()).text()],
     ["Find My Project", await (await getFindProject()).text()],
     ["Private Project", await (await getProject({ params: { id: "PRJ-TEST1234" } })).text()],

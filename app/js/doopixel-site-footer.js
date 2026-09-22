@@ -38,19 +38,20 @@
         <div class="dp-site-footer__links">
           <nav aria-label="Shop">
             <h2>Shop</h2>
+            <a href="https://doopixel.com/pages/gallery">Gallery &amp; Shop</a>
             <a href="https://pixelizer.doopixel.com/">Upload Images</a>
-            <a href="https://pixelizer.doopixel.com/gallery">Gallery &amp; Shop</a>
+            <a href="https://doopixel.com/collections/doo-parts">Doo Parts</a>
             <a href="https://pixelizer.doopixel.com/parts-import/">Matching Parts</a>
             <a href="https://pixelizer.doopixel.com/find-project">Find My Project</a>
             <a href="https://doopixel.com/pages/contact">Contact</a>
           </nav>
           <nav aria-label="Help">
             <h2>Help</h2>
-            <a href="https://doopixel.com/policies/shipping-policy">Shipping Policy</a>
-            <a href="https://doopixel.com/policies/refund-policy">Refund Policy</a>
-            <a href="https://doopixel.com/policies/privacy-policy">Privacy Policy</a>
-            <a href="https://doopixel.com/policies/terms-of-service">Terms of Service</a>
             <a href="https://doopixel.com/policies/legal-notice">Legal Notice</a>
+            <a href="https://doopixel.com/policies/privacy-policy">Privacy Policy</a>
+            <a href="https://doopixel.com/policies/refund-policy">Refund Policy</a>
+            <a href="https://doopixel.com/policies/shipping-policy">Shipping Policy</a>
+            <a href="https://doopixel.com/policies/terms-of-service">Terms of Service</a>
           </nav>
         </div>
 

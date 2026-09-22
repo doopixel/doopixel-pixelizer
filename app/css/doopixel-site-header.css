@@ -353,7 +353,10 @@ body.dp-site-menu-open { overflow: hidden; }
 
 body.dp-site-menu-open .dp-site-nav { z-index: 2040; }
 
+.dp-site-links .dp-site-mobile-contact { display: none; }
+
 @media (max-width: 1199px) {
+  .dp-site-links .dp-site-mobile-contact { display: flex; }
   .dp-site-nav {
     grid-template-columns: 86px minmax(0, 1fr) 86px;
     gap: 7px;

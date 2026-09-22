@@ -85,10 +85,11 @@ export async function onRequestGet({ params }) {
           <img src="https://cdn.shopify.com/s/files/1/0738/7562/0006/files/logo3.png?v=1787501605" alt="DooPixel" />
         </a>
         <div class="dp-site-links" id="dp-site-links">
-          <a class="dp-site-link" href="https://pixelizer.doopixel.com/">Upload Images</a>
-          <a class="dp-site-link" href="https://pixelizer.doopixel.com/gallery">Gallery &amp; Shop</a>
+          <a class="dp-site-link" href="https://doopixel.com/pages/gallery">Gallery &amp; Shop</a>
+          <a class="dp-site-link" href="https://pixelizer.doopixel.com/">Upload Image</a>
           <a class="dp-site-link" href="https://pixelizer.doopixel.com/parts-import/">Matching Parts</a>
-          <a class="dp-site-link is-active" href="https://pixelizer.doopixel.com/find-project" aria-current="page">Find My Project</a>
+          <a class="dp-site-link" href="https://doopixel.com/collections/doo-parts">Doo Parts</a>
+          <a class="dp-site-link dp-site-mobile-contact" href="https://doopixel.com/pages/contact">Contact</a>
         </div>
         <div class="dp-site-actions">
           <button class="dp-site-search-button" type="button" aria-label="Search DooPixel shop" aria-expanded="false" aria-controls="dp-site-search-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.25 4.25"></path></svg></button>
