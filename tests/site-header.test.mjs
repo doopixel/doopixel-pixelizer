@@ -31,7 +31,6 @@ function assertSharedHeader(html, pageName) {
 
 test("public pages use the My Pixel Walls header while preserving Cloudflare routes", async () => {
   const pages = [
-    ["Pixel Art Maker", await readFile(new URL("../app/index.html", import.meta.url), "utf8")],
     ["Matching Parts", await readFile(new URL("../app/parts-import/index.html", import.meta.url), "utf8")],
     ["Gallery", await (await getGallery()).text()],
     ["Find My Project", await (await getFindProject()).text()],
@@ -43,6 +42,15 @@ test("public pages use the My Pixel Walls header while preserving Cloudflare rou
     })).text()],
   ];
   pages.forEach(([pageName, html]) => assertSharedHeader(html, pageName));
+});
+
+test("Pixel Art Maker has a non-sticky return link instead of the shared header", async () => {
+  const html = await readFile(new URL("../app/index.html", import.meta.url), "utf8");
+  const styles = await readFile(new URL("../app/css/doopixel-wizard.css", import.meta.url), "utf8");
+  assert.match(html, /class="dp-tool-return"[\s\S]*?href="https:\/\/mypixelwalls\.com\/"[\s\S]*?Back to My Pixel Walls/);
+  assert.doesNotMatch(html, /dp-site-nav-wrap|doopixel-site-header\.(?:css|js)/);
+  assert.match(styles, /\.dp-tool-return\s*\{\s*position: static;/);
+  assert.match(styles, /\.dp-progress-wrap\s*\{\s*position: sticky;\s*top: 0;/);
 });
 
 test("shared navigation hides Matching Parts and Find My Project without removing their routes", async () => {

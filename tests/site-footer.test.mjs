@@ -3,7 +3,6 @@ import fs from "node:fs";
 import test from "node:test";
 
 const publicTemplates = [
-  "app/index.html",
   "functions/gallery.js",
   "functions/share/[id].js",
   "functions/find-project.js",
@@ -17,6 +16,11 @@ test("all public pages load the shared footer", () => {
     assert.match(source, /data-doopixel-footer/, `${path} is missing the footer mount`);
     assert.match(source, /doopixel-site-footer\.js/, `${path} is missing the footer script`);
   }
+});
+
+test("Pixel Art Maker omits the shared footer", () => {
+  const source = fs.readFileSync("app/index.html", "utf8");
+  assert.doesNotMatch(source, /doopixel-site-footer\.(?:css|js)|data-doopixel-footer/);
 });
 
 test("footer uses My Pixel Walls storefront and policy destinations", () => {

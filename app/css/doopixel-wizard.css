@@ -24,41 +24,44 @@ body.dp-wizard-ready {
   overflow-x: hidden;
 }
 
-body.dp-wizard-ready .dp-site-nav-wrap {
-  border-top: 0;
-  border-bottom: 0;
-  background: var(--dp-blue);
-}
-
-body.dp-wizard-ready .dp-site-nav {
-  min-height: 64px;
-}
-
-body.dp-wizard-ready .dp-site-link,
-body.dp-wizard-ready .dp-site-cart-mobile {
-  color: var(--dp-white) !important;
-}
-
-body.dp-wizard-ready .dp-site-link:hover,
-body.dp-wizard-ready .dp-site-link:focus,
-body.dp-wizard-ready .dp-site-cart-mobile:hover,
-body.dp-wizard-ready .dp-site-cart-mobile:focus {
-  border-color: var(--dp-white);
-  color: var(--dp-white) !important;
-}
-
-body.dp-wizard-ready .dp-site-link.is-active {
+.dp-tool-return {
+  position: static;
+  padding: 10px clamp(16px, 4vw, 48px);
+  border-bottom: 1px solid var(--dp-line);
   background: var(--dp-white);
-  color: var(--dp-blue-dark) !important;
 }
 
-body.dp-wizard-ready .dp-site-menu-button,
-body.dp-wizard-ready .dp-site-cart-mobile {
-  border-color: var(--dp-white);
+.dp-tool-return a {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  gap: 10px;
+  color: var(--dp-blue-dark);
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.2;
 }
 
-body.dp-wizard-ready .dp-site-menu-button {
-  color: var(--dp-white) !important;
+.dp-tool-return a:hover,
+.dp-tool-return a:focus-visible {
+  color: var(--dp-blue);
+}
+
+.dp-tool-return__arrow {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  place-items: center;
+  border-radius: 50%;
+  background: #eeeaff;
+  font-size: 18px;
+  line-height: 1;
+  transition: transform 160ms ease;
+}
+
+.dp-tool-return a:hover .dp-tool-return__arrow {
+  transform: translateX(-3px);
 }
 
 #dp-legacy-app {
@@ -106,7 +109,7 @@ body.dp-wizard-ready .dp-site-menu-button {
 
 .dp-progress-wrap {
   position: sticky;
-  top: 64px;
+  top: 0;
   z-index: 80;
   padding: 12px 16px;
   border-bottom: 1px solid var(--dp-line);
@@ -782,14 +785,6 @@ body.dp-wizard-ready .dp-site-menu-button {
 }
 
 @media (max-width: 820px) {
-  body.dp-wizard-ready .dp-site-nav {
-    min-height: 60px;
-  }
-
-  body.dp-wizard-ready .dp-site-links {
-    background: var(--dp-blue);
-  }
-
   .dp-wizard-intro {
     padding: 18px 16px 14px;
   }
@@ -807,7 +802,7 @@ body.dp-wizard-ready .dp-site-menu-button {
   }
 
   .dp-progress-wrap {
-    top: 60px;
+    top: 0;
     padding: 9px 10px;
   }
 
