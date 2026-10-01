@@ -10,7 +10,7 @@ const publicTemplates = [
   "functions/project/[id].js",
 ];
 
-test("all public pages load the shared DooPixel footer", () => {
+test("all public pages load the shared footer", () => {
   for (const path of publicTemplates) {
     const source = fs.readFileSync(path, "utf8");
     assert.match(source, /doopixel-site-footer\.css/, `${path} is missing footer styles`);
@@ -18,28 +18,25 @@ test("all public pages load the shared DooPixel footer", () => {
     assert.match(source, /doopixel-site-footer\.js/, `${path} is missing the footer script`);
   }
 });
-test("footer uses valid storefront destinations in the same window", () => {
+
+test("footer uses My Pixel Walls storefront and policy destinations", () => {
   const source = fs.readFileSync("app/js/doopixel-site-footer.js", "utf8");
-  assert.match(source, /https:\/\/doopixel\.com\/pages\/gallery/);
-  assert.match(source, /https:\/\/doopixel\.com\/collections\/doo-parts/);
-  assert.doesNotMatch(source, /https:\/\/pixelizer\.doopixel\.com\/gallery/);
-  assert.match(source, /https:\/\/pixelizer\.doopixel\.com\/parts-import\//);
-  assert.match(source, /https:\/\/doopixel\.com\/pages\/contact/);
-  assert.match(source, /logo3\.png\?v=1787501605/);
-  assert.match(source, /https:\/\/doopixel\.com\/contact#contact_form/);
+  assert.match(source, /https:\/\/mypixelwalls\.com\/collections\/brick-art/);
+  assert.match(source, /https:\/\/mypixelwalls\.com\/collections\/brick-parts/);
+  assert.match(source, /https:\/\/pixelizer\.doopixel\.com\/gallery/);
+  assert.match(source, /https:\/\/mypixelwalls\.com\/policies\/shipping-policy/);
+  assert.match(source, /logo111\.png\?v=1788088003/);
+  assert.match(source, /https:\/\/mypixelwalls\.com\/contact#contact_form/);
   assert.match(source, /contact\[email\]/);
-  assert.match(source, /Follow on Facebook/);
-  assert.match(source, /href="https:\/\/www\.facebook\.com\/doopixel"/);
-  assert.match(source, /Secure payments/);
+  assert.match(source, /support@mypixelwalls\.com/);
+  assert.doesNotMatch(source, /facebook\.com\/doopixel|\/parts-import|\/find-project/);
   assert.doesNotMatch(source, /target=["']_blank["']/);
-  assert.doesNotMatch(source, /href=["']#["']/);
 });
 
-test("footer keeps the Shopify-inspired responsive visual structure", () => {
+test("footer keeps responsive structure with the purple theme", () => {
   const styles = fs.readFileSync("app/css/doopixel-site-footer.css", "utf8");
   assert.match(styles, /grid-template-areas:/);
   assert.match(styles, /"brand connect"/);
-  assert.match(styles, /#0e100f/);
-  assert.match(styles, /#b9ed65/);
+  assert.match(styles, /#201938/);
   assert.match(styles, /@media \(max-width: 899px\)/);
 });

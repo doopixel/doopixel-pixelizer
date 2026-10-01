@@ -13,13 +13,13 @@ function getBearerToken(request) {
 }
 
 function safeFilename(value) {
-  const normalized = String(value || "DooPixel Instructions")
+  const normalized = String(value || "My Pixel Walls Instructions")
     .normalize("NFKD")
     .replace(/[^a-zA-Z0-9 _-]+/g, "")
     .trim()
     .replace(/\s+/g, "-")
     .slice(0, 80);
-  return `${normalized || "DooPixel-Instructions"}.pdf`;
+  return `${normalized || "My-Pixel-Walls-Instructions"}.pdf`;
 }
 
 export async function onRequestGet({ request, env, params }) {

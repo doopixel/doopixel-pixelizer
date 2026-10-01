@@ -85,7 +85,7 @@ export function parseBrickLinkXml(xmlText) {
   const flatPieces = lines.filter((line) => line.pieceType === "98138").reduce((sum, line) => sum + line.quantity, 0);
   const raisedPieces = lines.filter((line) => line.pieceType === "4073").reduce((sum, line) => sum + line.quantity, 0);
   const totalPieces = flatPieces + raisedPieces;
-  if (!totalPieces) throw new Error("No supported 98138 or 4073 pieces matched the DooPixel warehouse catalog.");
+  if (!totalPieces) throw new Error("No supported 98138 or 4073 pieces matched the My Pixel Walls warehouse catalog.");
 
   return {
     lines, unsupportedLines, totalPieces, flatPieces, raisedPieces,

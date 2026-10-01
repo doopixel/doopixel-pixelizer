@@ -178,7 +178,7 @@ test("rejects a custom color without complete warehouse display information", as
   const result = await response.json();
 
   assert.equal(response.status, 400);
-  assert.match(result.error, /DooPixel color information/);
+  assert.match(result.error, /My Pixel Walls color information/);
   assert.equal(harness.writes.length, 0);
 });
 

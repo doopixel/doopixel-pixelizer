@@ -129,7 +129,7 @@
     const palette = orderedHexes.map(function (hex) {
       const metadata = metadataByHex.get(hex);
       if (!metadata) {
-        throw new Error("Missing DooPixel color data for " + hex + ".");
+        throw new Error("Missing My Pixel Walls color data for " + hex + ".");
       }
       return metadata;
     });

@@ -64,7 +64,7 @@ function validateParts(rawParts) {
       throw new Error(`Invalid quantity for ${colorName || sku}.`);
     }
     if (!doopixelNo || !colorName || !/^#[0-9a-f]{6}$/.test(hex)) {
-      throw new Error("A required piece is missing its DooPixel color information.");
+      throw new Error("A required piece is missing its My Pixel Walls color information.");
     }
     seenSkus.add(sku);
     return {

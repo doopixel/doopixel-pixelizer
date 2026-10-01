@@ -2,7 +2,7 @@
   const mount = document.querySelector("[data-doopixel-footer]");
   if (!mount) return;
 
-  const logoUrl = "https://cdn.shopify.com/s/files/1/0738/7562/0006/files/logo3.png?v=1787501605";
+  const logoUrl = "https://cdn.shopify.com/s/files/1/0655/4953/3297/files/logo111.png?v=1788088003";
   const year = new Date().getFullYear();
   document.body.classList.add("dp-site-footer-page");
 
@@ -10,14 +10,14 @@
     <footer class="dp-site-footer">
       <div class="dp-site-footer__inner">
         <div class="dp-site-footer__brand">
-          <a class="dp-site-footer__logo" href="https://doopixel.com/" aria-label="DooPixel home">
-            <img src="${logoUrl}" alt="DooPixel" width="520" height="134" loading="lazy" />
+          <a class="dp-site-footer__logo" href="https://mypixelwalls.com/" aria-label="My Pixel Walls home">
+            <img src="${logoUrl}" alt="My Pixel Walls" loading="lazy" />
           </a>
-          <p class="dp-site-footer__summary">Fresh pixel art, creative ideas, and offers—occasionally.</p>
+          <p class="dp-site-footer__summary">Brick pixel art that turns your favorite images into unique wall décor.</p>
         </div>
 
         <div class="dp-site-footer__connect">
-          <form class="dp-site-footer__newsletter" action="https://doopixel.com/contact#contact_form" method="post">
+          <form class="dp-site-footer__newsletter" action="https://mypixelwalls.com/contact#contact_form" method="post">
             <input type="hidden" name="form_type" value="customer" />
             <input type="hidden" name="utf8" value="✓" />
             <input type="hidden" name="contact[tags]" value="newsletter" />
@@ -26,32 +26,24 @@
             <button type="submit" aria-label="Subscribe to newsletter">→</button>
           </form>
 
-          <div class="dp-site-footer__social">
-            <a href="https://www.facebook.com/doopixel" aria-label="Visit DooPixel on Facebook">
-              <span aria-hidden="true">f</span>
-              <strong>Follow on Facebook</strong>
-              <i aria-hidden="true">↗</i>
-            </a>
-          </div>
+          <p class="dp-site-footer__contact">Questions? <a href="mailto:support@mypixelwalls.com">support@mypixelwalls.com</a></p>
         </div>
 
         <div class="dp-site-footer__links">
           <nav aria-label="Shop">
             <h2>Shop</h2>
-            <a href="https://doopixel.com/pages/gallery">Gallery &amp; Shop</a>
-            <a href="https://pixelizer.doopixel.com/">Upload Images</a>
-            <a href="https://doopixel.com/collections/doo-parts">Doo Parts</a>
-            <a href="https://pixelizer.doopixel.com/parts-import/">Matching Parts</a>
-            <a href="https://pixelizer.doopixel.com/find-project">Find My Project</a>
-            <a href="https://doopixel.com/pages/contact">Contact</a>
+            <a href="https://mypixelwalls.com/collections/brick-art">Shop Pixel Art</a>
+            <a href="https://pixelizer.doopixel.com/">Create My Art</a>
+            <a href="https://pixelizer.doopixel.com/gallery">Community Gallery</a>
+            <a href="https://mypixelwalls.com/collections/brick-parts">Brick Parts</a>
           </nav>
           <nav aria-label="Help">
             <h2>Help</h2>
-            <a href="https://doopixel.com/policies/legal-notice">Legal Notice</a>
-            <a href="https://doopixel.com/policies/privacy-policy">Privacy Policy</a>
-            <a href="https://doopixel.com/policies/refund-policy">Refund Policy</a>
-            <a href="https://doopixel.com/policies/shipping-policy">Shipping Policy</a>
-            <a href="https://doopixel.com/policies/terms-of-service">Terms of Service</a>
+            <a href="https://mypixelwalls.com/policies/contact-information">Contact Us</a>
+            <a href="https://mypixelwalls.com/policies/privacy-policy">Privacy Policy</a>
+            <a href="https://mypixelwalls.com/policies/refund-policy">Return &amp; Refund Policy</a>
+            <a href="https://mypixelwalls.com/policies/shipping-policy">Shipping Policy</a>
+            <a href="https://mypixelwalls.com/policies/terms-of-service">Terms of Service</a>
           </nav>
         </div>
 
@@ -68,8 +60,8 @@
         </div>
 
         <div class="dp-site-footer__bottom">
-          <span>&copy; ${year} DooPixel</span>
-          <span>Build your imagination.</span>
+          <span>&copy; ${year} My Pixel Walls</span>
+          <span>Turn bricks into wall art.</span>
         </div>
       </div>
     </footer>`;

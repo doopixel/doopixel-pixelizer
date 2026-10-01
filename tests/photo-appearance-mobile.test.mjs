@@ -12,7 +12,7 @@ test("photo appearance sliders redraw on mobile input events", async () => {
     assert.match(source, new RegExp(`bindLivePhotoAppearanceSlider\\("${name}-slider"`));
   });
   assert.match(source, /80 - \(Date\.now\(\) - photoAppearanceLastUpdate\)/);
-  assert.match(page, /js\/index\.js\?v=20260820b/);
+  assert.match(page, /js\/index\.js\?v=20261001a/);
 });
 
 test("photo appearance resets flush pending mobile updates", async () => {
@@ -24,18 +24,18 @@ test("photo appearance resets flush pending mobile updates", async () => {
   assert.equal((source.match(/flushPhotoAppearanceUpdate\(\);/g) || []).length, 3);
 });
 
-test("pixelizer uses the current DooPixel green visual theme", async () => {
+test("pixelizer uses the My Pixel Walls purple visual theme", async () => {
   const page = await fs.readFile(new URL("../app/index.html", import.meta.url), "utf8");
   const styles = await fs.readFile(new URL("../app/css/doopixel-wizard.css", import.meta.url), "utf8");
   const manifest = await fs.readFile(new URL("../app/manifest.json", import.meta.url), "utf8");
 
-  assert.match(styles, /--dp-blue: #1f9d48/);
-  assert.match(styles, /--dp-blue-dark: #14733b/);
+  assert.match(styles, /--dp-blue: #5433eb/);
+  assert.match(styles, /--dp-blue-dark: #3820b8/);
   assert.doesNotMatch(styles, /#4961bd|#35499d|#289b3a/);
-  assert.match(page, /theme-color" content="#1f9d48"/);
-  assert.match(page, /doopixel-wizard\.css\?v=20260820b/);
+  assert.match(page, /theme-color" content="#5433eb"/);
+  assert.match(page, /doopixel-wizard\.css\?v=20261001a/);
   assert.doesNotMatch(page, /#4961bd|#35499d|#289b3a/);
-  assert.equal(JSON.parse(manifest).theme_color, "#1f9d48");
+  assert.equal(JSON.parse(manifest).theme_color, "#5433eb");
 });
 
 test("pixelizer recommends desktop use without blocking mobile users", async () => {
@@ -44,5 +44,5 @@ test("pixelizer recommends desktop use without blocking mobile users", async () 
 
   assert.match(wizard, /For the best experience, we recommend using this tool on a desktop computer\./);
   assert.match(wizard, /class="dp-desktop-tip"/);
-  assert.match(page, /doopixel-wizard-ui\.js\?v=20260820a/);
+  assert.match(page, /doopixel-wizard-ui\.js\?v=20261001a/);
 });

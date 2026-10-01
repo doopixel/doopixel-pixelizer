@@ -1,6 +1,6 @@
 (function setupDooPixelSiteHeader() {
-  const LOGO_URL = "https://cdn.shopify.com/s/files/1/0738/7562/0006/files/logo3.png?v=1787501605";
-  const SHOPIFY_ORIGIN = "https://doopixel.com";
+  const LOGO_URL = "https://cdn.shopify.com/s/files/1/0655/4953/3297/files/logo111.png?v=1788088003";
+  const SHOPIFY_ORIGIN = "https://mypixelwalls.com";
 
   const searchIcon = `
     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -12,6 +12,7 @@
     const normalized = Math.max(0, Number(count) || 0);
     document.querySelectorAll("[data-dp-cart-count]").forEach(function (badge) {
       badge.textContent = normalized > 99 ? "99+" : String(normalized);
+      badge.hidden = false;
     });
     document.querySelectorAll(".dp-site-cart-icon").forEach(function (link) {
       link.setAttribute("aria-label", "Shopping cart, " + normalized + (normalized === 1 ? " item" : " items"));
@@ -28,7 +29,7 @@
       const cart = await response.json();
       updateCartCount(cart.item_count);
     } catch (_error) {
-      // Shopify may reject cross-origin cart reads. Keep the accessible zero badge.
+      // Shopify may reject cross-origin cart reads; do not display an unverified count.
     }
   }
 
@@ -45,7 +46,8 @@
     wrap.querySelectorAll(".dp-site-logo img").forEach(function (logo) {
       logo.src = LOGO_URL;
       logo.removeAttribute("srcset");
-      logo.alt = "DooPixel";
+      logo.alt = "My Pixel Walls";
+      logo.parentElement.href = SHOPIFY_ORIGIN + "/";
     });
 
     if (!wrap.querySelector(".dp-site-topbar")) {
@@ -54,28 +56,21 @@
       topbar.setAttribute("role", "note");
       topbar.innerHTML = `
         <span class="dp-site-topbar__dot" aria-hidden="true"></span>
-        <strong>Free U.S. Shipping $99+</strong>
-        <span class="dp-site-topbar__separator" aria-hidden="true">·</span>
-        <span>Ships from the USA</span>`;
+        <strong>Turn Bricks Into Wall Art</strong>`;
       wrap.insertBefore(topbar, nav);
     }
 
-    if (!links.querySelector('a[href*="/parts-import"]')) {
-      const matchingParts = document.createElement("a");
-      matchingParts.className = "dp-site-link";
-      matchingParts.href = "https://pixelizer.doopixel.com/parts-import/";
-      matchingParts.textContent = "Matching Parts";
-      const projectLink = links.querySelector('a[href*="/find-project"]');
-      links.insertBefore(matchingParts, projectLink || null);
-    }
+    links.querySelectorAll('a[href*="/parts-import"], a[href*="/find-project"]').forEach(function (link) {
+      link.remove();
+    });
 
     let drawerHeader = links.querySelector(".dp-site-drawer-header");
     if (!drawerHeader) {
       drawerHeader = document.createElement("div");
       drawerHeader.className = "dp-site-drawer-header";
       drawerHeader.innerHTML = `
-        <a href="${SHOPIFY_ORIGIN}/" class="dp-site-drawer-logo" aria-label="DooPixel shop">
-          <img src="${LOGO_URL}" alt="DooPixel" />
+        <a href="${SHOPIFY_ORIGIN}/" class="dp-site-drawer-logo" aria-label="My Pixel Walls shop">
+          <img src="${LOGO_URL}" alt="My Pixel Walls" />
         </a>
         <span class="dp-site-drawer-label">Menu</span>
         <button class="dp-site-drawer-close" type="button" aria-label="Close navigation menu">×</button>`;
@@ -103,7 +98,7 @@
       searchButton = document.createElement("button");
       searchButton.className = "dp-site-search-button";
       searchButton.type = "button";
-      searchButton.setAttribute("aria-label", "Search DooPixel shop");
+      searchButton.setAttribute("aria-label", "Search My Pixel Walls shop");
       searchButton.setAttribute("aria-expanded", "false");
       searchButton.setAttribute("aria-controls", "dp-site-search-panel");
       searchButton.innerHTML = searchIcon;
@@ -117,8 +112,10 @@
       count.className = "dp-site-cart-count";
       count.dataset.dpCartCount = "";
       count.textContent = "0";
+      count.hidden = true;
       cart.appendChild(count);
     }
+    cart.querySelectorAll("[data-dp-cart-count]").forEach(function (count) { count.hidden = true; });
 
     let searchPanel = wrap.querySelector("#dp-site-search-panel");
     if (!searchPanel) {
@@ -132,7 +129,7 @@
           <div class="dp-site-search-heading">
             <div>
               <span>Find Your Next Build</span>
-              <h2 id="dp-site-search-title">Search DooPixel</h2>
+              <h2 id="dp-site-search-title">Search My Pixel Walls</h2>
             </div>
             <button class="dp-site-search-close" type="button" aria-label="Close search">×</button>
           </div>

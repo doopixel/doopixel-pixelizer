@@ -41,11 +41,14 @@ function findProperty(properties, names) {
 }
 
 export async function onRequestPost({ request, env }) {
+  const sourceShop = String(request.headers.get("x-shopify-shop-domain") || "").trim().toLowerCase();
+  const expectedShop = "58pa1m-qx.myshopify.com";
   if (!env.DB || !env.SHOPIFY_WEBHOOK_SECRET || !env.ORDER_LOOKUP_PEPPER) {
     logWebhook("missing_configuration", {
       hasDb: Boolean(env.DB),
       hasWebhookSecret: Boolean(env.SHOPIFY_WEBHOOK_SECRET),
       hasLookupPepper: Boolean(env.ORDER_LOOKUP_PEPPER),
+      sourceShop,
     });
     return jsonResponse({ ok: false, error: "Missing order integration configuration." }, 500);
   }
@@ -61,9 +64,7 @@ export async function onRequestPost({ request, env }) {
     return jsonResponse({ ok: false, error: "Invalid webhook signature." }, 401);
   }
 
-  const expectedShop = String(env.SHOPIFY_STORE_DOMAIN || "").trim().toLowerCase();
-  const sourceShop = String(request.headers.get("x-shopify-shop-domain") || "").trim().toLowerCase();
-  if (expectedShop && sourceShop !== expectedShop) {
+  if (sourceShop !== expectedShop) {
     logWebhook("unexpected_shop", { sourceShop, expectedShop });
     return jsonResponse({ ok: false, error: "Unexpected Shopify store." }, 403);
   }

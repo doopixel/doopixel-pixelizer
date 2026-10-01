@@ -77,7 +77,7 @@ test("customer and cart tables show synchronized mobile scroll progress above an
   const cart = await fs.readFile(new URL("../shopify/cart-matching-parts-details-custom-liquid.liquid", import.meta.url), "utf8");
   assert.match(page, /table-scroll-progress table-scroll-progress--top[\s\S]*table-wrap[\s\S]*table-scroll-progress/);
   assert.match(cart, /dp-parts-dialog__scroll-progress dp-parts-dialog__scroll-progress--top[\s\S]*dp-parts-dialog__table-wrap[\s\S]*dp-parts-dialog__scroll-progress/);
-  assert.match(page, /Turn A BrickLink List Into A Ready-To-Pick DooPixel Order/);
+  assert.match(page, /Turn A BrickLink List Into A Ready-To-Pick My Pixel Walls Order/);
   assert.match(cart, /Matching Parts Details/);
 });
 

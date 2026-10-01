@@ -23,7 +23,7 @@ export async function onRequestGet({ params, env, request }) {
   const rawId = String(params.id || "").trim().toUpperCase();
   const id = escapeHtml(rawId);
   const canonicalUrl = `${PUBLIC_ORIGIN}/share/${encodeURIComponent(rawId)}`;
-  let socialTitle = `DooPixel Shared Design ${rawId}`;
+  let socialTitle = `My Pixel Walls Shared Design ${rawId}`;
   let socialDescription = "Explore this community pixel art build and its required pieces.";
   let socialImageUrl = "";
   let isPublicDesign = false;
@@ -49,11 +49,11 @@ export async function onRequestGet({ params, env, request }) {
     if (socialDesign?.status === "approved") {
       isPublicDesign = true;
       socialTitle = socialDesign.is_verified
-        ? `${socialDesign.title} | DooPixel Verified`
-        : `${socialDesign.title} | DooPixel Community`;
+        ? `${socialDesign.title} | My Pixel Walls Verified`
+        : `${socialDesign.title} | My Pixel Walls Community`;
       socialDescription =
         summarizeDescription(socialDesign.customer_caption) ||
-        "A finished pixel art build shared by the DooPixel community.";
+        "A finished pixel art build shared by the My Pixel Walls community.";
       const imageKey = socialDesign.finished_image_key || socialDesign.preview_image_key;
       if (imageKey) {
         socialImageUrl = `${PUBLIC_ORIGIN}/api/images?key=${encodeURIComponent(imageKey)}`;
@@ -80,7 +80,7 @@ export async function onRequestGet({ params, env, request }) {
     ? `<script type="application/ld+json">${serializeJsonLd({
         "@context": "https://schema.org",
         "@type": "CreativeWork",
-        name: socialTitle.replace(/ \| DooPixel (Verified|Community)$/, ""),
+        name: socialTitle.replace(/ \| My Pixel Walls (Verified|Community)$/, ""),
         description: socialDescription,
         identifier: rawId,
         url: canonicalUrl,
@@ -88,12 +88,12 @@ export async function onRequestGet({ params, env, request }) {
         dateModified: socialDesign.updated_at || undefined,
         publisher: {
           "@type": "Organization",
-          name: "DooPixel",
-          url: "https://doopixel.com/",
+          name: "My Pixel Walls",
+          url: "https://mypixelwalls.com/",
         },
         isPartOf: {
           "@type": "CollectionPage",
-          name: "DooPixel Gallery & Shop",
+          name: "My Pixel Walls Community Gallery",
           url: `${PUBLIC_ORIGIN}/gallery`,
         },
       })}</script>
@@ -110,7 +110,7 @@ export async function onRequestGet({ params, env, request }) {
         {
           "@type": "ListItem",
           position: 2,
-          name: socialTitle.replace(/ \| DooPixel (Verified|Community)$/, ""),
+            name: socialTitle.replace(/ \| My Pixel Walls (Verified|Community)$/, ""),
           item: canonicalUrl,
         },
       ],
@@ -131,7 +131,7 @@ export async function onRequestGet({ params, env, request }) {
     <meta property="og:title" content="${escapeHtml(socialTitle)}" />
     <meta property="og:description" content="${escapeHtml(socialDescription)}" />
     <meta property="og:url" content="${escapeHtml(canonicalUrl)}" />
-    <meta property="og:site_name" content="DooPixel" />
+    <meta property="og:site_name" content="My Pixel Walls" />
     <meta name="twitter:title" content="${escapeHtml(socialTitle)}" />
     <meta name="twitter:description" content="${escapeHtml(socialDescription)}" />
     ${socialImageMeta}
@@ -145,12 +145,12 @@ export async function onRequestGet({ params, env, request }) {
         --line: #dfe1e7;
         --soft: #f5f6f8;
         --paper: #fff;
-        --blue: #4961bd;
-        --green: #28a139;
-        --green-dark: #228b31;
+        --blue: #5433eb;
+        --green: #5433eb;
+        --green-dark: #3820b8;
         --yellow: #f4ce21;
         --red: #d4141a;
-        --accent: #28a139;
+        --accent: #5433eb;
       }
       * { box-sizing: border-box; }
       body {
@@ -336,14 +336,14 @@ export async function onRequestGet({ params, env, request }) {
       #add-to-cart { width: 100%; }
       .instructions-note {
         margin: 0 0 12px;
-        border: 1px solid #cfe8d4;
+        border: 1px solid #d9d0ff;
         border-radius: 6px;
-        background: #eef8f0;
+        background: #f0ecff;
         padding: 10px 12px;
-        color: #3f5f46;
+        color: #3820b8;
         font-size: 13px;
       }
-      button.active { border-color: var(--green); background: #eef8f0; color: var(--green-dark); }
+      button.active { border-color: var(--green); background: #f0ecff; color: var(--green-dark); }
       button:disabled { opacity: .55; cursor: wait; }
       .social-actions { display: flex; gap: 10px; margin: 12px 0 0; }
       .social-actions button { flex: 1; }
@@ -457,16 +457,16 @@ export async function onRequestGet({ params, env, request }) {
         .share-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       }
     </style>
-    <link rel="stylesheet" href="/css/doopixel-page-polish.css?v=20260825a" />
-    <link rel="stylesheet" href="/css/doopixel-site-header.css?v=20260825a" />
-    <link rel="stylesheet" href="/css/doopixel-site-footer.css?v=20260816b" />
+    <link rel="stylesheet" href="/css/doopixel-page-polish.css?v=20261001a" />
+    <link rel="stylesheet" href="/css/doopixel-site-header.css?v=20261001a" />
+    <link rel="stylesheet" href="/css/doopixel-site-footer.css?v=20261001a" />
   </head>
   <body class="dp-page-share">
     <div class="dp-site-nav-wrap">
       <div class="dp-site-topbar" role="note">
-        <span class="dp-site-topbar__dot" aria-hidden="true"></span><strong>Free U.S. Shipping $99+</strong><span class="dp-site-topbar__separator" aria-hidden="true">·</span><span>Ships from the USA</span>
+        <span class="dp-site-topbar__dot" aria-hidden="true"></span><strong>Turn Bricks Into Wall Art</strong>
       </div>
-      <nav class="dp-site-nav" aria-label="DooPixel main navigation">
+      <nav class="dp-site-nav" aria-label="My Pixel Walls main navigation">
         <button
           class="dp-site-menu-button"
           type="button"
@@ -476,22 +476,22 @@ export async function onRequestGet({ params, env, request }) {
         >
           <img class="dp-site-icon" src="/assets/icons/lucide-menu.svg" alt="" />
         </button>
-        <a class="dp-site-logo" href="https://doopixel.com/" aria-label="DooPixel shop">
+        <a class="dp-site-logo" href="https://mypixelwalls.com/" aria-label="My Pixel Walls shop">
           <img
-            src="https://cdn.shopify.com/s/files/1/0738/7562/0006/files/logo3.png?v=1787501605"
-            alt="DooPixel"
+            src="https://cdn.shopify.com/s/files/1/0655/4953/3297/files/logo111.png?v=1788088003"
+            alt="My Pixel Walls"
           />
         </a>
         <div class="dp-site-links" id="dp-site-links">
-          <a class="dp-site-link" href="https://doopixel.com/pages/gallery">Gallery &amp; Shop</a>
-          <a class="dp-site-link" href="https://pixelizer.doopixel.com/">Upload Image</a>
-          <a class="dp-site-link" href="https://pixelizer.doopixel.com/parts-import/">Matching Parts</a>
-          <a class="dp-site-link" href="https://doopixel.com/collections/doo-parts">Doo Parts</a>
-          <a class="dp-site-link dp-site-mobile-contact" href="https://doopixel.com/pages/contact">Contact</a>
+          <a class="dp-site-link" href="https://mypixelwalls.com/collections/brick-art">Shop Pixel Art</a>
+          <a class="dp-site-link" href="https://pixelizer.doopixel.com/">Create My Art</a>
+          <a class="dp-site-link" href="https://pixelizer.doopixel.com/gallery">Community Gallery</a>
+          <a class="dp-site-link" href="https://mypixelwalls.com/collections/brick-parts">Brick Parts</a>
+          <a class="dp-site-link dp-site-mobile-contact" href="https://mypixelwalls.com/policies/contact-information">Contact</a>
         </div>
         <div class="dp-site-actions">
-          <button class="dp-site-search-button" type="button" aria-label="Search DooPixel shop" aria-expanded="false" aria-controls="dp-site-search-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.25 4.25"></path></svg></button>
-          <a class="dp-site-cart-icon" href="https://doopixel.com/cart" aria-label="Shopping cart"><img class="dp-site-icon" src="/assets/icons/lucide-shopping-cart.svg" alt="" /><span class="dp-site-cart-count" data-dp-cart-count>0</span></a>
+          <button class="dp-site-search-button" type="button" aria-label="Search My Pixel Walls shop" aria-expanded="false" aria-controls="dp-site-search-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.25 4.25"></path></svg></button>
+          <a class="dp-site-cart-icon" href="https://mypixelwalls.com/cart" aria-label="Shopping cart"><img class="dp-site-icon" src="/assets/icons/lucide-shopping-cart.svg" alt="" /><span class="dp-site-cart-count" data-dp-cart-count hidden>0</span></a>
         </div>
       </nav>
     </div>
@@ -500,11 +500,11 @@ export async function onRequestGet({ params, env, request }) {
       <div class="breadcrumb">
         <a href="https://pixelizer.doopixel.com/gallery">Back to Gallery</a>
         <span aria-hidden="true">/</span>
-        <span id="breadcrumb-title">DooPixel Design</span>
+        <span id="breadcrumb-title">Pixel Art Design</span>
       </div>
       <header class="design-header">
         <div class="design-title-row">
-          <h1 id="design-title">DooPixel Design</h1>
+          <h1 id="design-title">Pixel Art Design</h1>
         </div>
       </header>
 
@@ -595,14 +595,14 @@ export async function onRequestGet({ params, env, request }) {
     </div>
 
     <div data-doopixel-footer></div>
-    <script src="/js/doopixel-site-footer.js?v=20260818b"></script>
-    <script src="/js/doopixel-site-header.js?v=20260825a"></script>
-    <script src="/js/doopixel-instruction-data.js?v=20260818a"></script>
+    <script src="/js/doopixel-site-footer.js?v=20261001a"></script>
+    <script src="/js/doopixel-site-header.js?v=20261001a"></script>
+    <script src="/js/doopixel-instruction-data.js?v=20261001a"></script>
     <script>
       const DESIGN_ID = ${JSON.stringify(rawId)};
       const CANONICAL_URL = ${JSON.stringify(canonicalUrl)};
       const TURNSTILE_CONFIGURED = ${JSON.stringify(turnstileConfigured)};
-      const SHOPIFY_ADD_KIT_URL = "https://doopixel.com/pages/add-pixel-kit";
+      const SHOPIFY_ADD_KIT_URL = "https://mypixelwalls.com/pages/add-pixel-kit";
       let currentDesign = null;
       let currentEngagement = null;
 
@@ -920,7 +920,7 @@ export async function onRequestGet({ params, env, request }) {
         try {
           await navigator.share({
             title: currentDesign.title,
-            text: currentDesign.customerCaption || "See this DooPixel community build.",
+            text: currentDesign.customerCaption || "See this My Pixel Walls community build.",
             url: CANONICAL_URL,
           });
           trackShare();
@@ -931,7 +931,7 @@ export async function onRequestGet({ params, env, request }) {
 
       function openSocialShare(network) {
         const encodedUrl = encodeURIComponent(CANONICAL_URL);
-        const text = encodeURIComponent(currentDesign.title + " | DooPixel");
+        const text = encodeURIComponent(currentDesign.title + " | My Pixel Walls");
         const imageKey = currentDesign.finishedImageKey || currentDesign.previewImageKey;
         const media = encodeURIComponent(
           window.location.origin + "/api/images?key=" + encodeURIComponent(imageKey || "")

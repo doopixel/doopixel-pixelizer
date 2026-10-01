@@ -5,26 +5,26 @@ export async function onRequestGet() {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Pixel Art Gallery &amp; Buildable Kits | DooPixel</title>
+    <title>Pixel Art Community Gallery | My Pixel Walls</title>
     <meta name="description" content="Explore verified and community pixel art designs, view every required piece, and add a complete buildable kit to your cart." />
     <link rel="canonical" href="https://pixelizer.doopixel.com/gallery" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Pixel Art Gallery &amp; Buildable Kits | DooPixel" />
+    <meta property="og:title" content="Pixel Art Community Gallery | My Pixel Walls" />
     <meta property="og:description" content="Explore pixel art designs, see the required pieces, and add a complete buildable kit to your cart." />
     <meta property="og:url" content="https://pixelizer.doopixel.com/gallery" />
-    <meta property="og:site_name" content="DooPixel" />
+    <meta property="og:site_name" content="My Pixel Walls" />
     <meta name="twitter:card" content="summary" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
-        "name": "DooPixel Pixel Art Gallery & Shop",
+        "name": "My Pixel Walls Community Gallery",
         "url": "https://pixelizer.doopixel.com/gallery",
         "description": "Explore verified and community pixel art designs with complete piece lists and buildable kits.",
         "isPartOf": {
           "@type": "WebSite",
-          "name": "DooPixel",
-          "url": "https://doopixel.com/"
+          "name": "My Pixel Walls",
+          "url": "https://mypixelwalls.com/"
         }
       }
     </script>
@@ -38,9 +38,9 @@ export async function onRequestGet() {
         --line: #e3e3df;
         --red: #d4141a;
         --pink: #e899bc;
-        --green: #289b3a;
+        --green: #5433eb;
         --yellow: #f4ce21;
-        --blue: #4961bd;
+        --blue: #5433eb;
       }
 
       * { box-sizing: border-box; }
@@ -237,7 +237,7 @@ export async function onRequestGet() {
         cursor: pointer;
       }
 
-      .card:hover { border-color: #aeb8ae; }
+      .card:hover { border-color: #b7aafa; }
       .card:focus-visible {
         border-color: var(--green);
         outline: 2px solid rgba(40, 161, 57, 0.2);
@@ -342,13 +342,13 @@ export async function onRequestGet() {
       .card .button {
         width: 100%;
         margin-top: auto;
-        border-color: #28a139;
-        background: #28a139;
+        border-color: #5433eb;
+        background: #5433eb;
       }
 
       .card .button:hover {
-        border-color: #228b31;
-        background: #228b31;
+        border-color: #3820b8;
+        background: #3820b8;
       }
 
       .notice {
@@ -483,16 +483,16 @@ export async function onRequestGet() {
         h1 { font-size: 26px; }
       }
     </style>
-    <link rel="stylesheet" href="/css/doopixel-page-polish.css?v=20260825a" />
-    <link rel="stylesheet" href="/css/doopixel-site-header.css?v=20260825a" />
-    <link rel="stylesheet" href="/css/doopixel-site-footer.css?v=20260816b" />
+    <link rel="stylesheet" href="/css/doopixel-page-polish.css?v=20261001a" />
+    <link rel="stylesheet" href="/css/doopixel-site-header.css?v=20261001a" />
+    <link rel="stylesheet" href="/css/doopixel-site-footer.css?v=20261001a" />
   </head>
   <body class="dp-page-gallery">
     <div class="dp-site-nav-wrap">
       <div class="dp-site-topbar" role="note">
-        <span class="dp-site-topbar__dot" aria-hidden="true"></span><strong>Free U.S. Shipping $99+</strong><span class="dp-site-topbar__separator" aria-hidden="true">·</span><span>Ships from the USA</span>
+        <span class="dp-site-topbar__dot" aria-hidden="true"></span><strong>Turn Bricks Into Wall Art</strong>
       </div>
-      <nav class="dp-site-nav" aria-label="DooPixel main navigation">
+      <nav class="dp-site-nav" aria-label="My Pixel Walls main navigation">
         <button
           class="dp-site-menu-button"
           type="button"
@@ -502,22 +502,22 @@ export async function onRequestGet() {
         >
           <img class="dp-site-icon" src="/assets/icons/lucide-menu.svg" alt="" />
         </button>
-        <a class="dp-site-logo" href="https://doopixel.com/" aria-label="DooPixel shop">
+        <a class="dp-site-logo" href="https://mypixelwalls.com/" aria-label="My Pixel Walls shop">
           <img
-            src="https://cdn.shopify.com/s/files/1/0738/7562/0006/files/logo3.png?v=1787501605"
-            alt="DooPixel"
+            src="https://cdn.shopify.com/s/files/1/0655/4953/3297/files/logo111.png?v=1788088003"
+            alt="My Pixel Walls"
           />
         </a>
         <div class="dp-site-links" id="dp-site-links">
-          <a class="dp-site-link" href="https://doopixel.com/pages/gallery">Gallery &amp; Shop</a>
-          <a class="dp-site-link" href="https://pixelizer.doopixel.com/">Upload Image</a>
-          <a class="dp-site-link" href="https://pixelizer.doopixel.com/parts-import/">Matching Parts</a>
-          <a class="dp-site-link" href="https://doopixel.com/collections/doo-parts">Doo Parts</a>
-          <a class="dp-site-link dp-site-mobile-contact" href="https://doopixel.com/pages/contact">Contact</a>
+          <a class="dp-site-link" href="https://mypixelwalls.com/collections/brick-art">Shop Pixel Art</a>
+          <a class="dp-site-link" href="https://pixelizer.doopixel.com/">Create My Art</a>
+          <a class="dp-site-link is-active" href="https://pixelizer.doopixel.com/gallery" aria-current="page">Community Gallery</a>
+          <a class="dp-site-link" href="https://mypixelwalls.com/collections/brick-parts">Brick Parts</a>
+          <a class="dp-site-link dp-site-mobile-contact" href="https://mypixelwalls.com/policies/contact-information">Contact</a>
         </div>
         <div class="dp-site-actions">
-          <button class="dp-site-search-button" type="button" aria-label="Search DooPixel shop" aria-expanded="false" aria-controls="dp-site-search-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.25 4.25"></path></svg></button>
-          <a class="dp-site-cart-icon" href="https://doopixel.com/cart" aria-label="Shopping cart"><img class="dp-site-icon" src="/assets/icons/lucide-shopping-cart.svg" alt="" /><span class="dp-site-cart-count" data-dp-cart-count>0</span></a>
+          <button class="dp-site-search-button" type="button" aria-label="Search My Pixel Walls shop" aria-expanded="false" aria-controls="dp-site-search-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.25 4.25"></path></svg></button>
+          <a class="dp-site-cart-icon" href="https://mypixelwalls.com/cart" aria-label="Shopping cart"><img class="dp-site-icon" src="/assets/icons/lucide-shopping-cart.svg" alt="" /><span class="dp-site-cart-count" data-dp-cart-count hidden>0</span></a>
         </div>
       </nav>
     </div>
@@ -528,13 +528,13 @@ export async function onRequestGet() {
           <div>
             <h1>Pixel art, ready to build.</h1>
             <p class="intro-copy">
-              Explore verified designs from DooPixel and our builder community. Choose a design, add the exact kit, and receive instructions after checkout.
+              Explore verified designs and creative builds from the My Pixel Walls community. View the details and find your next project.
             </p>
           </div>
           <div class="intro-details" aria-label="What every gallery design includes">
             <p class="intro-detail"><strong>Verified designs:</strong> Reviewed before they appear in the gallery.</p>
             <p class="intro-detail"><strong>Exact piece lists:</strong> See the size, piece count, and colors before ordering.</p>
-            <p class="intro-detail"><strong>Ready to build:</strong> Add the complete kit and receive instructions after purchase.</p>
+            <p class="intro-detail"><strong>Ready to build:</strong> Explore the artwork and its piece details before you shop.</p>
           </div>
         </section>
 
@@ -567,8 +567,8 @@ export async function onRequestGet() {
     </div>
 
     <div data-doopixel-footer></div>
-    <script src="/js/doopixel-site-footer.js?v=20260818b"></script>
-    <script src="/js/doopixel-site-header.js?v=20260825a"></script>
+    <script src="/js/doopixel-site-footer.js?v=20261001a"></script>
+    <script src="/js/doopixel-site-header.js?v=20261001a"></script>
     <script>
       const loading = document.getElementById("loading");
       const empty = document.getElementById("empty");

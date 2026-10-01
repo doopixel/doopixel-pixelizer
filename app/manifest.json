@@ -1,8 +1,8 @@
 {
-  "name": "DooPixel Pixel Art Maker",
-  "short_name": "DooPixel",
-  "description": "Create custom pixel art from your own photo with DooPixel pieces.",
-  "theme_color": "#1f9d48",
+  "name": "My Pixel Walls Pixel Art Maker",
+  "short_name": "My Pixel Walls",
+  "description": "Create custom brick pixel art from your own photo with My Pixel Walls.",
+  "theme_color": "#5433eb",
   "background_color": "#FCFCFC",
   "icons": [
     {

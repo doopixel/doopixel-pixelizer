@@ -1072,7 +1072,7 @@ function generateInstructionTitlePage(
     ctx.fillStyle = "#000000";
     ctx.font = `${scalingFactor * 2}px Arial`;
     ctx.fillText(
-        typeof DOOPIXEL_INSTRUCTION_BRAND !== "undefined" ? DOOPIXEL_INSTRUCTION_BRAND : "DooPixel",
+        typeof DOOPIXEL_INSTRUCTION_BRAND !== "undefined" ? DOOPIXEL_INSTRUCTION_BRAND : "My Pixel Walls",
         pictureWidth * 0.75,
         pictureHeight * 0.28
     );
@@ -1537,7 +1537,7 @@ function generateDepthInstructionTitlePage(
 
     ctx.fillStyle = "#000000";
     ctx.font = `${scalingFactor * 2}px Arial`;
-    ctx.fillText("DooPixel", pictureWidth * 0.75, pictureHeight * 0.28);
+    ctx.fillText("My Pixel Walls", pictureWidth * 0.75, pictureHeight * 0.28);
     ctx.font = `${scalingFactor / 2}px Arial`;
     ctx.fillText(`Depth Instructions`, pictureWidth * 0.75, pictureHeight * 0.34);
     ctx.fillText(

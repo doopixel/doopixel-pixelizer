@@ -6,7 +6,7 @@ export async function onRequestGet() {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,nofollow" />
-    <title>Add DooPixel Verified Design</title>
+    <title>Add My Pixel Walls Verified Design</title>
     <style>
       :root {
         color-scheme: light;
@@ -84,7 +84,7 @@ export async function onRequestGet() {
     <div class="wrap">
       <header>
         <div>
-          <h1>Add DooPixel Verified Design</h1>
+          <h1>Add My Pixel Walls Verified Design</h1>
           <p class="muted">Publish an existing build with its required pieces and PDF instructions.</p>
           <nav class="nav">
             <a href="/admin/verified">Add Verified Design</a>
@@ -387,7 +387,7 @@ export async function onRequestGet() {
       async function loadSkuMap() {
         if (skuMap) return;
         const response = await fetch(SKU_MAP_URL);
-        if (!response.ok) throw new Error("Could not load the DooPixel color catalog.");
+        if (!response.ok) throw new Error("Could not load the My Pixel Walls color catalog.");
         skuMap = await response.json();
       }
 
@@ -402,7 +402,7 @@ export async function onRequestGet() {
       }
 
       async function openForm() {
-        showMessage("Checking access and loading DooPixel colors...");
+        showMessage("Checking access and loading My Pixel Walls colors...");
         await verifyAdminToken();
         await loadSkuMap();
         if (!partsElement.children.length) resetPartRows();
@@ -456,7 +456,7 @@ export async function onRequestGet() {
           const result = await response.json();
           if (!response.ok || !result.ok) throw new Error(result.error || "Could not publish this design.");
           message.className = "notice success";
-          message.innerHTML = "Published as DooPixel Verified. " +
+          message.innerHTML = "Published as My Pixel Walls Verified. " +
             '<a href="' + result.shareUrl + '" target="_blank" rel="noopener">Open design</a>';
           verifiedForm.reset();
           document.getElementById("artwork-image-help").textContent =

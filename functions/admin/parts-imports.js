@@ -1,7 +1,7 @@
 export async function onRequestGet() {
   return new Response(`<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
-<title>Parts Import Picking | DooPixel</title>
+<title>Parts Import Picking | My Pixel Walls</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;color:#181818}.wrap{max-width:1200px;margin:auto;padding:28px 18px 60px}header,.login,.tools,.head{display:flex;align-items:center;gap:10px}header,.head{justify-content:space-between}nav a{margin-right:12px;color:#111}input,select,button{min-height:42px;border:1px solid #bbb;padding:8px 11px;font:inherit}button{cursor:pointer;font-weight:700}.primary{background:#111;color:#fff}.tools{margin:22px 0;flex-wrap:wrap}.tools input{min-width:280px}.card{border:1px solid #ccc;padding:18px;margin:14px 0}.meta{color:#666;font-size:13px}.stats{margin:9px 0}table{width:100%;border-collapse:collapse;margin-top:14px}th,td{text-align:left;padding:8px;border-bottom:1px solid #ddd}th:last-child,td:last-child{text-align:right}.hidden{display:none}.notice{background:#f6f6f6;padding:14px;margin-top:16px}@media(max-width:650px){header,.head{display:block}.login{margin-top:14px;flex-wrap:wrap}.tools input{width:100%;min-width:0}.table{overflow:auto}}
 </style></head><body><main class="wrap">

@@ -1,6 +1,6 @@
 (function () {
   const SHOPIFY_ADD_KIT_URL =
-    window.DOOPIXEL_SHOPIFY_ADD_KIT_URL || "https://doopixel.com/pages/add-pixel-kit";
+    window.DOOPIXEL_SHOPIFY_ADD_KIT_URL || "https://mypixelwalls.com/pages/add-pixel-kit";
   const SKU_MAP_URL = window.DOOPIXEL_SKU_MAP_URL || "/doopixel-pixelizer-sku-map.json?v=20260818a";
   const CREATE_DESIGN_URL = window.DOOPIXEL_CREATE_DESIGN_URL || "/api/designs/create";
 
@@ -15,7 +15,7 @@
 
         if (!response.ok) {
           throw new Error(
-            "Could not load DooPixel SKU map from " +
+            "Could not load My Pixel Walls SKU map from " +
               SKU_MAP_URL +
               ". Make sure doopixel-pixelizer-sku-map.json is uploaded to the app folder."
           );
@@ -23,7 +23,7 @@
 
         if (responseText.trim().startsWith("<")) {
           throw new Error(
-            "DooPixel SKU map URL returned HTML instead of JSON: " +
+            "My Pixel Walls SKU map URL returned HTML instead of JSON: " +
               SKU_MAP_URL +
               ". The JSON file is missing or uploaded to the wrong folder."
           );
@@ -216,7 +216,7 @@
 
     const result = await response.json();
     if (!response.ok || !result.ok) {
-      throw new Error(result.error || "Could not save this DooPixel design.");
+      throw new Error(result.error || "Could not save this My Pixel Walls design.");
     }
 
     payload.id = result.id;

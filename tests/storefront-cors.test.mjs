@@ -16,6 +16,8 @@ test("allows only the public Gallery API surface", () => {
 });
 
 test("allows the storefront, Shopify preview, and local preview origins", () => {
+  assert.equal(isStorefrontOriginAllowed("https://mypixelwalls.com"), true);
+  assert.equal(isStorefrontOriginAllowed("https://www.mypixelwalls.com"), true);
   assert.equal(isStorefrontOriginAllowed("https://doopixel.com"), true);
   assert.equal(isStorefrontOriginAllowed("https://mz77zt-nj.myshopify.com"), true);
   assert.equal(isStorefrontOriginAllowed("http://127.0.0.1:9292"), true);
@@ -27,7 +29,7 @@ test("answers storefront preflight without invoking an API handler", async () =>
   const response = await onRequest({
     request: new Request("https://pixelizer.doopixel.com/api/designs/DP-123/projects", {
       method: "OPTIONS",
-      headers: { origin: "https://doopixel.com" },
+      headers: { origin: "https://mypixelwalls.com" },
     }),
     next: async () => {
       invoked = true;
@@ -37,7 +39,7 @@ test("answers storefront preflight without invoking an API handler", async () =>
 
   assert.equal(invoked, false);
   assert.equal(response.status, 204);
-  assert.equal(response.headers.get("access-control-allow-origin"), "https://doopixel.com");
+  assert.equal(response.headers.get("access-control-allow-origin"), "https://mypixelwalls.com");
   assert.equal(response.headers.get("access-control-allow-credentials"), "true");
 });
 

@@ -14,8 +14,7 @@ The migration adds private projects, hashed access tokens, order lookup rate lim
 
 Add these production and preview environment variables to the Pages project:
 
-- `SHOPIFY_WEBHOOK_SECRET`: Shopify's webhook signing secret.
-- `SHOPIFY_STORE_DOMAIN`: the store's permanent `*.myshopify.com` domain, not `doopixel.com`.
+- `SHOPIFY_WEBHOOK_SECRET`: the My Pixel Walls store's webhook signing secret. The webhook now accepts only `58pa1m-qx.myshopify.com`.
 - `ORDER_LOOKUP_PEPPER`: a randomly generated secret of at least 32 characters.
 
 Keep the existing `DB` and `DESIGN_IMAGES` bindings.
@@ -47,6 +46,8 @@ In Shopify Admin, go to **Settings > Notifications > Webhooks > Create webhook**
 - API version: the current stable version offered by Shopify
 
 Use the stable Pages production hostname, not a hash-prefixed preview URL. Send a test webhook after saving it. A generic Shopify test payload might report zero updated projects; the full COD test below verifies the actual line item properties.
+
+For the My Pixel Walls store, create an `Order creation` / JSON webhook to the same URL. Replace `SHOPIFY_WEBHOOK_SECRET` in Cloudflare Pages production secrets with that store's webhook signing secret before testing. The old store has no orders, so the webhook no longer accepts it. The customer-facing add-kit page lives at `https://mypixelwalls.com/pages/add-pixel-kit`.
 
 ## 5. Update the order confirmation email
 

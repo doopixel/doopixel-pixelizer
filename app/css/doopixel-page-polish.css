@@ -1,42 +1,42 @@
 :root {
-  --dp-blue: #20a83b;
-  --dp-blue-dark: #173e27;
-  --dp-green: #20a83b;
-  --dp-ink: #1b261e;
-  --dp-muted: #667069;
-  --dp-line: #dce5dd;
-  --dp-soft: #f3f6f1;
-  --blue: #20a83b;
-  --green: #20a83b;
-  --green-dark: #177a34;
-  --accent: #20a83b;
-  --ink: #1b261e;
-  --text: #1b261e;
-  --muted: #667069;
-  --line: #dce5dd;
-  --soft: #f3f6f1;
-  --canvas: #f4f7f2;
-  --paper: #fffdf8;
+  --dp-blue: #5433eb;
+  --dp-blue-dark: #3820b8;
+  --dp-green: #5433eb;
+  --dp-ink: #211b38;
+  --dp-muted: #655f78;
+  --dp-line: #e7e3f0;
+  --dp-soft: #f7f5ff;
+  --blue: #5433eb;
+  --green: #5433eb;
+  --green-dark: #3820b8;
+  --accent: #5433eb;
+  --ink: #211b38;
+  --text: #211b38;
+  --muted: #655f78;
+  --line: #e7e3f0;
+  --soft: #f7f5ff;
+  --canvas: #f7f5ff;
+  --paper: #ffffff;
 }
 
 html,
 body {
-  background-color: #f4f7f2 !important;
+  background-color: #f7f5ff !important;
 }
 
 /* Pixelizer: retain the workflow and controls, soften only the surfaces. */
 .dp-page-pixelizer .dp-wizard-intro,
 .dp-page-pixelizer .dp-progress-wrap {
-  background-color: #fffdf8;
+  background-color: #ffffff;
 }
 
 .dp-page-pixelizer .dp-upload-panel,
 .dp-page-pixelizer .dp-preview-frame,
 .dp-page-pixelizer .dp-panel,
 .dp-page-pixelizer .dp-control-group {
-  border-color: #dce5dd;
+  border-color: #e7e3f0;
   border-radius: 18px;
-  box-shadow: 0 12px 32px rgba(23, 62, 39, 0.06);
+  box-shadow: 0 12px 32px rgba(56, 37, 112, 0.06);
 }
 
 .dp-page-pixelizer .dp-primary-button,
@@ -58,7 +58,7 @@ body {
 /* BrickLink matching page. */
 .dp-page-parts-import .hero {
   border-radius: 24px;
-  background: linear-gradient(135deg, #173e27, #20a83b);
+  background: linear-gradient(135deg, #3820b8, #5433eb);
 }
 
 .dp-page-parts-import .step,
@@ -84,20 +84,20 @@ body {
 }
 
 .dp-page-parts-import .choose-button {
-  border-color: #173e27;
-  background: #173e27;
+  border-color: #3820b8;
+  background: #3820b8;
 }
 
 /* Gallery cards and filters. */
 .dp-page-gallery .button {
-  border-color: #20a83b;
+  border-color: #5433eb;
   border-radius: 12px;
-  background: #20a83b;
+  background: #5433eb;
 }
 
 .dp-page-gallery .button:hover {
-  border-color: #177a34;
-  background: #177a34;
+  border-color: #3820b8;
+  background: #3820b8;
 }
 
 .dp-page-gallery .intro,
@@ -106,24 +106,24 @@ body {
 .dp-page-gallery .card,
 .dp-page-gallery .empty,
 .dp-page-gallery .page-button {
-  border-color: #dce5dd;
+  border-color: #e7e3f0;
   border-radius: 18px;
 }
 
 .dp-page-gallery .intro,
 .dp-page-gallery .card,
 .dp-page-gallery .empty {
-  box-shadow: 0 12px 32px rgba(23, 62, 39, 0.055);
+  box-shadow: 0 12px 32px rgba(56, 37, 112, 0.055);
 }
 
 .dp-page-gallery .sort-button.active {
-  background: #edf7ef;
-  color: #173e27;
+  background: #eee9ff;
+  color: #3820b8;
 }
 
 .dp-page-gallery .gallery-search:focus-within {
-  border-color: #20a83b;
-  outline-color: rgba(32, 168, 59, 0.14);
+  border-color: #5433eb;
+  outline-color: rgba(84, 51, 235, 0.14);
 }
 
 /* Project lookup and private project pages. */
@@ -132,10 +132,10 @@ body {
 .dp-page-project .notice,
 .dp-page-project .preview-wrap,
 .dp-page-project details {
-  border: 1px solid #dce5dd;
+  border: 1px solid #e7e3f0;
   border-radius: 18px;
-  background: #fffdf8;
-  box-shadow: 0 10px 28px rgba(23, 62, 39, 0.05);
+  background: #ffffff;
+  box-shadow: 0 10px 28px rgba(56, 37, 112, 0.05);
 }
 
 .dp-page-find-project form {
@@ -152,23 +152,23 @@ body {
 
 .dp-page-find-project button,
 .dp-page-project .button {
-  border-color: #173e27;
-  background: #173e27;
+  border-color: #3820b8;
+  background: #3820b8;
 }
 
 .dp-page-find-project button:hover,
 .dp-page-find-project button:focus-visible,
 .dp-page-project .button:hover,
 .dp-page-project .button:focus-visible {
-  border-color: #20a83b;
-  background: #20a83b;
+  border-color: #5433eb;
+  background: #5433eb;
   color: #fff;
 }
 
 .dp-page-find-project .eyebrow,
 .dp-page-find-project .result span,
 .dp-page-project .eyebrow {
-  color: #177a34;
+  color: #5433eb;
 }
 
 /* Public design detail page. */
@@ -181,7 +181,7 @@ body {
 .dp-page-share .upload-box,
 .dp-page-share .comment-form,
 .dp-page-share .share-box {
-  border-color: #dce5dd;
+  border-color: #e7e3f0;
   border-radius: 18px;
 }
 
@@ -189,7 +189,7 @@ body {
 .dp-page-share .description-panel,
 .dp-page-share .pieces-section,
 .dp-page-share .comments-section {
-  box-shadow: 0 12px 32px rgba(23, 62, 39, 0.05);
+  box-shadow: 0 12px 32px rgba(56, 37, 112, 0.05);
 }
 
 .dp-page-share button,

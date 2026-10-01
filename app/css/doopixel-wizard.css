@@ -1,8 +1,8 @@
 :root {
-  --dp-blue: #1f9d48;
-  --dp-blue-dark: #14733b;
+  --dp-blue: #5433eb;
+  --dp-blue-dark: #3820b8;
   --dp-yellow: #f4ce21;
-  --dp-green: #1f9d48;
+  --dp-green: #5433eb;
   --dp-red: #d4141a;
   --dp-pink: #e899bc;
   --dp-ink: #202124;
@@ -726,8 +726,8 @@ body.dp-wizard-ready .dp-site-menu-button {
 
 .dp-final-controls #doopixel-add-to-cart-button:hover,
 .dp-final-controls #doopixel-add-to-cart-button:focus {
-  border-color: #1f7c2e;
-  background: #1f7c2e;
+  border-color: var(--dp-blue-dark);
+  background: var(--dp-blue-dark);
 }
 
 .dp-instructions-options {

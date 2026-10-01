@@ -6,7 +6,7 @@ export async function onRequestGet() {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,nofollow" />
-    <title>DooPixel Comment Review</title>
+    <title>My Pixel Walls Comment Review</title>
     <style>
       :root {
         color-scheme: light;

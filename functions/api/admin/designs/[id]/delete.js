@@ -39,7 +39,7 @@ export async function onRequestPost({ request, env, params }) {
     ).bind(id).first();
     if (!design) return jsonResponse({ ok: false, error: "Design not found." }, 404);
     if (!design.is_verified) {
-      return jsonResponse({ ok: false, error: "Permanent deletion is only available for DooPixel Verified designs." }, 400);
+      return jsonResponse({ ok: false, error: "Permanent deletion is only available for My Pixel Walls Verified designs." }, 400);
     }
 
     const projectCount = await env.DB.prepare(

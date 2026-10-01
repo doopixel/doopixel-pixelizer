@@ -20,9 +20,9 @@ export async function onRequestGet({ params }) {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,nofollow" />
-    <title>My Pixel Art Project | DooPixel</title>
+    <title>My Pixel Art Project | My Pixel Walls</title>
     <style>
-      :root { --text:#1d1d1d; --muted:#666; --line:#ddd; --soft:#f7f7f7; --blue:#405bb8; --yellow:#f4ce21; --red:#d4141a; --green:#289b3a; }
+      :root { --text:#211b38; --muted:#655f78; --line:#e7e3f0; --soft:#f7f5ff; --blue:#5433eb; --yellow:#f4ce21; --red:#d4141a; --green:#5433eb; }
       * { box-sizing:border-box; }
       body { margin:0; color:var(--text); background:#fff; font-family:Arial,Helvetica,sans-serif; }
       a { color:inherit; }
@@ -70,30 +70,30 @@ export async function onRequestGet({ params }) {
         .button { width:100%; }
       }
     </style>
-    <link rel="stylesheet" href="/css/doopixel-page-polish.css?v=20260825a" />
-    <link rel="stylesheet" href="/css/doopixel-site-header.css?v=20260825a" />
-    <link rel="stylesheet" href="/css/doopixel-site-footer.css?v=20260816b" />
+    <link rel="stylesheet" href="/css/doopixel-page-polish.css?v=20261001a" />
+    <link rel="stylesheet" href="/css/doopixel-site-header.css?v=20261001a" />
+    <link rel="stylesheet" href="/css/doopixel-site-footer.css?v=20261001a" />
   </head>
   <body class="dp-page-project">
     <div class="dp-site-nav-wrap">
-      <div class="dp-site-topbar" role="note"><span class="dp-site-topbar__dot" aria-hidden="true"></span><strong>Free U.S. Shipping $99+</strong><span class="dp-site-topbar__separator" aria-hidden="true">·</span><span>Ships from the USA</span></div>
-      <nav class="dp-site-nav" aria-label="DooPixel main navigation">
+      <div class="dp-site-topbar" role="note"><span class="dp-site-topbar__dot" aria-hidden="true"></span><strong>Turn Bricks Into Wall Art</strong></div>
+      <nav class="dp-site-nav" aria-label="My Pixel Walls main navigation">
         <button class="dp-site-menu-button" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="dp-site-links">
           <img class="dp-site-icon" src="/assets/icons/lucide-menu.svg" alt="" />
         </button>
-        <a class="dp-site-logo" href="https://doopixel.com/" aria-label="DooPixel shop">
-          <img src="https://cdn.shopify.com/s/files/1/0738/7562/0006/files/logo3.png?v=1787501605" alt="DooPixel" />
+        <a class="dp-site-logo" href="https://mypixelwalls.com/" aria-label="My Pixel Walls shop">
+          <img src="https://cdn.shopify.com/s/files/1/0655/4953/3297/files/logo111.png?v=1788088003" alt="My Pixel Walls" />
         </a>
         <div class="dp-site-links" id="dp-site-links">
-          <a class="dp-site-link" href="https://doopixel.com/pages/gallery">Gallery &amp; Shop</a>
-          <a class="dp-site-link" href="https://pixelizer.doopixel.com/">Upload Image</a>
-          <a class="dp-site-link" href="https://pixelizer.doopixel.com/parts-import/">Matching Parts</a>
-          <a class="dp-site-link" href="https://doopixel.com/collections/doo-parts">Doo Parts</a>
-          <a class="dp-site-link dp-site-mobile-contact" href="https://doopixel.com/pages/contact">Contact</a>
+          <a class="dp-site-link" href="https://mypixelwalls.com/collections/brick-art">Shop Pixel Art</a>
+          <a class="dp-site-link" href="https://pixelizer.doopixel.com/">Create My Art</a>
+          <a class="dp-site-link" href="https://pixelizer.doopixel.com/gallery">Community Gallery</a>
+          <a class="dp-site-link" href="https://mypixelwalls.com/collections/brick-parts">Brick Parts</a>
+          <a class="dp-site-link dp-site-mobile-contact" href="https://mypixelwalls.com/policies/contact-information">Contact</a>
         </div>
         <div class="dp-site-actions">
-          <button class="dp-site-search-button" type="button" aria-label="Search DooPixel shop" aria-expanded="false" aria-controls="dp-site-search-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.25 4.25"></path></svg></button>
-          <a class="dp-site-cart-icon" href="https://doopixel.com/cart" aria-label="Shopping cart"><img class="dp-site-icon" src="/assets/icons/lucide-shopping-cart.svg" alt="" /><span class="dp-site-cart-count" data-dp-cart-count>0</span></a>
+          <button class="dp-site-search-button" type="button" aria-label="Search My Pixel Walls shop" aria-expanded="false" aria-controls="dp-site-search-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.25 4.25"></path></svg></button>
+          <a class="dp-site-cart-icon" href="https://mypixelwalls.com/cart" aria-label="Shopping cart"><img class="dp-site-icon" src="/assets/icons/lucide-shopping-cart.svg" alt="" /><span class="dp-site-cart-count" data-dp-cart-count hidden>0</span></a>
         </div>
       </nav>
     </div>
@@ -146,14 +146,14 @@ export async function onRequestGet({ params }) {
     </main>
 
     <div data-doopixel-footer></div>
-    <script src="/js/doopixel-site-footer.js?v=20260818b"></script>
-    <script src="/js/doopixel-site-header.js?v=20260825a"></script>
+    <script src="/js/doopixel-site-footer.js?v=20261001a"></script>
+    <script src="/js/doopixel-site-header.js?v=20261001a"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" crossorigin="anonymous"></script>
-    <script>window.DOOPIXEL_INSTRUCTION_BRAND = "DooPixel";</script>
+    <script>window.DOOPIXEL_INSTRUCTION_BRAND = "My Pixel Walls";</script>
     <script src="/js/bricklink-colors.js"></script>
     <script src="/js/algo.js?v=20260818a"></script>
-    <script src="/js/doopixel-instruction-data.js?v=20260818a"></script>
-    <script src="/js/doopixel-project-instructions.js?v=20260818a"></script>
+    <script src="/js/doopixel-instruction-data.js?v=20261001a"></script>
+    <script src="/js/doopixel-project-instructions.js?v=20261001a"></script>
     <script src="/js/doopixel-image-upload.js?v=20260808a"></script>
     <script>
       const PROJECT_ID = ${JSON.stringify(projectId)};
@@ -245,7 +245,7 @@ export async function onRequestGet({ params }) {
             const downloadUrl = URL.createObjectURL(blob);
             const link = document.createElement("a");
             link.href = downloadUrl;
-            link.download = (currentResult.project.title || "DooPixel Instructions") + ".pdf";
+            link.download = (currentResult.project.title || "My Pixel Walls Instructions") + ".pdf";
             document.body.appendChild(link);
             link.click();
             link.remove();

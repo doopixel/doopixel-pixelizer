@@ -1,6 +1,8 @@
 const PUBLIC_ORIGIN = "https://pixelizer.doopixel.com";
 const PRODUCTION_PAGES_HOST = "doopixel-pixelizer.pages.dev";
 const STOREFRONT_ORIGINS = new Set([
+  "https://mypixelwalls.com",
+  "https://www.mypixelwalls.com",
   "https://doopixel.com",
   "https://www.doopixel.com",
   "https://mz77zt-nj.myshopify.com",
@@ -70,6 +72,10 @@ export async function onRequest(context) {
     canRedirect
   ) {
     return Response.redirect(`${PUBLIC_ORIGIN}${url.pathname}${url.search}`, 301);
+  }
+
+  if (canRedirect && (url.pathname === "/parts-import" || url.pathname === "/parts-import/")) {
+    return Response.redirect(`${PUBLIC_ORIGIN}/`, 302);
   }
 
   if (context.request.method === "OPTIONS" && allowStorefrontCors) {

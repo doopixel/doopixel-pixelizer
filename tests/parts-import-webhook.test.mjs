@@ -27,8 +27,7 @@ function makeDb(expectedPacks) {
   };
 }
 
-async function signedRequest(quantity) {
-  const secret = "test-shopify-secret";
+async function signedRequest(quantity, shopDomain = "58pa1m-qx.myshopify.com", secret = "test-shopify-secret") {
   const body = JSON.stringify({
     id: 12345,
     name: "#1007",
@@ -50,7 +49,7 @@ async function signedRequest(quantity) {
       headers: {
         "x-shopify-hmac-sha256": hmac,
         "x-shopify-webhook-id": `delivery-${quantity}`,
-        "x-shopify-shop-domain": "doopixel.myshopify.com",
+        "x-shopify-shop-domain": shopDomain,
       },
     }),
     secret,
@@ -62,7 +61,7 @@ test("order webhook marks a parts import ordered only when the paid pack count m
   const exactDb = makeDb(2);
   const exactResponse = await onRequestPost({
     request: exact.request,
-    env: { DB: exactDb, SHOPIFY_WEBHOOK_SECRET: exact.secret, ORDER_LOOKUP_PEPPER: "pepper", SHOPIFY_STORE_DOMAIN: "doopixel.myshopify.com" },
+    env: { DB: exactDb, SHOPIFY_WEBHOOK_SECRET: exact.secret, ORDER_LOOKUP_PEPPER: "pepper" },
   });
   assert.equal(exactResponse.status, 200);
   assert.equal((await exactResponse.json()).updatedPartsImports, 1);
@@ -74,7 +73,22 @@ test("order webhook marks a parts import ordered only when the paid pack count m
   const shortDb = makeDb(2);
   const shortResponse = await onRequestPost({
     request: short.request,
-    env: { DB: shortDb, SHOPIFY_WEBHOOK_SECRET: short.secret, ORDER_LOOKUP_PEPPER: "pepper", SHOPIFY_STORE_DOMAIN: "doopixel.myshopify.com" },
+    env: { DB: shortDb, SHOPIFY_WEBHOOK_SECRET: short.secret, ORDER_LOOKUP_PEPPER: "pepper" },
   });
   assert.equal((await shortResponse.json()).updatedPartsImports, 0);
+});
+
+test("order webhook rejects the old store and an incorrect signature", async () => {
+  const oldShop = await signedRequest(2, "doopixel.myshopify.com");
+  const db = makeDb(2);
+  const env = { DB: db, SHOPIFY_WEBHOOK_SECRET: oldShop.secret, ORDER_LOOKUP_PEPPER: "pepper" };
+  const oldShopResponse = await onRequestPost({ request: oldShop.request, env });
+  assert.equal(oldShopResponse.status, 403);
+
+  const newShop = await signedRequest(2);
+  const wrongSecretResponse = await onRequestPost({
+    request: newShop.request,
+    env: { ...env, SHOPIFY_WEBHOOK_SECRET: "wrong-secret" },
+  });
+  assert.equal(wrongSecretResponse.status, 401);
 });

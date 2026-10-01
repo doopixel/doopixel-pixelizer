@@ -41,7 +41,7 @@
     shell.innerHTML = `
       <div class="dp-loading-slot" id="dp-loading-slot"></div>
       <header class="dp-wizard-intro">
-        <h1>DooPixel Pixel Art Maker</h1>
+        <h1>My Pixel Walls Pixel Art Maker</h1>
         <p>Turn your photo into a buildable pixel artwork, then get the exact pieces and guide you need.</p>
         <p class="dp-desktop-tip">For the best experience, we recommend using this tool on a desktop computer.</p>
       </header>
@@ -213,7 +213,7 @@
       </section>
 
       <p class="dp-attribution">
-        DooPixel Pixel Art Maker is based on an open-source project and customized for DooPixel.
+        My Pixel Walls Pixel Art Maker is based on an open-source project and customized for My Pixel Walls.
       </p>
     `;
     return shell;

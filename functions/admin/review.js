@@ -6,7 +6,7 @@ export async function onRequestGet() {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,nofollow" />
-    <title>DooPixel Gallery Review</title>
+    <title>My Pixel Walls Gallery Review</title>
     <style>
       :root {
         color-scheme: light;
@@ -419,7 +419,7 @@ export async function onRequestGet() {
         meta.className = "meta";
         meta.append(
           metaItem("ID", design.id),
-          metaItem("Type", design.isVerified ? "DooPixel Verified" : "Community"),
+          metaItem("Type", design.isVerified ? "My Pixel Walls Verified" : "Community"),
           metaItem("Size", design.size.join(" x ")),
           metaItem("Pieces", Number(design.totalPieces).toLocaleString()),
           metaItem("Colors", design.colorLines),
